@@ -1,0 +1,18 @@
+# APP configoratins
+APP_PORT= 3001
+
+# DB configoratins
+DB_HOST= localhost
+DB_USERNAME= root
+DB_PASSWORD= password
+DB_NAME= imj_db
+
+# Sendgrid api key
+SENDGRID_API_KEY= 
+
+# Token
+ACCESS_TOKEN_SECRET= 
+ 
+JWT_PAYLOAD_PASSWORD= 
+JWT_PAYLOAD_SALT= 
+JWT_PAYLOAD_IV= 
