@@ -1,34 +1,51 @@
-// process data, when data is processed, call function inside service(different file).
 const Logger = require('logplease')
-const logger = Logger.create('auth.controller.js')
-const auth_service = require('./auth.service')
+const logger = Logger.create('user.controller.js')
+const user_service = require('./user.service')
 const Hashes = require('jshashes')
 const SHA256 = new Hashes.SHA256()
 
-const sign_in = async (req, res) => {
+const create_user = async (req, res) => {
   try {
     const body_parameters = await process_payload(req.body)
-    console.log(body_parameters)
-    auth_service.sign_in(body_parameters, res)
-  } catch (error) {
-    return res.status(400).end()
-  }
-}
-const sign_up = async (req, res) => {
-  try {
-    const body_parameters = await process_payload(req.body)
-    if (!body_parameters.username || !body_parameters.password) {
+    if (!body_parameters.username || !body_parameters.name || !body_parameters.level || !body_parameters.password || !body_parameters.email) {
       return res.status(400).end()
     }
-    auth_service.sign_up(body_parameters, res)
+    user_service.create_user(body_parameters, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
-const sign_out = async (req, res) => {
+
+const get_user = async (req, res) => {
   try {
-    const header_parameters = req.headers
-    auth_service.sign_out(header_parameters, res)
+    const uuid = req.params.id
+    if (!uuid) {
+      return res.status(400).end()
+    }
+    user_service.get_user(uuid, res)
+  } catch (error) {
+    return res.status(400).end()
+  }
+}
+const update_user = async (req, res) => {
+  try {
+    const uuid = req.params.id
+    const body_parameters = await process_payload(req.body)
+    if (!uuid || !body_parameters) {
+      return res.status(400).end()
+    }
+    user_service.update_user(body_parameters, uuid, res)
+  } catch (error) {
+    return res.status(400).end()
+  }
+}
+const delete_user = async (req, res) => {
+  try {
+    const uuid = req.params.id
+    if (!uuid) {
+      return res.status(400).end()
+    }
+    user_service.delete_user(uuid, res)
   } catch (error) {
     return res.status(400).end()
   }
@@ -71,7 +88,8 @@ function process_payload(payload) {
 }
 
 module.exports = {
-  sign_in,
-  sign_out,
-  sign_up,
+  create_user,
+  get_user,
+  update_user,
+  delete_user,
 }

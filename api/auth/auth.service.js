@@ -68,6 +68,7 @@ function get_token(user) {
       const payload = {
         user: {
           id: user.id,
+          level: user.level,
         },
       }
       const encrypted_and_encoded = await AceBase64Crypto.encrypt(payload)
@@ -82,6 +83,7 @@ function get_token(user) {
           user: {
             name: user.name,
             id: user.uuid,
+            level: user.level,
           },
           token: token,
         }
