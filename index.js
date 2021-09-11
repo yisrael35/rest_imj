@@ -9,7 +9,12 @@ const authRoutes = require('./api/auth/auth.routes')
 const userRoutes = require('./api/user/user.routes')
 
 server.use(cors())
-
+// server.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST')
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+//   next()
+// })
 // Routes
 server.use('/auth', authRoutes)
 server.use('/user', userRoutes)
