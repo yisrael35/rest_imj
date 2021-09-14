@@ -27,6 +27,14 @@ const get_user = async (req, res) => {
     return res.status(400).end()
   }
 }
+const get_users = async (req, res) => {
+  try {
+    
+    user_service.get_users( res)
+  } catch (error) {
+    return res.status(400).end()
+  }
+}
 const update_user = async (req, res) => {
   try {
     const uuid = req.params.id
@@ -90,6 +98,7 @@ function process_payload(payload) {
 module.exports = {
   create_user,
   get_user,
+  get_users,
   update_user,
   delete_user,
 }
