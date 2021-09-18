@@ -6,8 +6,13 @@ const SHA256 = new Hashes.SHA256()
 
 const create_user = async (req, res) => {
   try {
+    //validte - admin only
+    let level = req.headers.bearerAuth.user.level
+    if (level !== 1) {
+      return res.status(403).end()
+    }
     const body_parameters = await process_payload(req.body)
-    if (!body_parameters.username || !body_parameters.name || !body_parameters.level || !body_parameters.password || !body_parameters.email) {
+    if (!body_parameters.username || !body_parameters.name ||  !body_parameters.password ) {
       return res.status(400).end()
     }
     user_service.create_user(body_parameters, res)
@@ -29,8 +34,12 @@ const get_user = async (req, res) => {
 }
 const get_users = async (req, res) => {
   try {
-    
-    user_service.get_users( res)
+    //validte - admin only
+    let level = req.headers.bearerAuth.user.level
+    if (level !== 1) {
+      return res.status(403).end()
+    }
+    user_service.get_users(res)
   } catch (error) {
     return res.status(400).end()
   }
@@ -42,13 +51,18 @@ const update_user = async (req, res) => {
     if (!uuid || !body_parameters) {
       return res.status(400).end()
     }
-    user_service.update_user(body_parameters, uuid, res)
+    user_service.update_user(body_parameters, uuid,req, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
 const delete_user = async (req, res) => {
   try {
+    //validte - admin only
+    let level = req.headers.bearerAuth.user.level
+    if (level !== 1) {
+      return res.status(403).end()
+    }
     const uuid = req.params.id
     if (!uuid) {
       return res.status(400).end()
@@ -80,7 +94,10 @@ function process_payload(payload) {
               processed_payload.level = val
               break
             case 'email':
-              processed_payload.level = val
+              processed_payload.email = val.trim()
+              break
+            case 'phone':
+              processed_payload.phone = val
               break
             default:
               return reject({ status: 400 })

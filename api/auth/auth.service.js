@@ -6,6 +6,7 @@ const AceBase64Crypto = require('../../utils/AceBase64Crypto')
 const EXP_TOKEN = '1d'
 const ALG_TOKEN = 'HS256'
 
+//login
 const sign_in = async (payload, result) => {
   try {
     const [user] = await db_helper.get(query.login(payload))
@@ -16,6 +17,7 @@ const sign_in = async (payload, result) => {
   }
 }
 
+//register
 const sign_up = async (payload, result) => {
   try {
     await db_helper.update(query.create_user(payload), payload)
@@ -44,13 +46,14 @@ const sign_out = async (payload, result) => {
 
 // create token in database
 function create_token(token, user_id) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const token_details = {
         content: token,
         user_id,
       }
-      const res = db_helper.update(query.create_token(token_details), token_details)
+      db_helper.update_just_query(query.update_user(user_id))
+      const res = await db_helper.update(query.create_token(token_details), token_details)
       return resolve(res)
     } catch (error) {
       return reject(error)
@@ -64,7 +67,6 @@ function get_token(user) {
     try {
       const exp = EXP_TOKEN
       const algorithm = ALG_TOKEN
-
       const payload = {
         user: {
           id: user.id,

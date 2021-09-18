@@ -1,7 +1,17 @@
+const moment = require('moment')
+
 const create_user = (details) => {
   return `
   INSERT INTO user (${Object.keys(details)})
   VALUES (${Object.values(details).map((u) => '?')});`
+}
+const update_user = (id) => {
+  let now = moment().format('yyyy-MM-DD HH:mm:ss')
+  return `
+  UPDATE user 
+  SET last_login = '${now}'
+  WHERE id = '${id}';
+  `
 }
 
 const login = ({ username, password }) => {
@@ -42,6 +52,7 @@ module.exports = {
   login,
   create_token,
   create_user,
+  update_user,
   get_user_by_id,
   check_token_in_db,
   check_token_is_active,

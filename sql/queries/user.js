@@ -6,11 +6,34 @@ const create_user = (details) => {
 
 const get_user_by_uuid = (uuid) => {
   return `
-    SELECT * FROM user WHERE uuid = '${uuid}';`
+    SELECT 
+      uuid AS id,
+      username,
+      name,
+      level,
+      email,
+      phone,
+      last_login,
+      is_active,
+      created_at,
+      updated_at
+    FROM user WHERE uuid = '${uuid}';`
 }
+
 const get_users = () => {
   return `
-    SELECT * FROM user ;`
+    SELECT 
+      uuid AS id,
+      username,
+      name,
+      level,
+      email,
+      phone,
+      last_login,
+      is_active,
+      created_at,
+      updated_at
+    FROM user ;`
 }
 const update_user = (user, uuid) => {
   return `
@@ -18,11 +41,17 @@ const update_user = (user, uuid) => {
   SET ${Object.keys(user).map((key) => `${key} = ? `)}
   WHERE uuid = '${uuid}';`
 }
-
-const delete_user = (user, uuid) => {
+const update_user_by_uuid_and_id = (user, uuid, id) => {
   return `
   UPDATE user 
   SET ${Object.keys(user).map((key) => `${key} = ? `)}
+  WHERE uuid = '${uuid}' and id = '${id}';`
+}
+
+const delete_user = (uuid) => {
+  return `
+  UPDATE user 
+  SET is_active = IF(is_active , 0,1)
   WHERE uuid = '${uuid}';`
 }
 
@@ -31,5 +60,6 @@ module.exports = {
   get_user_by_uuid,
   get_users,
   update_user,
+  update_user_by_uuid_and_id,
   delete_user,
 }
