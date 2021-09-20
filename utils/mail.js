@@ -1,3 +1,4 @@
+const imj_url = process.env.IMJ_URL
 const first_letter = `
 <!DOCTYPE html>
 <html>
@@ -131,7 +132,7 @@ const end_letter = `
               <p><b>The israel museum Jerusalem מוזיאון ישראל ירושלים</b></p>
               <p>שדרות רופין 11 הקריה, ירושלים</p>
               <p>02-6708811</p>
-              <p>https://react-imj.herokuapp.com/login</p>
+              <p>${imj_url}/login</p>
             </td>
           </tr>
           <tr>
@@ -149,6 +150,50 @@ const end_letter = `
   </body>
 </html>
 `
+
+const forgot_password = (link) => {
+  return `${first_letter}
+          <tr>
+            <td id="credeantials">
+              <p>Hello,</p><br />
+              <p>
+                Click on the following link to update your password, this link is
+                valid for 1 hour only.
+              </p>
+              <br />
+                <h3>
+                  <a href=${link}>Submit new password</a>
+                </h3>
+              <br />
+              <br />
+              <p>Regards,</p>
+              <p>IMJ Support Team</p>
+            </td>
+          </tr>
+          ${end_letter}
+  `
+}
+
+const confirm_change_password = () => {
+  return `${first_letter}
+    <tr>
+      <td id="credeantials">
+        <p>Hello,</p><br />
+        <p>
+          Your password has been changed.
+          If you did not initiate this request, please contact your IMJ account administrator.
+        </p>
+        <br />
+        <h3>*** PLEASE DO NOT RESPOND TO THIS MESSAGE ***</h3>
+        <br />
+        <p>Regards,</p>
+        <p>IMJ Support Team</p>
+      </td>
+    </tr>
+    ${end_letter}
+  `
+}
+
 
 const share_file = () => {
   return `${first_letter}
@@ -171,4 +216,6 @@ const share_file = () => {
 
 module.exports = {
   share_file,
+  forgot_password,
+  confirm_change_password,
 }

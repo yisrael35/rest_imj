@@ -13,13 +13,23 @@ const create_user = async (payload, result) => {
   }
 }
 
-const get_user = async (uuid, result) => {
+const get_user = async (uuid, req, result) => {
   try {
-    const user_details = await db_helper.get(query.get_user_by_uuid(uuid))
-    if (!user_details) {
-      return result.status(404).end()
+    let level = req.headers.bearerAuth.user.level
+    if (level !== 1) {
+      let user_id = req.headers.bearerAuth.user.id
+      const user_details = await db_helper.get(query.get_user_by_uuid_and_id(uuid, user_id))
+      if (!user_details.length) {
+        return result.status(404).end()
+      }
+      return result.status(200).send(user_details[0])
+    } else {
+      const user_details = await db_helper.get(query.get_user_by_uuid(uuid))
+      if (!user_details.length) {
+        return result.status(404).end()
+      }
+      return result.status(200).send(user_details[0])
     }
-    return result.status(200).send(user_details[0])
   } catch (error) {
     console.log(error)
     return result.status(404).end()
@@ -43,7 +53,7 @@ const update_user = async (payload, uuid, req, result) => {
     let level = req.headers.bearerAuth.user.level
     if (level !== 1) {
       let user_id = req.headers.bearerAuth.user.id
-      const res = await db_helper.update(query.update_user_by_uuid_and_id(payload, uuid , user_id), payload)
+      const res = await db_helper.update(query.update_user_by_uuid_and_id(payload, uuid, user_id), payload)
       if (!res.affectedRows) {
         return result.status(404).end()
       }
@@ -51,7 +61,7 @@ const update_user = async (payload, uuid, req, result) => {
       //  return res.status(403).end()
     } else {
       //admin - update
-      const res = await db_helper.update(query.update_user(payload, uuid ), payload)
+      const res = await db_helper.update(query.update_user(payload, uuid), payload)
       if (!res.affectedRows) {
         return result.status(404).end()
       }

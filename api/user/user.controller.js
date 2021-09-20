@@ -27,7 +27,7 @@ const get_user = async (req, res) => {
     if (!uuid) {
       return res.status(400).end()
     }
-    user_service.get_user(uuid, res)
+    user_service.get_user(uuid,req, res)
   } catch (error) {
     return res.status(400).end()
   }
