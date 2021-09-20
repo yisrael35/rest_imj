@@ -17,4 +17,7 @@ JWT_PAYLOAD_PASSWORD=
 JWT_PAYLOAD_SALT= 
 JWT_PAYLOAD_IV= 
 
-TEST_URL= http://localhost:3001/
+TEST_URL= http://localhost:3001
+IMJ_URL= https://react-imj.herokuapp.com
+REDIRECT_URL_FORGOT_PASSWORD= http://localhost:3000
+IMJ_FROM= no-reply@react-imj.herokuapp.com
