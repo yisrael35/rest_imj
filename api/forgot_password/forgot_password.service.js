@@ -1,46 +1,71 @@
-const query = require('../../sql/queries/auth')
+const query = require('../../sql/queries/forgot_password')
 const db_helper = require('../../utils/db_helper')
 const jwt = require('jsonwebtoken')
 const AceBase64Crypto = require('../../utils/AceBase64Crypto')
+const mailUtil = require('../../utils/mail')
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const helper = require('../../utils/helper')
 
-const EXP_TOKEN = '1d'
+const EXP_TOKEN = '1h'
 const ALG_TOKEN = 'HS256'
 
-//login
-const sign_in = async (payload, result) => {
+const forgot_password = async (payload, result) => {
   try {
-    const [user] = await db_helper.get(query.login(payload))
+
+    const [user] = await db_helper.get(query.get_email_by_username(payload.username))
+    if (!user) {
+      return result({ status: 400 })
+    }
+ 
     const user_details = await get_token(user)
+    const msg = {
+      to: user.email,
+      from: `${process.env.IMJ_FROM}`,
+      subject: 'IMJ: Reset password',
+      html: mailUtil.forgot_password(`${process.env.REDIRECT_URL_FORGOT_PASSWORD}/forgot_password/${user_details.token}`),
+    }
+    await sgMail.send(msg, async (err, res) => {
+      if (err) {
+        // console.log(err.response.body.errors)
+        // return result({ status: 500})
+      } else {
+        // return result({ status: 200, data: { email: helper.return_encrypt_email(user.email) } }) 
+      }
+    })
     return result.status(200).send(user_details)
   } catch (error) {
+    console.log(error);
     return result.status(404).end()
   }
 }
 
-//register
-const sign_up = async (payload, result) => {
+const change_password = async (payload, user_id, result) => {
   try {
-    await db_helper.update(query.create_user(payload), payload)
+    const [user] = await db_helper.get(query.get_email_by_user_id(user_id))
+    if (!user) {
+      return result({ status: 400 })
+    }
+
+    await db_helper.update_just_query(query.update_password(user_id, payload.password))
+    const msg = {
+      to: user.email,
+      from: `${process.env.IMJ_FROM}`,
+      subject: 'IMJ: Password Changed',
+      html: mailUtil.confirm_change_password(),
+    }
+
+    sgMail.send(msg, async (err, res) => {
+      if (err) {
+        console.log(err)
+        return result({ status: 400 })
+      } else {
+        result({ status: 200 })
+      }
+    })
     return result.status(200).end()
   } catch (error) {
     return result.status(400).end()
-  }
-}
-
-const sign_out = async (payload, result) => {
-  try {
-    const token = payload.bearerAuth.token
-    const { err, res } = await db_helper.update_just_query(query.delete_token(token))
-    if (err) {
-      return result.status(404).end()
-    }
-    if (!res.affectedRows) {
-      return result.status(404).end()
-    }
-
-    return result.status(200).end()
-  } catch (error) {
-    return result.status(404).end()
   }
 }
 
@@ -98,7 +123,6 @@ function get_token(user) {
 }
 
 module.exports = {
-  sign_in,
-  sign_out,
-  sign_up,
+  forgot_password,
+  change_password,
 }

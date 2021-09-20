@@ -1,43 +1,28 @@
 // process data, when data is processed, call function inside service(different file).
 const Logger = require('logplease')
-const logger = Logger.create('auth.controller.js')
-const auth_service = require('./auth.service')
+const logger = Logger.create('forgot_password.controller.js')
+const forgot_password_service = require('./forgot_password.service')
 const Hashes = require('jshashes')
 const SHA256 = new Hashes.SHA256()
+const { check_password } = require('../../utils/helper')
 
-//login
-const sign_in = async (req, res) => {
+const forgot_password = async (req, res) => {
   try {
     const body_parameters = await process_payload(req.body)
-    // logger.log('login: ', body_parameters)
-    auth_service.sign_in(body_parameters, res)
+    forgot_password_service.forgot_password(body_parameters, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
 
-//register
-const sign_up = async (req, res) => {
+const change_password = async (req, res) => {
   try {
-    // TODO - only admin
-    // let level = req.headers.bearerAuth.user.level
-    // if (level !== 1) {
-    //   return res.status(403).end()
-    // }
     const body_parameters = await process_payload(req.body)
-    if (!body_parameters.username || !body_parameters.password) {
+    if (!body_parameters.password) {
       return res.status(400).end()
     }
-    auth_service.sign_up(body_parameters, res)
-  } catch (error) {
-    return res.status(400).end()
-  }
-}
-
-const sign_out = async (req, res) => {
-  try {
-    const header_parameters = req.headers
-    auth_service.sign_out(header_parameters, res)
+    const user_id = req.headers.bearerAuth.user.id
+    forgot_password_service.change_password(body_parameters, user_id, res)
   } catch (error) {
     return res.status(400).end()
   }
@@ -55,16 +40,11 @@ function process_payload(payload) {
               processed_payload.username = val.trim()
               break
             case 'password':
+              const is_valid_psw = check_password(val) 
+              if (!is_valid_psw) {
+                return reject({ status: 400 })
+              }
               processed_payload.password = SHA256.hex(val.trim())
-              break
-            case 'name':
-              processed_payload.name = val.trim()
-              break
-            case 'level':
-              processed_payload.level = val
-              break
-            case 'email':
-              processed_payload.level = val
               break
             default:
               return reject({ status: 400 })
@@ -80,7 +60,6 @@ function process_payload(payload) {
 }
 
 module.exports = {
-  sign_in,
-  sign_out,
-  sign_up,
+  forgot_password,
+  change_password,
 }
