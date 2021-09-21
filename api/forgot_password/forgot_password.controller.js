@@ -40,10 +40,10 @@ function process_payload(payload) {
               processed_payload.username = val.trim()
               break
             case 'password':
-              const is_valid_psw = check_password(val) 
-              if (!is_valid_psw) {
-                return reject({ status: 400 })
-              }
+              // const is_valid_psw = check_password(val)
+              // if (!is_valid_psw) {
+              //   return reject({ status: 400 })
+              // }
               processed_payload.password = SHA256.hex(val.trim())
               break
             default:
