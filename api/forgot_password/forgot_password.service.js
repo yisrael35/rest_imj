@@ -12,30 +12,27 @@ const ALG_TOKEN = 'HS256'
 
 const forgot_password = async (payload, result) => {
   try {
-
     const [user] = await db_helper.get(query.get_email_by_username(payload.username))
     if (!user) {
-      return result({ status: 400 })
+      return result.status(404).end()
     }
- 
+
     const user_details = await get_token(user)
     const msg = {
       to: user.email,
       from: `${process.env.IMJ_FROM}`,
       subject: 'IMJ: Reset password',
-      html: mailUtil.forgot_password(`${process.env.REDIRECT_URL_FORGOT_PASSWORD}/forgot_password/${user_details.token}`),
+      html: mailUtil.forgot_password(`${process.env.REDIRECT_URL_FORGOT_PASSWORD}/ResetPassword/${user_details.token}`),
     }
-    await sgMail.send(msg, async (err, res) => {
+    sgMail.send(msg, async (err, res) => {
       if (err) {
-        // console.log(err.response.body.errors)
-        // return result({ status: 500})
+        return result.status(500).end()
       } else {
-        // return result({ status: 200, data: { email: helper.return_encrypt_email(user.email) } }) 
+        return result.status(200).send({ status: 200, data: { email: helper.return_encrypt_email(user.email) } })
       }
     })
-    return result.status(200).send(user_details)
   } catch (error) {
-    console.log(error);
+    // console.log(error)
     return result.status(404).end()
   }
 }
@@ -57,13 +54,11 @@ const change_password = async (payload, user_id, result) => {
 
     sgMail.send(msg, async (err, res) => {
       if (err) {
-        console.log(err)
-        return result({ status: 400 })
+        return result.status(500).end()
       } else {
-        result({ status: 200 })
+        return result.status(200).end()
       }
     })
-    return result.status(200).end()
   } catch (error) {
     return result.status(400).end()
   }
