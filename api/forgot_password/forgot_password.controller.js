@@ -53,7 +53,7 @@ function process_payload(payload) {
       }
       return resolve(processed_payload)
     } catch (error) {
-      logger.error(`Failed to process payload, The error: ${error}`)
+      logger.error(`Failed to process forgot_password payload, The error: ${error}`)
       return reject({ status: 404, error: '4.11' })
     }
   })
