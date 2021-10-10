@@ -57,8 +57,11 @@ function process_payload(payload) {
             case 'password':
               processed_payload.password = SHA256.hex(val.trim())
               break
-            case 'name':
-              processed_payload.name = val.trim()
+            case 'first_name':
+              processed_payload.first_name = val.trim()
+              break
+            case 'last_name':
+              processed_payload.last_name = val.trim()
               break
             case 'level':
               processed_payload.level = val

@@ -83,7 +83,7 @@ function get_token(user) {
 
         const user_details = {
           user: {
-            name: user.name,
+            name: user.first_name + ' ' + user.last_name,
             id: user.uuid,
             level: user.level,
           },

@@ -9,7 +9,8 @@ const get_user_by_uuid = (uuid) => {
     SELECT 
       uuid AS id,
       username,
-      name,
+      first_name,
+      last_name,
       level,
       email,
       phone,
@@ -24,7 +25,8 @@ const get_user_by_uuid_and_id = (uuid, id) => {
     SELECT 
       uuid AS id,
       username,
-      name,
+      first_name,
+      last_name,
       level,
       email,
       phone,
@@ -40,7 +42,8 @@ const get_users = () => {
     SELECT 
       uuid AS id,
       username,
-      name,
+      first_name,
+      last_name,
       level,
       email,
       phone,
