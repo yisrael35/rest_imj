@@ -12,7 +12,7 @@ const create_user = async (req, res) => {
       return res.status(403).end()
     }
     const body_parameters = await process_payload(req.body)
-    if (!body_parameters.username || !body_parameters.name || !body_parameters.password) {
+    if (!body_parameters.username || !body_parameters.first_name ||!body_parameters.last_name ||!body_parameters.email || !body_parameters.password) {
       return res.status(400).end()
     }
     user_service.create_user(body_parameters, res)

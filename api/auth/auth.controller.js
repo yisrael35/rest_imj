@@ -9,7 +9,6 @@ const SHA256 = new Hashes.SHA256()
 const sign_in = async (req, res) => {
   try {
     const body_parameters = await process_payload(req.body)
-    // logger.log('login: ', body_parameters)
     auth_service.sign_in(body_parameters, res)
   } catch (error) {
     return res.status(400).end()
@@ -19,11 +18,11 @@ const sign_in = async (req, res) => {
 //register
 const sign_up = async (req, res) => {
   try {
-    // TODO - only admin
-    // let level = req.headers.bearerAuth.user.level
-    // if (level !== 1) {
-    //   return res.status(403).end()
-    // }
+    //  only admin
+    let level = req.headers.bearerAuth.user.level
+    if (level !== 1) {
+      return res.status(403).end()
+    }
     const body_parameters = await process_payload(req.body)
     if (!body_parameters.username || !body_parameters.password) {
       return res.status(400).end()
