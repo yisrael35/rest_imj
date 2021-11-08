@@ -15,6 +15,7 @@ const event_routes = require('./api/event/event.routes')
 const client_routes = require('./api/client/client.routes')
 const bid_routes = require('./api/bid/bid.routes')
 const location_routes = require('./api/location/location.routes')
+const utils_routes = require('./api/utils/utils.routes')
 
 // Routes
 server.use('/auth', auth_routes)
@@ -24,6 +25,7 @@ server.use('/event', event_routes)
 server.use('/client', client_routes)
 server.use('/bid', bid_routes)
 server.use('/location', location_routes)
+server.use('/utils', utils_routes)
 
 
 const port = process.env.APP_PORT || 3001
