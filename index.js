@@ -17,6 +17,7 @@ const bid_routes = require('./api/bid/bid.routes')
 const location_routes = require('./api/location/location.routes')
 const utils_routes = require('./api/utils/utils.routes')
 const cost_routes = require('./api/cost/cost.routes')
+const schedule_event_routes = require('./api/schedule_event/schedule_event.routes')
 
 // Routes
 server.use('/auth', auth_routes)
@@ -28,6 +29,7 @@ server.use('/bid', bid_routes)
 server.use('/location', location_routes)
 server.use('/utils', utils_routes)
 server.use('/cost', cost_routes)
+server.use('/schedule_event', schedule_event_routes)
 
 
 const port = process.env.APP_PORT || 3001
