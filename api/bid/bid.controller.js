@@ -3,6 +3,7 @@ const logger = Logger.create('event.controller.js')
 const bid_service = require('./bid.service')
 const db_helper = require('../../utils/db_helper')
 const query = require('../../sql/queries/bid')
+const helper = require('../../utils/helper')
 
 const create_bid = async (req, res) => {
   try {
@@ -11,7 +12,6 @@ const create_bid = async (req, res) => {
       return res.status(400).end()
     }
     const bid_body_parameters = await process_payload_bid(main_body_parameters.bid)
-    console.log(bid_body_parameters);
     const schedule_event_body_parameters = await process_payload_schedule_event(main_body_parameters.schedule_event)
     const costs_body_parameters = await process_payload_costs(main_body_parameters.costs)
     const body_parameters = { bid: bid_body_parameters, schedule_event: schedule_event_body_parameters, costs: costs_body_parameters, language: main_body_parameters.language }
@@ -38,32 +38,32 @@ const get_bid = async (req, res) => {
 
 const get_bids = async (req, res) => {
   try {
-    bid_service.get_bids(res)
+    const filters = await helper.process_filters(req.query)
+
+    bid_service.get_bids(filters, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
-//TODO --
+
 const update_bid = async (req, res) => {
   try {
+    console.log('im here 0')
     const uuid = req.params.id
-    const main_body_parameters = await process_payload_main(req.body)
-    if (!main_body_parameters.bid || !main_body_parameters.schedule_event || !main_body_parameters.costs) {
-      return res.status(400).end()
-    }
-    const bid_body_parameters = await process_payload_bid(main_body_parameters.bid)
-    // const schedule_event_body_parameters = await process_payload_schedule_event(main_body_parameters.schedule_event)
-    // const costs_body_parameters = await process_payload_costs(main_body_parameters.costs)
-    const body_parameters = { bid_body_parameters }
+    console.log(req.body)
+    const body_parameters = await process_payload_bid(req.body)
+
     if (!uuid || !body_parameters) {
       return res.status(400).end()
     }
+    console.log(uuid)
+    console.log(body_parameters)
+    console.log('im here 1')
     bid_service.update_bid(body_parameters, uuid, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
-//TODO --
 const delete_bid = async (req, res) => {
   try {
     const uuid = req.params.id

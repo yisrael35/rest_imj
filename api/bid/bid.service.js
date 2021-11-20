@@ -27,7 +27,7 @@ const create_bid = async (payload, result) => {
       }
     }
 
-    return result.status(200).end()
+    return result.status(200).send({ bid_id })
   } catch (error) {
     console.log(error)
     return result.status(400).end()
@@ -46,13 +46,15 @@ const get_bid = async (uuid, result) => {
     return result.status(404).end()
   }
 }
-const get_bids = async (result) => {
+const get_bids = async (filters, result) => {
   try {
-    const bid_details = await db_helper.get(query.get_bids())
+    const bid_details = await db_helper.get(query.get_bids(filters))
     if (!bid_details) {
       return result.status(404).end()
     }
-    return result.status(200).send(bid_details)
+    const meta_data = await get_meta_data(filters)
+
+    return result.status(200).send({ bids: bid_details, meta_data })
   } catch (error) {
     return result.status(404).end()
   }
@@ -80,6 +82,20 @@ const delete_bid = async (uuid, result) => {
   } catch (error) {
     return result.status(404).end()
   }
+}
+
+const get_meta_data = (filters) => {
+  return new Promise(async (resolve, reject) => {
+    let { limit, offset } = filters
+    let [{ sum }] = await db_helper.get(query.get_sum_rows(filters))
+    const meta_data = {
+      sum_rows: sum,
+      limit: limit,
+      page: offset == 0 ? 1 : JSON.parse(Math.ceil(offset / limit)) + 1,
+      sum_pages: Math.ceil(sum / limit),
+    }
+    return resolve(meta_data)
+  })
 }
 
 module.exports = {

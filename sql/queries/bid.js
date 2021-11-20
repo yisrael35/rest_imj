@@ -45,10 +45,10 @@ const get_bid_by_uuid = (uuid) => {
   JOIN event_type et ON et.id = b.event_type_id
   JOIN user u ON u.id = b.user_id
 
-  WHERE uuid = '${uuid}';`
+  WHERE b.uuid = '${uuid}';`
 }
 
-const get_bids = () => {
+const get_bids = ({ search, limit, offset }) => {
   return `
   SELECT 
   b.uuid AS id,
@@ -72,7 +72,36 @@ const get_bids = () => {
   FROM bid b 
   JOIN location l ON l.id = b.location_id
   JOIN event_type et ON et.id = b.event_type_id
-  JOIN user u ON u.id = b.user_id;`
+  JOIN user u ON u.id = b.user_id
+  ${
+    search
+      ? `WHERE b.id LIKE '%${search}%'  OR b.uuid LIKE '%${search}%' OR b.event_name LIKE '%${search}%'
+  OR b.client_name LIKE '%${search}%'
+  `
+      : ''
+  }
+  ORDER BY created_at DESC
+  LIMIT ${limit} OFFSET ${offset}
+  ;`
+}
+
+const get_sum_rows = ({ search }) => {
+  return `
+  SELECT 
+  COUNT(DISTINCT b.id) AS sum
+  FROM bid b 
+  JOIN location l ON l.id = b.location_id
+  JOIN event_type et ON et.id = b.event_type_id
+  JOIN user u ON u.id = b.user_id
+  ${
+    search
+      ? `WHERE b.id LIKE '%${search}%'  OR b.uuid LIKE '%${search}%' OR b.event_name LIKE '%${search}%'
+  OR b.client_name LIKE '%${search}%'
+  `
+      : ''
+  }
+
+  ;`
 }
 const update_bid = (bid, uuid) => {
   return `
@@ -94,6 +123,7 @@ module.exports = {
   get_user_by_uuid,
   get_bid_by_uuid,
   get_bids,
+  get_sum_rows,
   update_bid,
   delete_bid,
 }

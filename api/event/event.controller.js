@@ -1,6 +1,7 @@
 const Logger = require('logplease')
 const logger = Logger.create('event.controller.js')
 const event_service = require('./event.service')
+const helper = require('../../utils/helper')
 
 const create_event = async (req, res) => {
   try {
@@ -27,7 +28,9 @@ const get_event = async (req, res) => {
 }
 const get_events = async (req, res) => {
   try {
-    event_service.get_events(res)
+    const filters = await helper.process_filters(req.query)
+
+    event_service.get_events(filters, res)
   } catch (error) {
     return res.status(400).end()
   }

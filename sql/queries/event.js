@@ -10,10 +10,21 @@ const get_event_by_uuid = (uuid) => {
   FROM event WHERE uuid = '${uuid}';`
 }
 
-const get_events = () => {
+const get_events = ({ search, limit, offset }) => {
   return `
   SELECT *
-  FROM event;`
+  FROM event
+  ${search ? `WHERE id LIKE '%${search}%'  OR uuid LIKE '%${search}%' ` : ''}
+  ORDER BY created_at DESC
+  LIMIT ${limit} OFFSET ${offset}
+  ;`
+}
+const get_sum_rows = ({ search }) => {
+  return `
+  SELECT *
+  FROM event
+  ${search ? `WHERE id LIKE '%${search}%'  OR uuid LIKE '%${search}%'` : ''}
+  ;`
 }
 const update_event = (event, uuid) => {
   return `
@@ -33,6 +44,7 @@ module.exports = {
   create_event,
   get_event_by_uuid,
   get_events,
+  get_sum_rows,
   update_event,
   delete_event,
 }

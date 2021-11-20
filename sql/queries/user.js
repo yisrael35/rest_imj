@@ -37,7 +37,7 @@ const get_user_by_uuid_and_id = (uuid, id) => {
     FROM user WHERE uuid = '${uuid}' AND id = '${id}';`
 }
 
-const get_users = () => {
+const get_users = ({ search, limit, offset }) => {
   return `
     SELECT 
       uuid AS id,
@@ -51,7 +51,19 @@ const get_users = () => {
       is_active,
       created_at,
       updated_at
-    FROM user ;`
+    FROM user 
+    ${search ? `WHERE first_name LIKE '%${search}%'  OR last_name LIKE '%${search}%'` : ''}
+    LIMIT ${limit} OFFSET ${offset}
+    ;`
+}
+
+const get_sum_rows = ({ search }) => {
+  return `
+    SELECT 
+    COUNT(DISTINCT id) AS sum
+    FROM user 
+    ${search ? `WHERE first_name LIKE '%${search}%'  OR last_name LIKE '%${search}%'` : ''}
+    ;`
 }
 const update_user = (user, uuid) => {
   return `
@@ -78,6 +90,7 @@ module.exports = {
   get_user_by_uuid,
   get_user_by_uuid_and_id,
   get_users,
+  get_sum_rows,
   update_user,
   update_user_by_uuid_and_id,
   delete_user,

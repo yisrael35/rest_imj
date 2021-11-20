@@ -35,13 +35,15 @@ const get_user = async (uuid, req, result) => {
     return result.status(404).end()
   }
 }
-const get_users = async (result) => {
+const get_users = async (filters, result) => {
   try {
-    const user_details = await db_helper.get(query.get_users())
+    const user_details = await db_helper.get(query.get_users(filters))
     if (!user_details) {
       return result.status(404).end()
     }
-    return result.status(200).send(user_details)
+    const meta_data = await get_meta_data(filters)
+    // console.log(meta_data)
+    return result.status(200).send({ users: user_details, meta_data })
   } catch (error) {
     return result.status(404).end()
   }
@@ -82,6 +84,20 @@ const delete_user = async (uuid, result) => {
   } catch (error) {
     return result.status(404).end()
   }
+}
+
+const get_meta_data = (filters) => {
+  return new Promise(async (resolve, reject) => {
+    let { limit, offset } = filters
+    let [{ sum }] = await db_helper.get(query.get_sum_rows(filters))
+    const meta_data = {
+      sum_rows: sum,
+      limit: limit,
+      page: offset == 0 ? 1 : JSON.parse(Math.ceil(offset / limit)) + 1,
+      sum_pages: Math.ceil(sum / limit),
+    }
+    return resolve(meta_data)
+  })
 }
 
 module.exports = {
