@@ -1,6 +1,6 @@
 const get_event_type = () => {
   return `
-    SELECT name, id FROM event_type; 
+    SELECT name, id, languege, content, fields FROM event_type; 
   `
 }
 const get_locations = () => {
