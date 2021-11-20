@@ -9,7 +9,7 @@ const create_event = async (payload, result) => {
     }
     return result.status(200).end()
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return result.status(400).end()
   }
 }
@@ -26,13 +26,15 @@ const get_event = async (uuid, result) => {
     return result.status(404).end()
   }
 }
-const get_events = async (result) => {
+const get_events = async (filters, result) => {
   try {
-    const event_details = await db_helper.get(query.get_events())
+    const event_details = await db_helper.get(query.get_events(filters))
     if (!event_details) {
       return result.status(404).end()
     }
-    return result.status(200).send(event_details)
+    const meta_data = await get_meta_data(filters)
+
+    return result.status(200).send({ events: event_details, meta_data })
   } catch (error) {
     return result.status(404).end()
   }
@@ -60,6 +62,20 @@ const delete_event = async (uuid, result) => {
   } catch (error) {
     return result.status(404).end()
   }
+}
+
+const get_meta_data = (filters) => {
+  return new Promise(async (resolve, reject) => {
+    let { limit, offset } = filters
+    let [{ sum }] = await db_helper.get(query.get_sum_rows(filters))
+    const meta_data = {
+      sum_rows: sum,
+      limit: limit,
+      page: offset == 0 ? 1 : JSON.parse(Math.ceil(offset / limit)) + 1,
+      sum_pages: Math.ceil(sum / limit),
+    }
+    return resolve(meta_data)
+  })
 }
 
 module.exports = {

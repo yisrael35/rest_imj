@@ -1,59 +1,56 @@
 const Logger = require('logplease')
-const logger = Logger.create('event.controller.js')
-const event_service = require('./event.service')
-const helper = require('../../utils/helper')
+const logger = Logger.create('location.controller.js')
+const location_service = require('./location.service')
 
-const create_event = async (req, res) => {
+const create_location = async (req, res) => {
   try {
     const body_parameters = await process_payload(req.body)
     if (!body_parameters) {
       return res.status(400).end()
     }
-    event_service.create_event(body_parameters, res)
+    location_service.create_location(body_parameters, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
 
-const get_event = async (req, res) => {
+const get_location = async (req, res) => {
   try {
     const uuid = req.params.id
     if (!uuid) {
       return res.status(400).end()
     }
-    event_service.get_event(uuid, res)
+    location_service.get_location(uuid, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
-const get_events = async (req, res) => {
+const get_locations = async (req, res) => {
   try {
-    const filters = await helper.process_filters(req.query)
-
-    event_service.get_events(filters, res)
+    location_service.get_locations(res)
   } catch (error) {
     return res.status(400).end()
   }
 }
-const update_event = async (req, res) => {
+const update_location = async (req, res) => {
   try {
     const uuid = req.params.id
     const body_parameters = await process_payload(req.body)
     if (!uuid || !body_parameters) {
       return res.status(400).end()
     }
-    event_service.update_event(body_parameters, uuid, res)
+    location_service.update_location(body_parameters, uuid, res)
   } catch (error) {
     return res.status(400).end()
   }
 }
-const delete_event = async (req, res) => {
+const delete_location = async (req, res) => {
   try {
     const uuid = req.params.id
     if (!uuid) {
       return res.status(400).end()
     }
-    event_service.delete_event(uuid, res)
+    location_service.delete_location(uuid, res)
   } catch (error) {
     return res.status(400).end()
   }
@@ -66,8 +63,14 @@ function process_payload(payload) {
       for (const [key, val] of Object.entries(payload)) {
         if (val !== undefined) {
           switch (key) {
-            case 'eventcol':
-              processed_payload.eventcol = val.trim()
+            case 'name_en':
+              processed_payload.name_en = val.trim()
+              break
+            case 'name_he':
+              processed_payload.name_he = val.trim()
+              break
+            case 'mapping':
+              processed_payload.mapping = val.trim()
               break
             default:
               return reject({ status: 400 })
@@ -76,16 +79,16 @@ function process_payload(payload) {
       }
       return resolve(processed_payload)
     } catch (error) {
-      logger.error(`Failed to process event payload, The error: ${error}`)
+      logger.error(`Failed to process location payload, The error: ${error}`)
       return reject({ status: 404, error: '4.11' })
     }
   })
 }
 
 module.exports = {
-  create_event,
-  get_event,
-  get_events,
-  update_event,
-  delete_event,
+  create_location,
+  get_location,
+  get_locations,
+  update_location,
+  delete_location,
 }

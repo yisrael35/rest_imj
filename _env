@@ -21,3 +21,6 @@ TEST_URL= http://localhost:3001
 IMJ_URL= https://react-imj.herokuapp.com
 REDIRECT_URL_FORGOT_PASSWORD= http://localhost:3000
 IMJ_FROM= no-reply@react-imj.herokuapp.com
+
+USERNAME_TEST= y@gmail.com
+PASSWORD_TEST= 12345678
