@@ -66,7 +66,7 @@ function process_payload(payload) {
               processed_payload.level = val
               break
             case 'email':
-              processed_payload.level = val
+              processed_payload.email = val
               break
             default:
               return reject({ status: 400 })
