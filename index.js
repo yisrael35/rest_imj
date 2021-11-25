@@ -5,7 +5,7 @@ const server = express()
 server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
-server.use(cors())
+server.use(cors('*'))
 
 // Files of the Routes
 const auth_routes = require('./api/auth/auth.routes')
@@ -30,7 +30,6 @@ server.use('/location', location_routes)
 server.use('/utils', utils_routes)
 server.use('/cost', cost_routes)
 server.use('/schedule_event', schedule_event_routes)
-
 
 const port = process.env.APP_PORT || 3001
 server.listen(port, () => {
