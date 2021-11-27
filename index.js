@@ -6,7 +6,7 @@ server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 
 server.use(cors('*'))
-
+server.use('/assets', express.static('pdf_files'))
 // Files of the Routes
 const auth_routes = require('./api/auth/auth.routes')
 const user_routes = require('./api/user/user.routes')
