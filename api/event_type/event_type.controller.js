@@ -70,7 +70,7 @@ function process_payload(payload) {
               processed_payload.language = val.trim()
               break
             case 'content':
-              processed_payload.content = val.trim()
+              processed_payload.content = JSON.stringify(val)
               break
             case 'fields':
               processed_payload.fields = JSON.stringify(val)
@@ -94,4 +94,5 @@ module.exports = {
   get_event_types,
   update_event_type,
   delete_event_type,
+  process_payload,
 }
