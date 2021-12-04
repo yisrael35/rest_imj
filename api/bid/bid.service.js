@@ -8,8 +8,9 @@ const create_bid = async (payload, result) => {
     const res_bid = await db_helper.update(query.create_bid(bid), bid)
     let bid_id = res_bid.insertId
     if (!bid_id) {
-      return result.status(404).end()
+      return result.status(400).end()
     }
+   
     for (const sch_e of schedule_event) {
       sch_e.bid_id = bid_id
       const res_schedule_event = await db_helper.update(query.create_schedule_event(sch_e), sch_e)
@@ -26,6 +27,12 @@ const create_bid = async (payload, result) => {
         return result.status(400).end()
       }
     }
+    
+    const client = {name: bid.client_name}
+    const res_client = await db_helper.update(query.create_client(client), client)
+    if (!res_client.affectedRows) {
+      console.log('res_client -- error')
+    }
 
     return result.status(200).send({ bid_id })
   } catch (error) {
@@ -36,11 +43,13 @@ const create_bid = async (payload, result) => {
 
 const get_bid = async (uuid, result) => {
   try {
-    const bid_details = await db_helper.get(query.get_bid_by_uuid(uuid))
-    if (!bid_details.length) {
+    const [bid_details] = await db_helper.get(query.get_bid_by_uuid(uuid))
+    const bid_costs_details = await db_helper.get(query.get_bid_costs(uuid))
+    const bid_schedule_event_details = await db_helper.get(query.get_bid_schedule_event(uuid))
+    if (!bid_details) {
       return result.status(404).end()
     }
-    return result.status(200).send(bid_details[0])
+    return result.status(200).send({ bid: bid_details, costs: bid_costs_details, schedule_event: bid_schedule_event_details })
   } catch (error) {
     console.log(error)
     return result.status(404).end()
