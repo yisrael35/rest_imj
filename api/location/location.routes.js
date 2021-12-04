@@ -10,4 +10,5 @@ router.put('/:id', checkJWT, update_location)
 router.post('/', checkJWT, create_location) 
 router.delete('/:id', checkJWT, delete_location) 
 
+
 module.exports = router

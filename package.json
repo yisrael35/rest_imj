@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/yisrael35/rest_imj#readme",
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.15",
+    "pdfmake": "^0.2.4"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",

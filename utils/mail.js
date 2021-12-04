@@ -201,7 +201,7 @@ const share_file = () => {
               <td id="credeantials">
                 <p>Hello,</p>
                 <br />
-                <p>You will find a pdf file attached to this email with the bid</p>
+                <p>You will find a pdf file attached to this email</p>
                 <br />
                 <br />
                 <p>Sincerely,</p>
