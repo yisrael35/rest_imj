@@ -104,6 +104,9 @@ function process_payload(payload) {
             case 'phone':
               processed_payload.phone = val
               break
+            case 'is_active':
+              processed_payload.is_active = val
+              break
             default:
               return reject({ status: 400 })
           }
@@ -112,7 +115,7 @@ function process_payload(payload) {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process user payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 404 })
     }
   })
 }

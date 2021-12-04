@@ -1,4 +1,4 @@
--- INSERT INTO user SET username='omer', password=('ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'), level=1, is_active=1, first_name='עומר', last_name='צור', email='omer@imj.org.il';
+-- INSERT INTO user SET username='omer', password=('ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'), level=1, is_active=1, first_name='עומר', last_name='צור', email='imj.org.il';
 
 INSERT INTO user SET username='yisrael', password=('ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'), level=1, is_active=1, first_name='Yisrael', last_name='Bar', email='yisrael35@gmail.com';
 INSERT INTO user SET username='elad.david5', password=('ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'), level=1, is_active=1, first_name='Elad', last_name='David', email='elad.david5@gmail.com';
