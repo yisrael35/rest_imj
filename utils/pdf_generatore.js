@@ -2,7 +2,7 @@ const pdfmake = require('pdfmake')
 const fs = require('fs')
 const db_helper = require('./db_helper')
 const query = require('../sql/queries/pdf_generator')
-// const pdf_temp = require('./pdf_temp')
+// const pdf_temp = require('./edit_pdf')
 
 const fonts = {
   Roboto: {
@@ -42,8 +42,6 @@ const pdf_generator = async (id, fields) => {
     return { status: 500 }
   }
 }
-
-// pdf_generator(25)
 
 module.exports = {
   pdf_generator,
