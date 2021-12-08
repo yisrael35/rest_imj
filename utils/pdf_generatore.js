@@ -2,14 +2,14 @@ const pdfmake = require('pdfmake')
 const fs = require('fs')
 const db_helper = require('./db_helper')
 const query = require('../sql/queries/pdf_generator')
-// const pdf_temp = require('./edit_pdf')
+// const pdf_temp = require('./edit_pdf/pdf_editor')
 
 const fonts = {
   Roboto: {
-    normal: __dirname + '\\Open Sans Hebrew\\OpenSansHebrew-Regular.ttf',
-    bold: __dirname + '\\Open Sans Hebrew\\OpenSansHebrew-Bold.ttf',
-    italics: __dirname + '\\Open Sans Hebrew\\OpenSansHebrew-Italic.ttf',
-    bolditalics: __dirname + '\\Open Sans Hebrew\\OpenSansHebrew-Bolditalic.ttf',
+    normal: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Regular.ttf',
+    bold: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Bold.ttf',
+    italics: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Italic.ttf',
+    bolditalics: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Bolditalic.ttf',
   },
 }
 

@@ -34,11 +34,11 @@ const create_pdf = async (req, res) => {
 
 const delete_pdf = async (req, res) => {
   try {
-    const uuid = req.params.id
-    if (!uuid) {
+    const file_name = req.params.id
+    if (!file_name) {
       return res.status(400).end()
     }
-    pdf_service.delete_pdf(uuid, res)
+    pdf_service.delete_pdf(file_name, res)
   } catch (error) {
     return res.status(400).end()
   }
