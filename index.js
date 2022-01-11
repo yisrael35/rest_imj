@@ -4,6 +4,7 @@ const path = require('path')
 const server = express()
 server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
+require('./ws/ws_service')
 
 server.use(cors('*'))
 server.use('/assets', express.static('pdf_files'))
@@ -37,7 +38,7 @@ server.use('/pdf', pdf_routes)
 
 // const template = require('./utils/pdf_generatore')
 
-const port = process.env.APP_PORT || 3001
+const port = process.env.HTTP_PORT || 3001
 server.listen(port, () => {
-  console.log('Server is running on:', port)
+  console.log('HTTP Server is running on:', port)
 })

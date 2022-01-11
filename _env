@@ -1,5 +1,6 @@
 # APP configoratins
-APP_PORT= 3001
+HTTP_PORT= 3001
+WS_PORT= 3020
 
 # DB configoratins
 DB_HOST= localhost

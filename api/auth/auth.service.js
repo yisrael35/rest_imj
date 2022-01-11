@@ -10,7 +10,7 @@ const ALG_TOKEN = 'HS256'
 const sign_in = async (payload, result) => {
   try {
     const [user] = await db_helper.get(query.login(payload))
-    const user_details = await get_token(user)
+    const user_details = await create_token(user)
     return result.status(200).send(user_details)
   } catch (error) {
     return result.status(404).end()
@@ -45,7 +45,7 @@ const sign_out = async (payload, result) => {
 }
 
 // create token in database
-function create_token(token, user_id) {
+function save_token_in_db(token, user_id) {
   return new Promise(async (resolve, reject) => {
     try {
       const token_details = {
@@ -62,7 +62,7 @@ function create_token(token, user_id) {
 }
 
 // create token
-function get_token(user) {
+function create_token(user) {
   return new Promise(async (resolve, reject) => {
     try {
       const exp = EXP_TOKEN
@@ -79,7 +79,7 @@ function get_token(user) {
         if (err) {
           throw err
         }
-        await create_token(token, user.id)
+        await save_token_in_db(token, user.id)
 
         const user_details = {
           user: {
