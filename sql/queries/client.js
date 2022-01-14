@@ -24,9 +24,8 @@ const update_client = (client, uuid) => {
 
 const delete_client = (uuid) => {
   return `
-  UPDATE client 
-  SET is_active = IF(is_active , 0,1)
-  WHERE uuid = '${uuid}';`
+  DELETE FROM client WHERE uuid = '${uuid}'; 
+  `
 }
 
 module.exports = {

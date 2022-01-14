@@ -66,11 +66,11 @@ function process_payload(payload) {
             case 'name':
               processed_payload.name = val.trim()
               break
-            case 'email':
-              processed_payload.email = val.trim()
+            case 'type':
+              processed_payload.type = val.trim()
               break
-            case 'phone':
-              processed_payload.phone = val.trim()
+            case 'contact':
+              processed_payload.contact = JSON.stringify(val)
               break
             default:
               return reject({ status: 400 })

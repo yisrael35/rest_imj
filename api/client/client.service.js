@@ -54,6 +54,7 @@ const delete_client = async (uuid, result) => {
   try {
     const { err, res } = await db_helper.update_just_query(query.delete_client(uuid))
     if (err || !res.affectedRows) {
+      console.log(err)
       return result.status(404).end()
     }
     return result.status(200).end()
