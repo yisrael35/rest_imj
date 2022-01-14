@@ -1,6 +1,9 @@
 const mysql = require('mysql')
 require('dotenv').config()
 
+const Logger = require('logplease')
+const logger = Logger.create('./utils/db.js')
+
 // Create a connection to the database
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -12,7 +15,7 @@ const connection = mysql.createConnection({
 // open the MySQL connection
 connection.connect((error) => {
   if (error) throw error
-  console.log(`Successfully connected to database: ${process.env.DB_NAME}.`)
+  logger.log(`Successfully connected to database: ${process.env.DB_NAME}.`)
 })
 
 module.exports = connection

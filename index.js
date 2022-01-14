@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
+const Logger = require('logplease')
+const logger = Logger.create('index.js')
 const server = express()
 server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
@@ -40,5 +42,5 @@ server.use('/pdf', pdf_routes)
 
 const port = process.env.HTTP_PORT || 3001
 server.listen(port, () => {
-  console.log('HTTP Server is running on:', port)
+  logger.log('HTTP Server is running on:', port)
 })
