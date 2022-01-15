@@ -1,5 +1,7 @@
 const query = require('../../sql/queries/event')
 const db_helper = require('../../utils/db_helper')
+const ws_service = require('../../ws/services/ws_service')
+const { message_builder } = require('../../ws/helpers/message_builder')
 
 const create_event = async (payload, result) => {
   try {
@@ -7,6 +9,12 @@ const create_event = async (payload, result) => {
     if (!res.insertId) {
       return result.status(404).end()
     }
+    
+    //TODO -- send to ws the updated events
+    const wss = ws_service.get_wss_of_ws_service()
+    wss.clients.forEach((ws) => {
+      // ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events: myEventsList }, code: '200' })))
+    })
     return result.status(200).end()
   } catch (error) {
     console.log(error)

@@ -6,7 +6,7 @@ const logger = Logger.create('index.js')
 const server = express()
 server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
-require('./ws/ws_service')
+require('./ws/services/ws_service')
 
 server.use(cors('*'))
 server.use('/assets', express.static('pdf_files'))
