@@ -1,6 +1,7 @@
 const Logger = require('logplease')
 const logger = Logger.create('event.controller.js')
 const client_service = require('./client.service')
+const helper = require('../../utils/helper')
 
 const create_client = async (req, res) => {
   try {
@@ -27,7 +28,8 @@ const get_client = async (req, res) => {
 }
 const get_clients = async (req, res) => {
   try {
-    client_service.get_clients(res)
+    const filters = await helper.process_filters(req.query)
+    client_service.get_clients(filters, res)
   } catch (error) {
     return res.status(400).end()
   }

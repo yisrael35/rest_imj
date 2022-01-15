@@ -10,11 +10,24 @@ const get_client_by_uuid = (uuid) => {
   FROM client WHERE uuid = '${uuid}';`
 }
 
-const get_clients = () => {
+const get_clients = ({ search, limit, offset }) => {
   return `
   SELECT *
-  FROM client;`
+  FROM client
+  ${search ? `WHERE contact LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
+    LIMIT ${limit} OFFSET ${offset}
+    ;`
 }
+
+const get_sum_rows = ({ search }) => {
+  return `
+    SELECT 
+    COUNT(DISTINCT id) AS sum
+    FROM client 
+    ${search ? `WHERE contact LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
+    ;`
+}
+
 const update_client = (client, uuid) => {
   return `
   UPDATE client 
@@ -34,4 +47,5 @@ module.exports = {
   get_clients,
   update_client,
   delete_client,
+  get_sum_rows,
 }
