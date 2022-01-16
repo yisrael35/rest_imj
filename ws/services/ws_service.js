@@ -5,6 +5,7 @@ const session_manager = require('../helpers/session_manager')
 const auth_manager = require('../helpers/auth_manager')
 const { message_type } = require('../helpers/message_handler')
 const { message_builder } = require('../helpers/message_builder')
+const { get_events } = require('../models/event')
 const Logger = require('logplease')
 const logger = Logger.create('ws/ws_service.js')
 const server = createServer()
@@ -88,7 +89,8 @@ const handle_token = async (token, ws) => {
   ws.send(JSON.stringify(message_builder({ type: 'login', error: false, content: `login success`, code: '200' })))
 
   //TODO -- replace my event list with real data
-  ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events: myEventsList }, code: '200' })))
+  get_events({}, ws)
+  // ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events: myEventsList }, code: '200' })))
 }
 
 exports.get_wss_of_ws_service = get_wss_of_ws_service

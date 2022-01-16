@@ -52,6 +52,15 @@ const get_clients_by_uuids = (uuids) => {
   FROM client 
   WHERE uuid IN (${uuids.map((item) => `'${item}'`)});`
 }
+const get_suppliers_by_uuids = (uuids) => {
+  return `
+  SELECT id
+  FROM supplier 
+  WHERE uuid IN (${uuids.map((item) => `'${item}'`)});`
+}
+
+
+
 
 module.exports = {
   create_event,
@@ -62,4 +71,5 @@ module.exports = {
   delete_event,
   get_user_by_uuid,
   get_clients_by_uuids,
+  get_suppliers_by_uuids,
 }

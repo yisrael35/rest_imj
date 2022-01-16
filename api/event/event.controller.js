@@ -101,7 +101,9 @@ const process_payload = (payload) => {
               processed_payload.clients = JSON.stringify(clients)
               break
             case 'type':
-              //TODO
+              if (val !== 'public' && val !== 'private' && val !== 'inside' && val !== 'photo_shot') {
+                return reject({ status: 400 })
+              }
               processed_payload.type = val.trim()
               break
             case 'comment':
@@ -114,8 +116,15 @@ const process_payload = (payload) => {
               processed_payload.check_list = val
               break
             case 'suppliers':
-              //TODO
-              processed_payload.suppliers = JSON.stringify(val)
+              let res_suppliers = await db_helper.get(query.get_suppliers_by_uuids(val))
+              if (!res_suppliers) {
+                return reject({ status: 404 })
+              }
+              const suppliers = []
+              for (const client of res_suppliers) {
+                suppliers.push(client.id)
+              }
+              processed_payload.suppliers = JSON.stringify(suppliers)
               break
             default:
               return reject({ status: 400 })

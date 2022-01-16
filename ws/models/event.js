@@ -2,10 +2,22 @@
 const Logger = require('logplease')
 const logger = Logger.create('ws/models/events.js')
 const { message_builder } = require('../helpers/message_builder')
-const get_events = (message, ws) => {
+const db_helper = require('../../utils/db_helper')
+const query = require('../../sql/queries/event')
+
+const get_events = async (message, ws) => {
   try {
+    const event_details = await db_helper.get(query.get_events({ search: '', limit: 30, offset: 0 }))
+    const events = []
+    for (const event of event_details) {
+      events.push({
+        title: event.name,
+        start: event.from_date,
+        end: event.to_date,
+      })
+    }
     //TODO -- replace my event list with real data
-    ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events: myEventsList }, code: '200' })))
+    ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events }, code: '200' })))
   } catch (error) {
     logger.error(error)
     return ws.send(JSON.stringify(message_builder({ type: 'events', error: true, content: message, code: '400' })))
