@@ -1,7 +1,7 @@
 const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0
 
-function return_encrypt_email(email) {
+const return_encrypt_email = (email) => {
   if (typeof email !== 'string') {
     email = email[0]
   }
@@ -10,17 +10,18 @@ function return_encrypt_email(email) {
   return split_email[0] + '@' + split_email[1]
 }
 
-function check_password(password) {
+const check_password = (password) => {
   return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-,]).{8,200}/.test(password)
 }
 
-function validateEmail(email) {
+const validateEmail = (email) => {
   var re = /\S+@\S+\.\S+/
   return re.test(email)
 }
 
 // process filters
-function process_filters(payload) {
+
+const process_filters = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}

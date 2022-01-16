@@ -106,7 +106,7 @@ var pdfDoc = printer.createPdfKitDocument(pdf_content)
 pdfDoc.pipe(fs.createWriteStream('./utils/edit_pdf/result.pdf'))
 pdfDoc.end()
 
-fs.writeFile('./utils/edit_pdf/pdf_data.txt','Content field: \n' + JSON.stringify(pdf_content) + '\n fields field: \n' + JSON.stringify(variables), function (err) {
+fs.writeFile('./utils/edit_pdf/pdf_data.txt', 'Content field: \n' + JSON.stringify(pdf_content) + '\n fields field: \n' + JSON.stringify(variables), (err) => {
   if (err) {
     return console.log(err)
   }

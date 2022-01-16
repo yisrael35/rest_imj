@@ -76,7 +76,7 @@ const delete_user = async (req, res) => {
 }
 
 // process login payload (req)
-function process_payload(payload) {
+const process_payload = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}

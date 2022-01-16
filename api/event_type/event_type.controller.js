@@ -56,7 +56,7 @@ const delete_event_type = async (req, res) => {
   }
 }
 
-function process_payload(payload) {
+const process_payload = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}

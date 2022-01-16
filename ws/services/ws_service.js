@@ -29,7 +29,7 @@ wss.on('connection', async (ws, req) => {
     return
   }
 
-  ws.on('message', function incoming(message) {
+  ws.on('message', (message) => {
     try {
       logger.log('---------------------------------------')
       const session = session_manager.get_session(ws.id)

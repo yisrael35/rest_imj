@@ -76,7 +76,7 @@ const delete_cost = async (req, res) => {
   }
 }
 
-function process_payload_create(data) {
+const process_payload_create = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res_cost = []
@@ -118,7 +118,7 @@ function process_payload_create(data) {
   })
 }
 
-function process_payload_update(payload) {
+const process_payload_update = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}

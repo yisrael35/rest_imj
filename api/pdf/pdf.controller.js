@@ -60,7 +60,7 @@ const get_fields = async (event_type_id, unprocessed_data) => {
   return process_data
 }
 
-function process_payload(payload) {
+const process_payload = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}

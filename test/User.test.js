@@ -1,6 +1,6 @@
 const axios = require('axios')
 require('dotenv').config()
-function generate_password(length) {
+const generate_password = (length) => {
   var result = ''
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   var characters_length = characters.length

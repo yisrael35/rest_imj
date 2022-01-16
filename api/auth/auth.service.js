@@ -45,7 +45,7 @@ const sign_out = async (payload, result) => {
 }
 
 // create token in database
-function save_token_in_db(token, user_id) {
+const save_token_in_db = (token, user_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const token_details = {
@@ -62,7 +62,7 @@ function save_token_in_db(token, user_id) {
 }
 
 // create token
-function create_token(user) {
+const create_token = (user) => {
   return new Promise(async (resolve, reject) => {
     try {
       const exp = EXP_TOKEN

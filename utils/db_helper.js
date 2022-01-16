@@ -1,7 +1,7 @@
 const sql = require('./db')
 
 // get data from database
-function get(sql_query) {
+const get = (sql_query) => {
   return new Promise((resolve, reject) => {
     sql.query(`${sql_query}`, (err, res) => {
       if (err) {
@@ -13,7 +13,7 @@ function get(sql_query) {
 }
 
 // update in database
-function update(query, data) {
+const update = (query, data) => {
   return new Promise((resolve, reject) => {
     try {
       sql.query(`${query}`, Object.values(data), (err, res) => {
@@ -29,7 +29,7 @@ function update(query, data) {
 }
 
 // update in database
-function update_just_query(query) {
+const update_just_query = (query) => {
   return new Promise((resolve, reject) => {
     try {
       sql.query(`${query}`, (err, res) => {

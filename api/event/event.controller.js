@@ -1,7 +1,10 @@
 const Logger = require('logplease')
 const logger = Logger.create('event.controller.js')
 const event_service = require('./event.service')
+const db_helper = require('../../utils/db_helper')
+const query = require('../../sql/queries/event')
 const helper = require('../../utils/helper')
+const moment = require('moment')
 
 const create_event = async (req, res) => {
   try {
@@ -59,15 +62,60 @@ const delete_event = async (req, res) => {
   }
 }
 
-function process_payload(payload) {
+const process_payload = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}
       for (const [key, val] of Object.entries(payload)) {
         if (val !== undefined) {
           switch (key) {
-            case 'eventcol':
-              processed_payload.eventcol = val.trim()
+            case 'name':
+              processed_payload.name = val.trim()
+              break
+            case 'user':
+              let user_uuid = val
+              let [res_user] = await db_helper.get(query.get_user_by_uuid(user_uuid))
+              if (!res_user) {
+                return reject({ status: 404 })
+              }
+              processed_payload.user_id = Number(res_user.id)
+              break
+            case 'from_date':
+              processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              break
+            case 'to_data':
+              processed_payload.to_data = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              break
+            case 'status':
+              processed_payload.status = val.trim()
+              break
+            case 'clients':
+              let res_clients = await db_helper.get(query.get_clients_by_uuids(val))
+              if (!res_clients) {
+                return reject({ status: 404 })
+              }
+              const clients = []
+              for (const client of res_clients) {
+                clients.push(client.id)
+              }
+              processed_payload.clients = JSON.stringify(clients)
+              break
+            case 'type':
+              //TODO
+              processed_payload.type = val.trim()
+              break
+            case 'comment':
+              processed_payload.comment = val.trim()
+              break
+            case 'budget':
+              processed_payload.budget = val
+              break
+            case 'check_list':
+              processed_payload.check_list = val
+              break
+            case 'suppliers':
+              //TODO
+              processed_payload.suppliers = JSON.stringify(val)
               break
             default:
               return reject({ status: 400 })

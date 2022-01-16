@@ -40,6 +40,19 @@ const delete_event = (uuid) => {
   WHERE uuid = '${uuid}';`
 }
 
+const get_user_by_uuid = (uuid) => {
+  return `
+  SELECT id
+  FROM user WHERE uuid = '${uuid}';`
+}
+
+const get_clients_by_uuids = (uuids) => {
+  return `
+  SELECT id
+  FROM client 
+  WHERE uuid IN (${uuids.map((item) => `'${item}'`)});`
+}
+
 module.exports = {
   create_event,
   get_event_by_uuid,
@@ -47,4 +60,6 @@ module.exports = {
   get_sum_rows,
   update_event,
   delete_event,
+  get_user_by_uuid,
+  get_clients_by_uuids,
 }
