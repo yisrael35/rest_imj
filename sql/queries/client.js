@@ -14,7 +14,7 @@ const get_clients = ({ search, limit, offset }) => {
   return `
   SELECT *
   FROM client
-  ${search ? `WHERE contact LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
+  ${search ? `WHERE email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
     LIMIT ${limit} OFFSET ${offset}
     ;`
 }
@@ -24,7 +24,7 @@ const get_sum_rows = ({ search }) => {
     SELECT 
     COUNT(DISTINCT id) AS sum
     FROM client 
-    ${search ? `WHERE contact LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
+    ${search ? `WHERE  email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
     ;`
 }
 

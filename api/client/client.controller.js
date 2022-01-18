@@ -71,8 +71,11 @@ const process_payload = (payload) => {
             case 'type':
               processed_payload.type = val.trim()
               break
-            case 'contact':
-              processed_payload.contact = JSON.stringify(val)
+            case 'email':
+              processed_payload.email =  val.trim()
+              break
+            case 'phone':
+              processed_payload.phone =  val.trim()
               break
             default:
               return reject({ status: 400 })
