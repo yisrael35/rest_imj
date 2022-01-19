@@ -23,6 +23,7 @@ const utils_routes = require('./api/utils/utils.routes')
 const cost_routes = require('./api/cost/cost.routes')
 const schedule_event_routes = require('./api/schedule_event/schedule_event.routes')
 const pdf_routes = require('./api/pdf/pdf.routes')
+const supplier_routes = require('./api/supplier/supplier.routes')
 
 // Routes
 server.use('/auth', auth_routes)
@@ -37,6 +38,7 @@ server.use('/utils', utils_routes)
 server.use('/cost', cost_routes)
 server.use('/schedule_event', schedule_event_routes)
 server.use('/pdf', pdf_routes)
+server.use('/supplier', supplier_routes)
 
 // const template = require('./utils/pdf_generatore')
 
