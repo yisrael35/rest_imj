@@ -8,6 +8,7 @@ const moment = require('moment')
 
 const create_event = async (req, res) => {
   try {
+
     const body_parameters = await process_payload(req.body)
     if (!body_parameters) {
       return res.status(400).end()
@@ -83,8 +84,8 @@ const process_payload = (payload) => {
             case 'from_date':
               processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
               break
-            case 'to_data':
-              processed_payload.to_data = moment(val).format('YYYY-MM-DD HH:mm:ss')
+            case 'to_date':
+              processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
               break
             case 'status':
               processed_payload.status = val.trim()

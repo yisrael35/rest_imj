@@ -10,20 +10,29 @@ const get_event_by_uuid = (uuid) => {
   FROM event WHERE uuid = '${uuid}';`
 }
 
-const get_events = ({ search, limit, offset }) => {
+const get_events = ({ search, limit, offset, from_date, to_date }) => {
   return `
   SELECT *
   FROM event
-  ${search ? `WHERE id LIKE '%${search}%'  OR uuid LIKE '%${search}%' ` : ''}
+  WHERE
+  ${from_date ? `from_date >= '${from_date}' AND` : ''}
+  ${to_date ? `to_date <= '${to_date}' AND` : ''}
+  ${search ? ` id LIKE '%${search}%'  OR uuid LIKE '%${search}%' AND ` : ''}
+  1=1
   ORDER BY created_at DESC
-  LIMIT ${limit} OFFSET ${offset}
+  ${limit ? ` LIMIT ${limit}` : ''}  ${offset ? ` OFFSET ${offset}` : ''}
   ;`
 }
-const get_sum_rows = ({ search }) => {
+
+const get_sum_rows = ({ search, from_date, to_date }) => {
   return `
-  SELECT *
+  SELECT count(id) AS sum
   FROM event
-  ${search ? `WHERE id LIKE '%${search}%'  OR uuid LIKE '%${search}%'` : ''}
+  WHERE
+  ${from_date ? `from_date >= '${from_date}' AND` : ''}
+  ${to_date ? `to_date <= '${to_date}' AND` : ''}
+  ${search ? ` id LIKE '%${search}%'  OR uuid LIKE '%${search}%' AND` : ''}
+  1 = 1
   ;`
 }
 const update_event = (event, uuid) => {
@@ -58,9 +67,6 @@ const get_suppliers_by_uuids = (uuids) => {
   FROM supplier 
   WHERE uuid IN (${uuids.map((item) => `'${item}'`)});`
 }
-
-
-
 
 module.exports = {
   create_event,

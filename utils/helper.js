@@ -1,3 +1,6 @@
+const Logger = require('logplease')
+const logger = Logger.create('utils/helper.js')
+const moment = require('moment')
 const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0
 
@@ -42,6 +45,12 @@ const process_filters = (payload) => {
               break
             case 'search':
               processed_payload.search = val.trim()
+              break
+            case 'from_date':
+              processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              break
+            case 'to_date':
+              processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
               break
             default:
               return reject({ status: 400 })

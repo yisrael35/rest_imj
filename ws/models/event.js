@@ -1,13 +1,21 @@
-// const { message_builder } = require('../helpers/message_handler')
 const Logger = require('logplease')
 const logger = Logger.create('ws/models/events.js')
 const { message_builder } = require('../helpers/message_builder')
 const db_helper = require('../../utils/db_helper')
 const query = require('../../sql/queries/event')
+const moment = require('moment')
+const helper = require('../../utils/helper')
 
 const get_events = async (message, ws) => {
   try {
-    const event_details = await db_helper.get(query.get_events({ search: '', limit: 30, offset: 0 }))
+    let filters
+    if (message && message.data) {
+      filters = await process_filters(message.data)
+    } else {
+      filters = await process_filters({})
+    }
+
+    const event_details = await db_helper.get(query.get_events(filters))
     const events = []
     for (const event of event_details) {
       events.push({
@@ -16,7 +24,6 @@ const get_events = async (message, ws) => {
         end: event.to_date,
       })
     }
-    //TODO -- replace my event list with real data
     ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events }, code: '200' })))
   } catch (error) {
     logger.error(error)
@@ -24,6 +31,38 @@ const get_events = async (message, ws) => {
   }
 }
 module.exports = { get_events }
+
+const process_filters = (payload) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const processed_payload = {}
+      for (const [key, val] of Object.entries(payload)) {
+        if (val !== undefined) {
+          switch (key) {
+            case 'search':
+              processed_payload.search = val.trim()
+              break
+            case 'from_date':
+              processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              break
+            case 'to_date':
+              processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              break
+            default:
+              return reject({ status: 400 })
+          }
+        }
+      }
+      processed_payload.from_date = processed_payload.from_date ? processed_payload.from_date : moment().startOf('month').format('YYYY-MM-DD HH:mm:ss')
+      processed_payload.to_date = processed_payload.to_date ? processed_payload.to_date : moment().endOf('month').format('YYYY-MM-DD HH:mm:ss')
+      return resolve(processed_payload)
+    } catch (error) {
+      console.log(error);
+      logger.error(`Failed to process user payload, The error: ${error}`)
+      return reject({ status: 404, error: '4.11' })
+    }
+  })
+}
 
 const myEventsList = [
   {
