@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/yisrael35/rest_imj#readme",
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.15",
+    "pdfmake": "^0.2.4"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",
@@ -34,6 +35,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-openapi-validator": "^3.9.1",
+    "http": "0.0.1-security",
     "jest": "^27.2.0",
     "jshashes": "^1.0.8",
     "jsonwebtoken": "^8.5.1",
@@ -41,6 +43,8 @@
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "node-forge": "^0.10.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "uuid": "^8.3.2",
+    "ws": "^8.4.0"
   }
 }

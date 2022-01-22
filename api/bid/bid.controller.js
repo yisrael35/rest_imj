@@ -76,7 +76,7 @@ const delete_bid = async (req, res) => {
   }
 }
 
-function process_payload_main(payload) {
+const process_payload_main = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}
@@ -108,7 +108,7 @@ function process_payload_main(payload) {
   })
 }
 
-function process_payload_bid(payload) {
+const process_payload_bid = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}
@@ -178,7 +178,7 @@ function process_payload_bid(payload) {
   })
 }
 
-function process_payload_schedule_event(schedule_event) {
+const process_payload_schedule_event = (schedule_event) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res_schedule_event = []
@@ -211,7 +211,7 @@ function process_payload_schedule_event(schedule_event) {
   })
 }
 
-function process_payload_costs(cost) {
+const process_payload_costs = (cost) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res_cost = []

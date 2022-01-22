@@ -52,7 +52,7 @@ test('test of signout', async () => {
   const result = await axios.delete(url + '/auth')
   expect(result.status).toBe(200)
 })
-function generate_password(length) {
+const generate_password = (length) => {
   var result = ''
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   var characters_length = characters.length

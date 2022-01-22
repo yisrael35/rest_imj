@@ -3,14 +3,22 @@ const create_bid = (details) => {
   INSERT INTO bid (${Object.keys(details)})
   VALUES (${Object.values(details).map((u) => '?')});`
 }
+
 const create_schedule_event = (details) => {
   return `
   INSERT INTO schedule_event (${Object.keys(details)})
   VALUES (${Object.values(details).map((u) => '?')});`
 }
+
 const create_costs = (details) => {
   return `
   INSERT INTO cost (${Object.keys(details)})
+  VALUES (${Object.values(details).map((u) => '?')});`
+}
+
+const create_client = (details) => {
+  return `
+  INSERT INTO client (${Object.keys(details)})
   VALUES (${Object.values(details).map((u) => '?')});`
 }
 
@@ -19,6 +27,7 @@ const get_user_by_uuid = (uuid) => {
   SELECT id
   FROM user WHERE uuid = '${uuid}';`
 }
+
 const get_bid_by_uuid = (uuid) => {
   return `
   SELECT 
@@ -44,8 +53,34 @@ const get_bid_by_uuid = (uuid) => {
   JOIN location l ON l.id = b.location_id
   JOIN event_type et ON et.id = b.event_type_id
   JOIN user u ON u.id = b.user_id
-
   WHERE b.uuid = '${uuid}';`
+}
+
+const get_bid_costs = (uuid) => {
+  return `
+    SELECT 
+    c.id,
+    c.description,
+    c.amount,
+    c.unit_cost,
+    c.total_cost,
+    c.discount,
+    c.comment
+    FROM bid b 
+    LEFT JOIN cost c ON c.bid_id = b.id
+    WHERE b.uuid = '${uuid}';`
+}
+
+const get_bid_schedule_event = (uuid) => {
+  return `
+    SELECT 
+    sc.id,
+    sc.start_activity,
+    sc.end_activity,
+    sc.description
+    FROM bid b 
+    LEFT JOIN schedule_event sc ON sc.bid_id = b.id
+    WHERE b.uuid = '${uuid}';`
 }
 
 const get_bids = ({ search, limit, offset }) => {
@@ -120,8 +155,11 @@ module.exports = {
   create_bid,
   create_schedule_event,
   create_costs,
+  create_client,
   get_user_by_uuid,
   get_bid_by_uuid,
+  get_bid_costs,
+  get_bid_schedule_event,
   get_bids,
   get_sum_rows,
   update_bid,

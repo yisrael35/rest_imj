@@ -17,7 +17,7 @@ const forgot_password = async (payload, result) => {
       return result.status(404).end()
     }
 
-    const user_details = await get_token(user)
+    const user_details = await create_token(user)
     const msg = {
       to: user.email,
       from: `${process.env.IMJ_FROM}`,
@@ -65,7 +65,7 @@ const change_password = async (payload, user_id, result) => {
 }
 
 // create token in database
-function create_token(token, user_id) {
+const save_token_in_db = (token, user_id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const token_details = {
@@ -82,7 +82,7 @@ function create_token(token, user_id) {
 }
 
 // create token
-function get_token(user) {
+const create_token = (user) => {
   return new Promise(async (resolve, reject) => {
     try {
       const exp = EXP_TOKEN
@@ -99,7 +99,7 @@ function get_token(user) {
         if (err) {
           throw err
         }
-        await create_token(token, user.id)
+        await save_token_in_db(token, user.id)
 
         const user_details = {
           user: {

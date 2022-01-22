@@ -1,6 +1,7 @@
 const Logger = require('logplease')
 const logger = Logger.create('event.controller.js')
 const client_service = require('./client.service')
+const helper = require('../../utils/helper')
 
 const create_client = async (req, res) => {
   try {
@@ -27,7 +28,8 @@ const get_client = async (req, res) => {
 }
 const get_clients = async (req, res) => {
   try {
-    client_service.get_clients(res)
+    const filters = await helper.process_filters(req.query)
+    client_service.get_clients(filters, res)
   } catch (error) {
     return res.status(400).end()
   }
@@ -56,7 +58,7 @@ const delete_client = async (req, res) => {
   }
 }
 
-function process_payload(payload) {
+const process_payload = (payload) => {
   return new Promise(async (resolve, reject) => {
     try {
       const processed_payload = {}
@@ -66,11 +68,14 @@ function process_payload(payload) {
             case 'name':
               processed_payload.name = val.trim()
               break
+            case 'type':
+              processed_payload.type = val.trim()
+              break
             case 'email':
-              processed_payload.email = val.trim()
+              processed_payload.email =  val.trim()
               break
             case 'phone':
-              processed_payload.phone = val.trim()
+              processed_payload.phone =  val.trim()
               break
             default:
               return reject({ status: 400 })

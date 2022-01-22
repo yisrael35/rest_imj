@@ -26,7 +26,8 @@ const get_email_by_username = (username) => {
     SELECT 
     id,
     uuid,
-    name,
+    first_name,
+    last_name,
     email,
     level
     FROM user 

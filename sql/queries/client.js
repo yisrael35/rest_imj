@@ -10,11 +10,24 @@ const get_client_by_uuid = (uuid) => {
   FROM client WHERE uuid = '${uuid}';`
 }
 
-const get_clients = () => {
+const get_clients = ({ search, limit, offset }) => {
   return `
   SELECT *
-  FROM client;`
+  FROM client
+  ${search ? `WHERE email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
+    LIMIT ${limit} OFFSET ${offset}
+    ;`
 }
+
+const get_sum_rows = ({ search }) => {
+  return `
+    SELECT 
+    COUNT(DISTINCT id) AS sum
+    FROM client 
+    ${search ? `WHERE  email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
+    ;`
+}
+
 const update_client = (client, uuid) => {
   return `
   UPDATE client 
@@ -24,9 +37,8 @@ const update_client = (client, uuid) => {
 
 const delete_client = (uuid) => {
   return `
-  UPDATE client 
-  SET is_active = IF(is_active , 0,1)
-  WHERE uuid = '${uuid}';`
+  DELETE FROM client WHERE uuid = '${uuid}'; 
+  `
 }
 
 module.exports = {
@@ -35,4 +47,5 @@ module.exports = {
   get_clients,
   update_client,
   delete_client,
+  get_sum_rows,
 }
