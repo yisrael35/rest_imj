@@ -80,7 +80,7 @@ CREATE TABLE `client` (
   `id` int NOT NULL AUTO_INCREMENT,
   `uuid` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `type` enum('private','company','departmment') NOT NULL DEFAULT 'private',
+  `type` enum('private','company','department') NOT NULL DEFAULT 'private',
   `email` varchar(45) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
