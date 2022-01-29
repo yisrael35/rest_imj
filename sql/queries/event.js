@@ -6,14 +6,35 @@ const create_event = (details) => {
 
 const get_event_by_uuid = (uuid) => {
   return `
-  SELECT *
-  FROM event WHERE uuid = '${uuid}';`
+  SELECT 
+  e.uuid AS id,
+  e.name,
+  u.first_name AS user,
+  e.from_date,
+  e.to_date,
+  e.status,
+  e.type,
+  e.clients,
+  e.comment,
+  e.check_list,
+  e.suppliers,
+  e.budget
+  FROM event e
+  JOIN user u ON u.id = e.user_id
+  WHERE e.uuid = '${uuid}';`
 }
 
 const get_events = ({ search, limit, offset, from_date, to_date }) => {
   return `
-  SELECT *
-  FROM event
+  SELECT 
+    uuid AS id,
+    name,
+    from_date,
+    to_date,
+    status,
+    type,
+    comment
+  FROM event e
   WHERE
   ${from_date ? `from_date >= '${from_date}' AND` : ''}
   ${to_date ? `to_date <= '${to_date}' AND` : ''}

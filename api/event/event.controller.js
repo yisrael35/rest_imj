@@ -8,7 +8,6 @@ const moment = require('moment')
 
 const create_event = async (req, res) => {
   try {
-
     const body_parameters = await process_payload(req.body)
     if (!body_parameters) {
       return res.status(400).end()
@@ -88,6 +87,9 @@ const process_payload = (payload) => {
               processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
               break
             case 'status':
+              if (val !== 'pending' && val !== 'approved' && val !== 'canceled ') {
+                return reject({ status: 400 })
+              }
               processed_payload.status = val.trim()
               break
             case 'clients':
