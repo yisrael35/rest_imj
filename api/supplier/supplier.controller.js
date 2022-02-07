@@ -69,7 +69,7 @@ const process_payload = (payload) => {
               processed_payload.name = val.trim()
               break
             case 'account':
-              processed_payload.type = JSON.stringify(val)
+              processed_payload.account = JSON.stringify(val)
               break
             case 'email':
               processed_payload.email =  val.trim()

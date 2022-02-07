@@ -28,9 +28,7 @@ const get_supplier = async (uuid, result) => {
 }
 const get_suppliers = async (filters, result) => {
   try {
-    console.log(filters);
     const supplier_details = await db_helper.get(query.get_suppliers(filters))
-    console.log(supplier_details);
     if (!supplier_details) {
       return result.status(404).end()
     }
