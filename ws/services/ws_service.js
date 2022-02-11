@@ -7,7 +7,7 @@ const { message_type } = require('../helpers/message_handler')
 const { message_builder } = require('../helpers/message_builder')
 const { get_events } = require('../models/event')
 const Logger = require('logplease')
-const logger = Logger.create('ws/ws_service.js')
+const logger = Logger.create('./ws/ws_service.js')
 const server = createServer()
 
 const wss = new WebSocket.Server({ server })
@@ -78,7 +78,6 @@ logger.log('WS Server is running on:', process.env.WS_PORT)
 
 const handle_token = async (token, ws) => {
   login_data = await auth_manager.checkJWT(token)
-
   const new_session = {
     ...login_data,
     authenticate: true,

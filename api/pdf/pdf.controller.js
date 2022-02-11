@@ -47,7 +47,7 @@ const delete_pdf = async (req, res) => {
 const get_fields = async (event_type_id, unprocessed_data) => {
   const [res_event_type] = await db_helper.get(query.get_event_type(event_type_id))
   if (!res_event_type) {
-    console.log('res_event_type failed')
+    logger.error('res_event_type failed')
     throw Error
   }
   let fields = JSON.parse(res_event_type['fields'])
@@ -86,7 +86,7 @@ const process_payload = (payload) => {
       }
       return resolve(processed_payload)
     } catch (error) {
-      logger.error(`Failed to process location payload, The error: ${error}`)
+      logger.error(`Failed to process pdf payload, The error: ${error}`)
       return reject({ status: 404, error: '4.11' })
     }
   })

@@ -1,5 +1,8 @@
 const query = require('../../sql/queries/client')
 const db_helper = require('../../utils/db_helper')
+const Logger = require('logplease')
+const logger = Logger.create('api/client/client.service.js')
+const csv_generator = require('../../workers/csv_worker')
 
 const create_client = async (payload, result) => {
   try {
@@ -9,7 +12,7 @@ const create_client = async (payload, result) => {
     }
     return result.status(200).end()
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -22,7 +25,7 @@ const get_client = async (uuid, result) => {
     }
     return result.status(200).send(client_details[0])
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -32,9 +35,19 @@ const get_clients = async (filters, result) => {
     if (!client_details) {
       return result.status(404).end()
     }
+    if (filters.csv) {
+      const res_csv = await csv_generator.create_csv_file(client_details)
+      if (res_csv.status === 200) {
+        const file_name = res_csv.file_name
+        return result.status(200).send({ file_name })
+      } else {
+        return result.status(res_csv.status).send("failed to create csv")
+      }
+    }
     const meta_data = await get_meta_data(filters)
     return result.status(200).send({ clients: client_details, meta_data })
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -47,6 +60,7 @@ const update_client = async (payload, uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -55,11 +69,12 @@ const delete_client = async (uuid, result) => {
   try {
     const { err, res } = await db_helper.update_just_query(query.delete_client(uuid))
     if (err || !res.affectedRows) {
-      console.log(err)
+      logger.error(err)
       return result.status(404).end()
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }

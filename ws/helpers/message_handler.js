@@ -1,6 +1,6 @@
 const event = require('../models/event')
 const Logger = require('logplease')
-const logger = Logger.create('ws/helper/message_handler.js')
+const logger = Logger.create('./ws/helper/message_handler.js')
 const { message_builder } = require('./message_builder')
 
 const message_type = (message, ws) => {

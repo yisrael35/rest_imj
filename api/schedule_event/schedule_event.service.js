@@ -1,7 +1,7 @@
 const query = require('../../sql/queries/schedule_event')
 const db_helper = require('../../utils/db_helper')
 const Logger = require('logplease')
-const logger = Logger.create('schedule_event.service.js')
+const logger = Logger.create('./api/schedule_event/schedule_event.service.js')
 
 const create_schedule_event = async (schedule_events, { bid_id, event_id }, result) => {
   try {
@@ -16,7 +16,7 @@ const create_schedule_event = async (schedule_events, { bid_id, event_id }, resu
     }
     return result.status(200).end()
   } catch (error) {
-    logger.log(error)
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -29,7 +29,7 @@ const get_schedule_event = async (uuid, result) => {
     }
     return result.status(200).send(schedule_event_details[0])
   } catch (error) {
-    logger.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -41,6 +41,7 @@ const get_schedule_events = async (result) => {
     }
     return result.status(200).send(schedule_event_details)
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -53,6 +54,7 @@ const update_schedule_event = async (payload, uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -65,6 +67,7 @@ const delete_schedule_event = async (uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }

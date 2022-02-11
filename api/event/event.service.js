@@ -1,7 +1,9 @@
 const query = require('../../sql/queries/event')
 const db_helper = require('../../utils/db_helper')
-const ws_service = require('../../ws/services/ws_service')
-const { message_builder } = require('../../ws/helpers/message_builder')
+const Logger = require('logplease')
+const logger = Logger.create('event.service.js')
+const event = require('../../ws/models/event')
+const csv_generator = require('../../workers/csv_worker')
 
 const create_event = async (payload, result) => {
   try {
@@ -9,23 +11,10 @@ const create_event = async (payload, result) => {
     if (!res.insertId) {
       return result.status(404).end()
     }
-
-    const event_details = await db_helper.get(query.get_events({ search: '', limit: 30, offset: 0 }))
-    const events = []
-    for (const event of event_details) {
-      events.push({
-        title: event.name,
-        start: event.from_date,
-        end: event.to_date,
-      })
-    }
-    const wss = ws_service.get_wss_of_ws_service()
-    wss.clients.forEach((ws) => {
-      ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events }, code: '200' })))
-    })
+    event.send_update_event_to_all()
     return result.status(200).end()
   } catch (error) {
-    console.log(error)
+    logger.log(error)
     return result.status(400).end()
   }
 }
@@ -38,7 +27,7 @@ const get_event = async (uuid, result) => {
     }
     return result.status(200).send(event_details[0])
   } catch (error) {
-    console.log(error)
+    logger.log(error)
     return result.status(404).end()
   }
 }
@@ -48,10 +37,20 @@ const get_events = async (filters, result) => {
     if (!event_details) {
       return result.status(404).end()
     }
+    if (filters.csv) {
+      const res_csv = await csv_generator.create_csv_file(event_details)
+      if (res_csv.status === 200) {
+        const file_name = res_csv.file_name
+        return result.status(200).send({ file_name })
+      } else {
+        return result.status(res_csv.status).send('failed to create csv')
+      }
+    }
     const meta_data = await get_meta_data(filters)
 
     return result.status(200).send({ events: event_details, meta_data })
   } catch (error) {
+    logger.log(error)
     return result.status(404).end()
   }
 }
@@ -62,8 +61,10 @@ const update_event = async (payload, uuid, result) => {
     if (!res.affectedRows) {
       return result.status(404).end()
     }
+    event.send_update_event_to_all()
     return result.status(200).end()
   } catch (error) {
+    logger.log(error)
     return result.status(400).end()
   }
 }
@@ -76,6 +77,7 @@ const delete_event = async (uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.log(error)
     return result.status(404).end()
   }
 }

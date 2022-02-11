@@ -6,7 +6,7 @@ const SHA256 = new Hashes.SHA256()
 const helper = require('../../utils/helper')
 const create_user = async (req, res) => {
   try {
-    //validte - admin only
+    //validate - admin only
     let level = req.headers.bearerAuth.user.level
     if (level !== 1) {
       return res.status(403).end()

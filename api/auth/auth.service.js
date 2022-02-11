@@ -2,6 +2,8 @@ const query = require('../../sql/queries/auth')
 const db_helper = require('../../utils/db_helper')
 const jwt = require('jsonwebtoken')
 const AceBase64Crypto = require('../../utils/AceBase64Crypto')
+const Logger = require('logplease')
+const logger = Logger.create('api/auth/auth.service.js')
 
 const EXP_TOKEN = '1d'
 const ALG_TOKEN = 'HS256'
@@ -10,9 +12,13 @@ const ALG_TOKEN = 'HS256'
 const sign_in = async (payload, result) => {
   try {
     const [user] = await db_helper.get(query.login(payload))
+    if (!user) {
+      return result.status(403).end()
+    }
     const user_details = await create_token(user)
     return result.status(200).send(user_details)
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -23,6 +29,7 @@ const sign_up = async (payload, result) => {
     await db_helper.update(query.create_user(payload), payload)
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -40,6 +47,7 @@ const sign_out = async (payload, result) => {
 
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -56,6 +64,7 @@ const save_token_in_db = (token, user_id) => {
       const res = await db_helper.update(query.create_token(token_details), token_details)
       return resolve(res)
     } catch (error) {
+      logger.error(error)
       return reject(error)
     }
   })
@@ -92,6 +101,7 @@ const create_token = (user) => {
         return resolve(user_details)
       })
     } catch (error) {
+      logger.error(error)
       return reject(error)
     }
   })

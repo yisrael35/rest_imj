@@ -1,5 +1,7 @@
 const pdfmake = require('pdfmake')
 const fs = require('fs')
+const Logger = require('logplease')
+const logger = Logger.create('./utils/edit_pdf/pdf_editor.js')
 
 const fonts = {
   Roboto: {
@@ -29,7 +31,7 @@ let variables = {
   schedul: 'ראשון שני שלישי ^ רביעי',
 }
 
-const replate_str = (str, to, index) => {
+const replace_str = (str, to, index) => {
   var chars = str.split('')
   chars[index] = to
   return chars.join('')
@@ -65,11 +67,11 @@ const str_to_he = (str = '') => {
   for (word in str) {
     for (ch in str[word]) {
       if (str[word][ch] == '(') {
-        str[word] = replate_str(')', ch)
+        str[word] = replace_str(')', ch)
         last_change_ch = ch
         last_change_word = word
       } else if (str[word][ch] == ')') {
-        str[word] = replate_str('(', ch)
+        str[word] = replace_str('(', ch)
         last_change_ch = ch
         last_change_word = word
       }
@@ -108,7 +110,7 @@ pdfDoc.end()
 
 fs.writeFile('./utils/edit_pdf/pdf_data.txt', 'Content field: \n' + JSON.stringify(pdf_content) + '\n fields field: \n' + JSON.stringify(variables), (err) => {
   if (err) {
-    return console.log(err)
+    return logger.error(err)
   }
 })
 

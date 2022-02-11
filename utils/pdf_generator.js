@@ -2,6 +2,8 @@ const pdfmake = require('pdfmake')
 const fs = require('fs')
 const db_helper = require('./db_helper')
 const query = require('../sql/queries/pdf_generator')
+const Logger = require('logplease')
+const logger = Logger.create('./utils/pdf_generator.js')
 // const pdf_temp = require('./edit_pdf/pdf_editor')
 
 const fonts = {
@@ -17,7 +19,7 @@ const pdf_generator = async (id, fields) => {
   try {
     const [event_type_details] = await db_helper.get(query.get_event_type(id))
     if (!event_type_details) {
-      console.log('couldnt get event type from db')
+      logger.error("couldn't get event type from db")
       return { status: 404 }
     }
     let pdf_content = event_type_details['content']
@@ -38,7 +40,7 @@ const pdf_generator = async (id, fields) => {
     pdfDoc.end()
     return { status: 200, file_name }
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return { status: 500 }
   }
 }

@@ -1,5 +1,7 @@
 const axios = require('axios')
 require('dotenv').config()
+const Logger = require('logplease')
+const logger = Logger.create('./test/auth.test.js')
 
 let token
 const url = process.env.TEST_URL
@@ -16,8 +18,8 @@ test('test of signin fields', async () => {
     expect(result.data).toHaveProperty('token')
     expect(result.data).toHaveProperty('user')
   } catch (error) {
-    console.log('error in signin')
-    console.log(error.response.status)
+    logger.error('error in sign_in')
+    logger.error(error.response.status)
   }
 })
 
@@ -29,8 +31,8 @@ test('test of signup', async () => {
     const result = await axios.post(url + '/auth', new_user)
     expect(result.status).toBe(200)
   } catch (error) {
-    console.log('error in signup')
-    console.log(error.response.status)
+    logger.error('error in signup')
+    logger.error(error.response.status)
   }
 })
 
@@ -42,7 +44,7 @@ test(' delete user by id ', async () => {
     let res_delete_user = await axios.delete(`${url}/user/${user_id}`)
     expect(res_delete_user.status).toBe(200)
   } catch (error) {
-    console.log(error.response.status)
+    logger.log(error.response.status)
 
     expect(false).toBeTruthy()
   }

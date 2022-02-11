@@ -1,19 +1,25 @@
 const Logger = require('logplease')
-const logger = Logger.create('ws/models/events.js')
+const logger = Logger.create('./ws/models/events.js')
 const { message_builder } = require('../helpers/message_builder')
 const db_helper = require('../../utils/db_helper')
 const query = require('../../sql/queries/event')
 const moment = require('moment')
-const helper = require('../../utils/helper')
+const ws_service = require('../services/ws_service')
+const session_manager = require('../helpers/session_manager')
 
 const get_events = async (message, ws) => {
   try {
     let filters
+
     if (message && message.data) {
       filters = await process_filters(message.data)
     } else {
       filters = await process_filters({})
     }
+    let session = session_manager.get_session(ws.id)
+
+    session['events'] = filters
+    session_manager.update_session(ws.id, session)
 
     const event_details = await db_helper.get(query.get_events(filters))
     const events = []
@@ -32,7 +38,33 @@ const get_events = async (message, ws) => {
     return ws.send(JSON.stringify(message_builder({ type: 'events', error: true, content: message, code: '400' })))
   }
 }
-module.exports = { get_events }
+
+const send_update_event_to_all = async () => {
+  try {
+    const wss = ws_service.get_wss_of_ws_service()
+    for (const ws of wss.clients) {
+      let session = session_manager.get_session(ws.id)
+      const filters = session.events
+      const event_details = await db_helper.get(query.get_events(filters))
+      const events = []
+      for (const event of event_details) {
+        events.push({
+          title: event.name,
+          start: event.from_date,
+          end: event.to_date,
+        })
+      }
+      ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events }, code: '200' })))
+    }
+  } catch (error) {
+    logger.error(error)
+  }
+}
+
+module.exports = {
+  get_events,
+  send_update_event_to_all,
+}
 
 const get_meta_data = (filters) => {
   return new Promise(async (resolve, reject) => {
@@ -75,8 +107,7 @@ const process_filters = (payload) => {
       processed_payload.to_date = processed_payload.to_date ? processed_payload.to_date : moment().endOf('month').format('YYYY-MM-DD HH:mm:ss')
       return resolve(processed_payload)
     } catch (error) {
-      console.log(error)
-      logger.error(`Failed to process user payload, The error: ${error}`)
+      logger.error(`Failed to process event payload, The error: ${error}`)
       return reject({ status: 404, error: '4.11' })
     }
   })

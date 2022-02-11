@@ -1,5 +1,7 @@
 const query = require('../../sql/queries/event_type')
 const db_helper = require('../../utils/db_helper')
+const Logger = require('logplease')
+const logger = Logger.create('./api/event_type/event_type.service.js')
 
 const create_event_type = async (payload, result) => {
   try {
@@ -9,7 +11,7 @@ const create_event_type = async (payload, result) => {
     }
     return result.status(200).end()
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -22,7 +24,7 @@ const get_event_type = async (id, result) => {
     }
     return result.status(200).send(event_type_details[0])
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -34,6 +36,7 @@ const get_event_types = async (result) => {
     }
     return result.status(200).send(event_type_details)
   } catch (error) {
+    logger.log(error)
     return result.status(404).end()
   }
 }
@@ -46,6 +49,7 @@ const update_event_type = async (payload, id, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.log(error)
     return result.status(400).end()
   }
 }
@@ -58,6 +62,7 @@ const delete_event_type = async (id, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.log(error)
     return result.status(404).end()
   }
 }

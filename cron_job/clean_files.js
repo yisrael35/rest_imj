@@ -1,5 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+const Logger = require('logplease')
+const logger = Logger.create('./cron_job/clean_files.js')
 
 const clean_files = async () => {
   try {
@@ -12,7 +14,7 @@ const clean_files = async () => {
       }
     })
   } catch (error) {
-    console.log(error)
+    logger.error(error)
   }
 }
 clean_files()

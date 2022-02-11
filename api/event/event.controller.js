@@ -81,13 +81,19 @@ const process_payload = (payload) => {
               processed_payload.user_id = Number(res_user.id)
               break
             case 'from_date':
-              processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              if (!moment(val).format('YYYY-MM-DD HH:mm:ss')) {
+                return reject({ status: 400 })
+              }
+              processed_payload.from_date = val
               break
             case 'to_date':
-              processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              if (!moment(val).format('YYYY-MM-DD HH:mm:ss')) {
+                return reject({ status: 400 })
+              }
+              processed_payload.to_date = val
               break
             case 'status':
-              if (val !== 'pending' && val !== 'approved' && val !== 'canceled ') {
+              if (val !== 'pending' && val !== 'approved' && val !== 'canceled') {
                 return reject({ status: 400 })
               }
               processed_payload.status = val.trim()
