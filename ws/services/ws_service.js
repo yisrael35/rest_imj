@@ -32,7 +32,6 @@ wss.on('connection', async (ws, req) => {
 
   ws.on('message', (message) => {
     try {
-      logger.log('---------------------------------------')
       const session = session_manager.get_session(ws.id)
       if (!session || !session.authenticate) {
         ws.send(JSON.stringify(message_builder({ type: 'login', error: true, content: 'Unauthorized', code: '401' })))

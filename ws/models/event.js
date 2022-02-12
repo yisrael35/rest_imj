@@ -28,6 +28,7 @@ const get_events = async (message, ws) => {
         title: event.name,
         start: event.from_date,
         end: event.to_date,
+        bgColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
       })
     }
     const meta_data = await get_meta_data(filters)
@@ -52,6 +53,7 @@ const send_update_event_to_all = async () => {
           title: event.name,
           start: event.from_date,
           end: event.to_date,
+          bgColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
         })
       }
       ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events }, code: '200' })))
