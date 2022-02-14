@@ -8,8 +8,14 @@ const get_locations = () => {
     SELECT name_he AS name,  id FROM location; 
   `
 }
+const get_clients = () => {
+  return `
+    SELECT name, id FROM client; 
+  `
+}
 
 module.exports = {
   get_event_type,
   get_locations,
+  get_clients,
 }

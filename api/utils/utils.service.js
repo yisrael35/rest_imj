@@ -11,6 +11,7 @@ const get_utils = async (result, level) => {
       tables.push('user')
     }
     data['tables'] = tables
+    data['clients'] = await db_helper.get(query.get_clients())
     data['locations'] = await db_helper.get(query.get_locations())
     data['event_type'] = await db_helper.get(query.get_event_type())
     return result.status(200).send(data)

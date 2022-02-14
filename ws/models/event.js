@@ -24,11 +24,15 @@ const get_events = async (message, ws) => {
     const event_details = await db_helper.get(query.get_events(filters))
     const events = []
     for (const event of event_details) {
+      const { id, name, from_date, to_date, status, type, comment } = event
       events.push({
-        title: event.name,
-        start: event.from_date,
-        end: event.to_date,
-        bgColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
+        id,
+        title: name,
+        start: from_date,
+        end: to_date,
+        status,
+        type,
+        comment,
       })
     }
     const meta_data = await get_meta_data(filters)
@@ -49,11 +53,15 @@ const send_update_event_to_all = async () => {
       const event_details = await db_helper.get(query.get_events(filters))
       const events = []
       for (const event of event_details) {
+        const { id, name, from_date, to_date, status, type, comment } = event
         events.push({
-          title: event.name,
-          start: event.from_date,
-          end: event.to_date,
-          bgColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
+          id,
+          title: name,
+          start: from_date,
+          end: to_date,
+          status,
+          type,
+          comment,
         })
       }
       ws.send(JSON.stringify(message_builder({ type: 'events', error: false, content: { events }, code: '200' })))
