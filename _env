@@ -25,3 +25,7 @@ IMJ_FROM= no-reply@react-imj.herokuapp.com
 
 USERNAME_TEST= y@gmail.com
 PASSWORD_TEST= 12345678
+
+RABBITMQ_URL= 
+RABBITMQ_CHANNEL_NAME= 
+QUEUE_LOGGER_ACTIVATE= false

@@ -1,12 +1,16 @@
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
-const Logger = require('logplease')
-const logger = Logger.create('./index.js')
 const server = express()
 server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 require('./ws/services/ws_service')
+const Logger = require('logplease')
+const logger = Logger.create('./index.js')
+
+if (process.env.QUEUE_LOGGER_ACTIVATE === 'true') {
+  require('./utils/log_queue').init_queue()
+}
 
 server.use(cors('*'))
 server.use('/assets', express.static('files'))
@@ -46,5 +50,5 @@ server.use('/supplier', supplier_routes)
 
 const port = process.env.HTTP_PORT || 3001
 server.listen(port, () => {
-  logger.log('HTTP Server is running on:', port)
+  logger.log(`HTTP Server is running on: ${port}`)
 })

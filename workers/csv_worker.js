@@ -1,5 +1,5 @@
 const Logger = require('logplease')
-const logger = Logger.create('workers/csv_worker.js')
+const logger = Logger.create('./workers/csv_worker.js')
 const { StaticPool } = require('node-worker-threads-pool')
 
 //Create new worker
