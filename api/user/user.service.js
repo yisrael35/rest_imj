@@ -45,7 +45,7 @@ const get_users = async (filters, result) => {
     if (!user_details) {
       return result.status(404).end()
     }
-    if (filters.csv) {
+    if (filters.csv && filters.csv === 'true') {
       const res_csv = await csv_generator.create_csv_file(user_details)
       if (res_csv.status === 200) {
         const file_name = res_csv.file_name

@@ -35,13 +35,13 @@ const get_suppliers = async (filters, result) => {
     if (!supplier_details) {
       return result.status(404).end()
     }
-    if (filters.csv) {
+    if (filters.csv && filters.csv === 'true') {
       const res_csv = await csv_generator.create_csv_file(supplier_details)
       if (res_csv.status === 200) {
         const file_name = res_csv.file_name
         return result.status(200).send({ file_name })
       } else {
-        return result.status(res_csv.status).send("failed to create csv")
+        return result.status(res_csv.status).send('failed to create csv')
       }
     }
     const meta_data = await get_meta_data(filters)
