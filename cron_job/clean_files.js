@@ -5,7 +5,8 @@ const logger = Logger.create('./cron_job/clean_files.js')
 
 const clean_files = async () => {
   try {
-    const dit_path = path.join(path.resolve(), '..', 'files')
+    // const dit_path = path.join(path.resolve(), '..', 'files') // -- windows
+    const dit_path = path.join(path.resolve(), 'files') // -- linux
     const files = fs.readdirSync(dit_path)
     files.forEach((file) => {
       if (file !== '.gitkeep') {
