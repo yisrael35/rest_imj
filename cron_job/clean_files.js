@@ -13,6 +13,8 @@ const clean_files = async () => {
         fs.unlinkSync(file_path)
       }
     })
+
+    logger.log('cronjob finish successfully')
   } catch (error) {
     logger.error(error)
   }
