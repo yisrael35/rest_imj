@@ -10,7 +10,8 @@ const clean_files = async () => {
     const files = fs.readdirSync(dit_path)
     files.forEach((file) => {
       if (file !== '.gitkeep') {
-        const file_path = path.join(path.resolve(), '..', 'files', file)
+        // const file_path = path.join(path.resolve(), '..', 'files', file)// -- windows
+        const file_path = path.join(path.resolve(), 'rest_imj', 'files', file) // -- linux
         fs.unlinkSync(file_path)
       }
     })
