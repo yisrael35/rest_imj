@@ -42,7 +42,7 @@ const create_pdf = async ({ event_type_id, fields, email }, result) => {
       } else {
         return result.status(res_pdf.status).end()
       }
-    }, 1500)
+    }, 4000)
   } catch (error) {
     logger.error(error)
     return result.status(400).end()
