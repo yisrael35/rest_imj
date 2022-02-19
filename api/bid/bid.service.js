@@ -31,11 +31,7 @@ const create_bid = async (payload, result) => {
       }
     }
 
-    const client = { name: bid.client_name }
-    const res_client = await db_helper.update(query.create_client(client), client)
-    if (!res_client.affectedRows) {
-      logger.error('res_client -- error')
-    }
+  
 
     return result.status(200).send({ bid_id })
   } catch (error) {

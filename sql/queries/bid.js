@@ -42,7 +42,8 @@ const get_bid_by_uuid = (uuid) => {
   b.total_a_discount,
   b.total_discount,
   b.currency,
-  b.client_name,
+  c.name AS client,
+  c.email AS client_email,
   b.event_name,
   b.event_date,
   b.max_participants,
@@ -53,6 +54,7 @@ const get_bid_by_uuid = (uuid) => {
   JOIN location l ON l.id = b.location_id
   JOIN event_type et ON et.id = b.event_type_id
   JOIN user u ON u.id = b.user_id
+  JOIN client c ON c.id = b.client_id
   WHERE b.uuid = '${uuid}';`
 }
 
@@ -97,7 +99,7 @@ const get_bids = ({ search, limit, offset }) => {
   b.total_a_discount,
   b.total_discount,
   b.currency,
-  b.client_name,
+  c.name AS client,
   b.event_name,
   b.event_date,
   b.max_participants,
@@ -108,10 +110,10 @@ const get_bids = ({ search, limit, offset }) => {
   JOIN location l ON l.id = b.location_id
   JOIN event_type et ON et.id = b.event_type_id
   JOIN user u ON u.id = b.user_id
+  JOIN client c ON c.id = b.client_id
   ${
     search
       ? `WHERE b.id LIKE '%${search}%'  OR b.uuid LIKE '%${search}%' OR b.event_name LIKE '%${search}%'
-  OR b.client_name LIKE '%${search}%'
   `
       : ''
   }
@@ -128,10 +130,10 @@ const get_sum_rows = ({ search }) => {
   JOIN location l ON l.id = b.location_id
   JOIN event_type et ON et.id = b.event_type_id
   JOIN user u ON u.id = b.user_id
+  JOIN client c ON c.id = b.client_id
   ${
     search
       ? `WHERE b.id LIKE '%${search}%'  OR b.uuid LIKE '%${search}%' OR b.event_name LIKE '%${search}%'
-  OR b.client_name LIKE '%${search}%'
   `
       : ''
   }
@@ -151,6 +153,12 @@ const delete_bid = (uuid) => {
   `
 }
 
+const get_client_by_uuid = (uuid) => {
+  return `
+  SELECT id
+  FROM client WHERE uuid = '${uuid}';`
+}
+
 module.exports = {
   create_bid,
   create_schedule_event,
@@ -164,4 +172,5 @@ module.exports = {
   get_sum_rows,
   update_bid,
   delete_bid,
+  get_client_by_uuid,
 }

@@ -26,7 +26,9 @@ const create_csv_file = async ({ data }) => {
       })
 
       await csvWriter.writeRecords(data).then(async () => {
-        return resolve({ file_name, status: 200 })
+        setTimeout(() => {
+          return resolve({ file_name, status: 200 })
+        }, 2000)
       })
     } catch (error) {
       logger.error(error)
@@ -38,4 +40,3 @@ const create_csv_file = async ({ data }) => {
 parentPort.on('message', async (data) => {
   parentPort.postMessage(await create_csv_file(data))
 })
-

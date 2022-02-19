@@ -10,7 +10,7 @@ const get_locations = () => {
 }
 const get_clients = () => {
   return `
-    SELECT name, id FROM client; 
+    SELECT name, uuid AS id FROM client; 
   `
 }
 

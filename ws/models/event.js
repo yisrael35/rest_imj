@@ -14,7 +14,7 @@ const get_events = async (message, ws) => {
     if (message && message.data) {
       filters = await process_filters(message.data)
     } else {
-      filters = await process_filters({})
+      filters = await process_filters({ status: 'approved' })
     }
     let session = session_manager.get_session(ws.id)
 
@@ -101,6 +101,12 @@ const process_filters = (payload) => {
           switch (key) {
             case 'search':
               processed_payload.search = val.trim()
+              break
+            case 'status':
+              if (val !== 'pending' && val !== 'approved' && val !== 'canceled') {
+                return reject({ status: 400 })
+              }
+              processed_payload.status = val.trim()
               break
             case 'from_date':
               processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
