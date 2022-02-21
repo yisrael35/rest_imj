@@ -24,7 +24,7 @@ const get_event_by_uuid = (uuid) => {
   WHERE e.uuid = '${uuid}';`
 }
 
-const get_events = ({ search, limit, offset, from_date, to_date }) => {
+const get_events = ({ search, limit, offset, from_date, to_date, status }) => {
   return `
   SELECT 
     uuid AS id,
@@ -39,6 +39,7 @@ const get_events = ({ search, limit, offset, from_date, to_date }) => {
   ${from_date ? `from_date >= '${from_date}' AND` : ''}
   ${to_date ? `to_date <= '${to_date}' AND` : ''}
   ${search ? ` id LIKE '%${search}%'  OR uuid LIKE '%${search}%' AND ` : ''}
+  ${status ? `status = '${status}' AND` : ''}
   1=1
   ORDER BY created_at DESC
   ${limit ? ` LIMIT ${limit}` : ''}  ${offset ? ` OFFSET ${offset}` : ''}

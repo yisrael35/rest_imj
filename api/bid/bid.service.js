@@ -36,6 +36,7 @@ const create_bid = async (payload, result) => {
     if (!res_client.affectedRows) {
       logger.error('res_client -- error')
     }
+  
 
     return result.status(200).send({ bid_id })
   } catch (error) {

@@ -16,7 +16,7 @@ const clean_files = async () => {
       }
     })
 
-    logger.log('cronjob finish successfully')
+    logger.info('cronjob finish successfully')
   } catch (error) {
     logger.error(error)
   }

@@ -136,7 +136,11 @@ const process_payload_bid = (payload) => {
               processed_payload.event_date = val.trim()
               break
             case 'client_id':
-              processed_payload.client_id = Number(val)
+              const [res_client] = await db_helper.get(query.get_client_by_uuid(val))
+              if (!res_client) {
+                return reject({ status: 404 })
+              }
+              processed_payload.client_id = res_client.id
               break
             case 'event_name':
               processed_payload.event_name = val.trim()
