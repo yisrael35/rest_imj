@@ -72,6 +72,13 @@ const process_payload = (payload) => {
             case 'name':
               processed_payload.name = val.trim()
               break
+            case 'bid_id':
+              const [res_bid] = await db_helper.get(query.get_bid_by_uuid(val.trim()))
+              if (!res_bid) {
+                return reject({ status: 404 })
+              }
+              processed_payload.bid_id = res_bid.id
+              break
             case 'user':
               let user_uuid = val
               let [res_user] = await db_helper.get(query.get_user_by_uuid(user_uuid))

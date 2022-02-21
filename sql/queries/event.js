@@ -76,6 +76,11 @@ const get_user_by_uuid = (uuid) => {
   SELECT id
   FROM user WHERE uuid = '${uuid}';`
 }
+const get_bid_by_uuid = (uuid) => {
+  return `
+  SELECT id
+  FROM bid WHERE uuid = '${uuid}';`
+}
 
 const get_clients_by_uuids = (uuids) => {
   return `
@@ -98,6 +103,7 @@ module.exports = {
   update_event,
   delete_event,
   get_user_by_uuid,
+  get_bid_by_uuid,
   get_clients_by_uuids,
   get_suppliers_by_uuids,
 }
