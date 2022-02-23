@@ -102,7 +102,7 @@ const get_fields = async (event_type_id, res_bid) => {
         if (res_bid[key]) {
           process_data[key] = res_bid[key]
         } else {
-          process_data[key] = key
+          process_data[key] = ''
         }
         break
     }
