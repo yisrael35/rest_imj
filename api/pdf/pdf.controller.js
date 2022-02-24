@@ -15,6 +15,7 @@ const create_pdf = async (req, res) => {
       if (!res_bid) {
         return res.status(404).end()
       }
+
       event_type_id = res_bid.event_type_id
 
       fields = await get_fields(event_type_id, res_bid)
@@ -80,7 +81,7 @@ const get_fields = async (event_type_id, res_bid) => {
           process_data['location_name'] = res_location['name_he']
         } else if (res_event_type['language'].toLowerCase() === 'english') {
           process_data['location_name'] = res_location['name_en']
-        } 
+        }
         break
       case 'event_date':
         let date = res_bid['event_date'].getUTCDate() + '/' + (res_bid['event_date'].getUTCMonth() + 1) + '/' + res_bid['event_date'].getUTCFullYear()
@@ -203,7 +204,11 @@ const process_payload = (payload) => {
         if (val !== undefined) {
           switch (key) {
             case 'bid_id':
-              processed_payload.bid_id = Number(val)
+              const [res_bid] = await db_helper.get(query.get_bid_id_by_uuid(val.trim()))
+              if (!res_bid) {
+                return reject({ status: 404 })
+              }
+              processed_payload.bid_id = res_bid.id
               break
             case 'event_id':
               processed_payload.event_id = val.trim()

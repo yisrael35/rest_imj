@@ -58,6 +58,12 @@ const get_bid_by_uuid = (uuid) => {
   WHERE b.uuid = '${uuid}';`
 }
 
+const get_bid_by_id = (id) => {
+  return `
+  SELECT * FROM bid
+  WHERE id = ${id};
+  `
+}
 const get_bid_costs = (uuid) => {
   return `
     SELECT 
@@ -173,4 +179,5 @@ module.exports = {
   update_bid,
   delete_bid,
   get_client_by_uuid,
+  get_bid_by_id,
 }

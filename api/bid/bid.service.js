@@ -36,9 +36,9 @@ const create_bid = async (payload, result) => {
     if (!res_client.affectedRows) {
       logger.error('res_client -- error')
     }
-  
 
-    return result.status(200).send({ bid_id })
+    const [res_bid_id] = await db_helper.get(query.get_bid_by_id(bid_id))
+    return result.status(200).send({ bid_id: res_bid_id.uuid })
   } catch (error) {
     logger.error(error)
     return result.status(400).end()

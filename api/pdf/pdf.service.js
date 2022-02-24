@@ -32,13 +32,14 @@ const create_pdf = async ({ event_type_id, fields, email }, result) => {
           }
           sgMail.send(msg, async (err, res) => {
             if (err) {
+              console.log(err)
               return result.status(500).end()
             } else {
               return result.status(200).send({ status: 200, data: { email: helper.return_encrypt_email(email) } })
             }
           })
         }
-        return result.status(200).send(file_name)
+        return result.status(200).send({ file_name })
       } else {
         return result.status(res_pdf.status).end()
       }
