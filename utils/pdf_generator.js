@@ -29,9 +29,7 @@ const pdf_generator = async (id, fields) => {
     }
     if (fields['language'].toLowerCase() == 'hebrew') {
       pdf_content = pdf_content.replace('\n', '^')
-    } else {
-      // english case??
-    }
+    } 
     if (typeof pdf_content != 'json') {
       pdf_content = JSON.parse(pdf_content)
     }
