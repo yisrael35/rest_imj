@@ -12,34 +12,66 @@ const fonts = {
   },
 }
 
-let lang = 'Hebrew'
+// let lang = 'Hebrew'
+// let pdf_content = {
+//   content: [
+//     { text: 'הצעת מחיר לאירוע #event_type במוזיאון ישראל', style: 'header', fontSize: 18, alignment: 'center', bold: true },
+//     { text: ' ', alignment: 'right' },
+//     { text: '#client_id שלום רב, ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'להלן מפורטים פרטי האירוע וכן הצעת מחיר מטעם המוזיאון: ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'פרטים כללים: ', alignment: 'right', bold: true },
+//     { text: 'תאריך האירוע: #event_date', alignment: 'right' },
+//     { text: 'כמות משתתפים: #max_participants - #min_participants', alignment: 'right' },
+//     { text: 'מיקום האירוע: #location_name', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'לוח זמנים לאירוע:', alignment: 'right', bold: true },
+//     { text: '#schedule_event', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'עלויות:', alignment: 'right', bold: true },
+//     { text: '#costs', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'הערות:', alignment: 'right', bold: true },
+//     { text: '#comment', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'נשמח לסייע בכל שאלה ובקשה נוספת. ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'בברכה, ', alignment: 'right' },
+//     { text: 'צוות המוזיאון. ', alignment: 'right' },
+//   ],
+// }
+
+let lang = 'English'
 let pdf_content = {
   content: [
-    { text: 'הצעת מחיר לאירוע #event_type במוזיאון ישראל', style: 'header', fontSize: 18, alignment: 'center', bold: true },
-    { text: ' ', alignment: 'right' },
-    { text: '#client_id שלום רב, ', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'להלן מפורטים פרטי האירוע וכן הצעת מחיר מטעם המוזיאון: ', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'פרטים כללים: ', alignment: 'right', bold: true },
-    { text: 'תאריך האירוע: #event_date', alignment: 'right' },
-    { text: 'כמות משתתפים: #max_participants - #min_participants', alignment: 'right' },
-    { text: 'מיקום האירוע: #location_name', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'לוח זמנים לאירוע:', alignment: 'right', bold: true },
-    { text: '#schedule_event', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'עלויות:', alignment: 'right', bold: true },
-    { text: '#costs', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'הערות הלקוח:', alignment: 'right', bold: true },
-    { text: '#comment', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'נשמח לסייע בכל שאלה ובקשה נוספת. ', alignment: 'right' },
-    { text: ' ', alignment: 'right' },
-    { text: 'בברכה, ', alignment: 'right' },
-    { text: 'צוות המוזיאון. ', alignment: 'right' },
+    { text: 'Israel Museum’s proposal for #event_type event', style: 'header', fontSize: 18, alignment: 'center', bold: true },
+    { text: ' ' },
+    { text: 'Dear #client_id, ' },
+    { text: ' ' },
+    { text: 'Please find the event details and the Museum’s proposal for the event:' },
+    { text: ' ' },
+    { text: 'General details:', bold: true },
+    { text: 'Date: #event_date' },
+    { text: 'Participants: #min_participants - #max_participants' },
+    { text: 'Location in the museum: #location_name' },
+    { text: ' ' },
+    { text: 'Event schedule:', bold: true },
+    { text: '#schedule_event'},
+    { text: ' ' },
+    { text: 'Costs:', bold: true },
+    { text: '#costs' },
+    { text: ' ' },
+    { text: 'Comments:', bold: true },
+    { text: '#comment' },
+    { text: ' '},
+    { text: ' ' },
+    { text: 'Please feel free to contact us any time!' },
+    { text: 'Looking forward to hearing from you. ' },
+    { text: '  ' },
+    { text: 'Kind regards, ' },
+    { text: 'Israel Museum Jerusalem' },
   ],
 }
 
@@ -62,39 +94,6 @@ let variables = {
   status: '',
   schedule_event: '',
 }
-
-// let variables = {
-//   client_comments: ' גג',
-//   imj_comments: 'ככ',
-// }
-
-// let lang = 'English'
-// let pdf_content = {
-//   content: [
-//     { text: 'Dear #name', style: 'header', fontSize: 18, alignment: 'center', bold: true },
-//     { text: ' ' },
-//     { text: 'My name is #my_name and Im an event producer at the Israel Museum.' },
-//     { text: 'Following your conversation with Omer, we would be happy to host you and your family at the Israel Museum.' },
-//     { text: 'Please find the Museum’s proposal for the #event_type event:' },
-//     { text: ' ' },
-//     { text: 'Date: #event_date' },
-//     { text: 'Participants: #participants' },
-//     { text: ' ' },
-//     { text: 'Tentative schedule: ' },
-//     { text: '#schedule' },
-//     { text: ' ' },
-//     { text: 'Costs: ' },
-//     { text: '#costs ' },
-//     { text: 'Regarding the brunch, please connect directly with the restaurant: #contact ' },
-//     { text: ' ' },
-//     { text: 'Please feel free to contact me any time! ' },
-//     { text: 'Looking forward to hearing from you, ' },
-//     { text: ' ' },
-//     { text: 'Kind regards, ' },
-//     { text: '#my_name. ' },
-
-//   ],
-// }
 
 const replace_str = (str, to, index) => {
   var chars = str.split('')

@@ -80,7 +80,7 @@ const get_fields = async (event_type_id, res_bid) => {
           process_data['location_name'] = res_location['name_he']
         } else if (res_event_type['language'].toLowerCase() === 'english') {
           process_data['location_name'] = res_location['name_en']
-        } 
+        }
         break
       case 'event_date':
         let date = res_bid['event_date'].getUTCDate() + '/' + (res_bid['event_date'].getUTCMonth() + 1) + '/' + res_bid['event_date'].getUTCFullYear()
@@ -123,6 +123,9 @@ const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => 
     logger.error('res_cost failed')
     throw Error
   }
+  if(res_cost[0]['description'] == '' && res_cost[0]['amount'] == 0 && res_cost[0]['total_cost'] == 0){
+    return ''
+  }
   let cost_str = ''
   let discount_flag = false
   if (lang.toLowerCase() == 'hebrew') {
@@ -149,8 +152,16 @@ const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => 
       if (element['discount']) {
         cost_str += ' -' + element['discount']
         discount = element['discount']
+        discount_flag = true
       }
-      cost_str += ' = ' + element['total_cost'] - discount + element['comment'] + '^'
+      console.log(element['total_cost'] - discount)
+      console.log(element['comment'])
+      cost_str += ' = ' + (element['total_cost'] - discount) +' ' + element['comment'] + '\\n'
+    }
+    if (discount_flag) {
+      cost_str += '\\ntotal price without discount: ' + total_cost + '\\n total price with discount: ' + total_cost_with_discount
+    } else {
+      cost_str += '\\ntotal price: ' + total_cost
     }
   }
   return cost_str
@@ -161,39 +172,25 @@ const get_schedule_event = async (bid_id, lang) => {
     logger.error('res_schedule_event failed')
     throw Error
   }
+  console.log(res_schedule_event);
+if(res_schedule_event[0]['start_activity'] == '00:00:00' && res_schedule_event[0]['end_activity'] == '00:00:00'){
+  return ''
+}
   let schedule_str = ''
 
   if (lang.toLowerCase() == 'hebrew') {
     for (let element of res_schedule_event) {
       schedule_str += element['end_activity'].slice(0, 5) + ' - ' + element['start_activity'].slice(0, 5) + '  ' + element['description'] + '^'
     }
+    schedule_str = schedule_str.slice(0, -1)
   } else {
     for (let element of res_schedule_event) {
-      schedule_str += element['start_activity'].slice(0, 5) + ' - ' + element['end_activity'].slice(0, 5) + '  ' + element['description'] + '^'
+      schedule_str += element['start_activity'].slice(0, 5) + ' - ' + element['end_activity'].slice(0, 5) + '  ' + element['description'] + '\\n'
     }
   }
 
-  return schedule_str.slice(0, -1)
+  return schedule_str
 }
-
-// costs
-// currency
-// end_time
-// language
-// event_date
-// event_name
-// event_type
-// start_time
-// client_name
-// location_name
-// imj_comments
-// event_comment
-// schedule_event
-// total_discount
-// max_participants
-// min_participants
-// total_a_discount
-// total_b_discount
 
 const process_payload = (payload) => {
   return new Promise(async (resolve, reject) => {
