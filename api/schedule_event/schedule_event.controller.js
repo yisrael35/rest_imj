@@ -80,7 +80,7 @@ const process_payload_create = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res_schedule_event = []
-      for (const payload of data.schedule_event) {
+      for (const payload of data.schedule_time_event) {
         const processed_payload = {}
         for (const [key, val] of Object.entries(payload)) {
           if (val !== undefined) {

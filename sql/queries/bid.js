@@ -42,12 +42,12 @@ const get_bid_by_uuid = (uuid) => {
   b.total_a_discount,
   b.total_discount,
   b.currency,
+  b.language,
   c.name AS client,
   c.email AS client_email,
   b.event_name,
   b.event_date,
   b.max_participants,
-  b.min_participants,
   b.created_at,
   b.updated_at
   FROM bid b 
@@ -105,11 +105,11 @@ const get_bids = ({ search, limit, offset }) => {
   b.total_a_discount,
   b.total_discount,
   b.currency,
+  b.language,
   c.name AS client,
   b.event_name,
   b.event_date,
   b.max_participants,
-  b.min_participants,
   b.created_at,
   b.updated_at
   FROM bid b 

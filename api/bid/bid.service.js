@@ -6,35 +6,10 @@ const csv_generator = require('../../workers/csv_worker')
 
 const create_bid = async (payload, result) => {
   try {
-    const { bid, schedule_event, costs, language } = payload
-
-    const res_bid = await db_helper.update(query.create_bid(bid), bid)
+    const res_bid = await db_helper.update(query.create_bid(payload), payload)
     let bid_id = res_bid.insertId
     if (!bid_id) {
       return result.status(400).end()
-    }
-
-    for (const sch_e of schedule_event) {
-      sch_e.bid_id = bid_id
-      const res_schedule_event = await db_helper.update(query.create_schedule_event(sch_e), sch_e)
-      if (!res_schedule_event.affectedRows) {
-        logger.error('res_schedule_event -- error')
-        return result.status(400).end()
-      }
-    }
-    for (const cost of costs) {
-      cost.bid_id = bid_id
-      const res_costs = await db_helper.update(query.create_costs(cost), cost)
-      if (!res_costs.affectedRows) {
-        logger.error('res_costs -- error')
-        return result.status(400).end()
-      }
-    }
-
-    const client = { name: bid.client_id }
-    const res_client = await db_helper.update(query.create_client(client), client)
-    if (!res_client.affectedRows) {
-      logger.error('res_client -- error')
     }
 
     const [res_bid_id] = await db_helper.get(query.get_bid_by_id(bid_id))
