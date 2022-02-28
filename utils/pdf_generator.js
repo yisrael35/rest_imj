@@ -4,7 +4,7 @@ const pdfmake = require('pdfmake')
 const fs = require('fs')
 const db_helper = require('./db_helper')
 const query = require('../sql/queries/pdf_generator')
-const pdf_temp = require('./edit_pdf/pdf_editor')
+// const pdf_temp = require('./edit_pdf/pdf_editor')
 
 const fonts = {
   Roboto: {
