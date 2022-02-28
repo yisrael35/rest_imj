@@ -2,16 +2,18 @@ const Logger = require('logplease')
 const logger = Logger.create('./utils/pdf_generator.js')
 const pdfmake = require('pdfmake')
 const fs = require('fs')
+const path = require('path')
+
 const db_helper = require('./db_helper')
 const query = require('../sql/queries/pdf_generator')
 // const pdf_temp = require('./edit_pdf/pdf_editor')
 
 const fonts = {
   Roboto: {
-    normal: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Regular.ttf',
-    bold: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Bold.ttf',
-    italics: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Italic.ttf',
-    bolditalics: __dirname + '\\edit_pdf\\Open Sans Hebrew\\OpenSansHebrew-Bolditalic.ttf',
+    normal: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Regular.ttf'),
+    bold: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Bold.ttf'),
+    italics: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Italic.ttf'),
+    bolditalics: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Bolditalic.ttf'),
   },
 }
 
@@ -29,7 +31,7 @@ const pdf_generator = async (id, fields) => {
     }
     if (fields['language'].toLowerCase() == 'hebrew') {
       pdf_content = pdf_content.replace('\n', '^')
-    } 
+    }
     if (typeof pdf_content != 'json') {
       pdf_content = JSON.parse(pdf_content)
     }
