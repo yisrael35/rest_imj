@@ -16,6 +16,11 @@ const create_pdf = async (req, res) => {
         return res.status(404).end()
       }
 
+      // NOTE- in case bid status fields = draft
+      // if (res_bid['status'] === 'draft') {
+      //   return res.status(400).send('Check bid status.')
+      // }
+
       event_type_id = res_bid.event_type_id
 
       fields = await get_fields(event_type_id, res_bid)
@@ -114,7 +119,6 @@ const get_fields = async (event_type_id, res_bid) => {
 
   // console.log('process_data:')
   // console.log(process_data)
-
   return process_data
 }
 
@@ -124,7 +128,7 @@ const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => 
     logger.error('res_cost failed')
     throw Error
   }
-  if(res_cost[0]['description'] == '' && res_cost[0]['amount'] == 0 && res_cost[0]['total_cost'] == 0){
+  if (res_cost.length === 0 || (res_cost[0]['description'] == '' && res_cost[0]['amount'] == 0 && res_cost[0]['total_cost'] == 0)) {
     return ''
   }
   let cost_str = ''
@@ -157,7 +161,7 @@ const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => 
       }
       console.log(element['total_cost'] - discount)
       console.log(element['comment'])
-      cost_str += ' = ' + (element['total_cost'] - discount) +' ' + element['comment'] + '\\n'
+      cost_str += ' = ' + (element['total_cost'] - discount) + ' ' + element['comment'] + '\\n'
     }
     if (discount_flag) {
       cost_str += '\\ntotal price without discount: ' + total_cost + '\\n total price with discount: ' + total_cost_with_discount
@@ -173,12 +177,10 @@ const get_schedule_event = async (bid_id, lang) => {
     logger.error('res_schedule_event failed')
     throw Error
   }
-  console.log(res_schedule_event);
-if(res_schedule_event[0]['start_activity'] == '00:00:00' && res_schedule_event[0]['end_activity'] == '00:00:00'){
-  return ''
-}
+  if (res_schedule_event.length === 0 || (res_schedule_event[0]['start_activity'] == '00:00:00' && res_schedule_event[0]['end_activity'] == '00:00:00')) {
+    return ''
+  }
   let schedule_str = ''
-
   if (lang.toLowerCase() == 'hebrew') {
     for (let element of res_schedule_event) {
       schedule_str += element['end_activity'].slice(0, 5) + ' - ' + element['start_activity'].slice(0, 5) + '  ' + element['description'] + '^'

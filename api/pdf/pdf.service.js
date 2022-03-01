@@ -6,6 +6,7 @@ const mailUtil = require('../../utils/mail')
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const path = require('path')
+const helper = require('../../utils/helper')
 
 const create_pdf = async ({ event_type_id, fields, email }, result) => {
   try {
@@ -35,11 +36,13 @@ const create_pdf = async ({ event_type_id, fields, email }, result) => {
               console.log(err)
               return result.status(500).end()
             } else {
-              return result.status(200).send({ status: 200, data: { email: helper.return_encrypt_email(email) } })
+              return result.status(200).send({ data: { email: helper.return_encrypt_email(email) } })
+              // return result.status(200)
             }
           })
+        } else {
+          return result.status(200).send({ file_name })
         }
-        return result.status(200).send({ file_name })
       } else {
         return result.status(res_pdf.status).end()
       }
