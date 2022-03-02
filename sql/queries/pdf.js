@@ -9,15 +9,6 @@ const get_bid_id_by_uuid = (uuid) => {
   FROM bid WHERE uuid = '${uuid}';`
 }
 
-// join implementation:
-// const get_bid_by_id = (id) => {
-//   return `
-//   SELECT b.*, l.name_en AS location_en, l.name_he AS location_he 
-//   FROM bid b WHERE b.id = '${id}' 
-//   JOIN location l ON l.id = b.location_id
-//   ;`
-// }
-
 const get_bid_by_id = (id) => {
   return `
   SELECT *
@@ -48,12 +39,21 @@ const get_cost_by_bid_id = (bid_id) => {
 }
 
 const get_table_by_id = (table_name, id) => {
-  return `
+  return (
+    `
   SELECT *
-  FROM ` + table_name + ` WHERE id = '${id}';`
+  FROM ` +
+    table_name +
+    ` WHERE id = '${id}';`
+  )
 }
 
-
+const update_bid = (bid, uuid) => {
+  return `
+  UPDATE bid 
+  SET ${Object.keys(bid).map((key) => `${key} = ? `)}
+  WHERE uuid = '${uuid}';`
+}
 
 module.exports = {
   get_event_type,
@@ -64,4 +64,5 @@ module.exports = {
   get_schedule_event_by_bid_id,
   get_table_by_id,
   get_cost_by_bid_id,
+  update_bid,
 }

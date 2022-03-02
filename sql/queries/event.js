@@ -27,21 +27,23 @@ const get_event_by_uuid = (uuid) => {
 const get_events = ({ search, limit, offset, from_date, to_date, status }) => {
   return `
   SELECT 
-    uuid AS id,
-    name,
-    from_date,
-    to_date,
-    status,
-    type,
-    comment
+    e.uuid AS id,
+    e.name,
+    u.first_name,
+    e.from_date,
+    e.to_date,
+    e.status,
+    e.type,
+    e.comment
   FROM event e
+  JOIN user u ON u.id = e.user_id
   WHERE
-  ${from_date ? `from_date >= '${from_date}' AND` : ''}
-  ${to_date ? `to_date <= '${to_date}' AND` : ''}
-  ${search ? ` id LIKE '%${search}%'  OR uuid LIKE '%${search}%' AND ` : ''}
-  ${status ? `status = '${status}' AND` : ''}
+  ${from_date ? `e.from_date >= '${from_date}' AND` : ''}
+  ${to_date ? `e.to_date <= '${to_date}' AND` : ''}
+  ${search ? ` e.id LIKE '%${search}%'  OR e.uuid LIKE '%${search}%' AND ` : ''}
+  ${status ? `e.status = '${status}' AND` : ''}
   1=1
-  ORDER BY created_at DESC
+  ORDER BY e.created_at DESC
   ${limit ? ` LIMIT ${limit}` : ''}  ${offset ? ` OFFSET ${offset}` : ''}
   ;`
 }

@@ -8,6 +8,7 @@ const { validateEmail } = require('../../utils/helper')
 const create_pdf = async (req, res) => {
   try {
     const process_data = await process_payload(req.body)
+    const { bid_id: bid_uuid } = req.body
     const { bid_id, event_id, email } = process_data
     let event_type_id, fields
     if (bid_id) {
@@ -34,7 +35,7 @@ const create_pdf = async (req, res) => {
     //   fields = await get_fields(event_id, res_event)
     // }
 
-    pdf_service.create_pdf({ event_type_id, fields, email }, res)
+    pdf_service.create_pdf({ event_type_id, fields, email, bid_uuid }, res)
   } catch (error) {
     return res.status(400).end()
   }
