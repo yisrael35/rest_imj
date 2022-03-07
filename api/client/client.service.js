@@ -67,10 +67,14 @@ const update_client = async (payload, uuid, result) => {
 
 const delete_client = async (uuid, result) => {
   try {
-    const { err, res } = await db_helper.update_just_query(query.delete_client(uuid))
+    const [res_client] = await db_helper.get(query.get_client_by_uuid(uuid))
+    if (!res_client) {
+      return result.status(404).end()
+    }
+    const { err, res } = await db_helper.update_just_query(query.delete_client(res_client.id))
     if (err || !res.affectedRows) {
       logger.error(err)
-      return result.status(404).end()
+      return result.status(500).end()
     }
     return result.status(200).end()
   } catch (error) {

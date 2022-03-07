@@ -11,6 +11,7 @@ const create_client = async (req, res) => {
     }
     client_service.create_client(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -23,6 +24,7 @@ const get_client = async (req, res) => {
     }
     client_service.get_client(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -31,6 +33,7 @@ const get_clients = async (req, res) => {
     const filters = await helper.process_filters(req.query)
     client_service.get_clients(filters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -43,6 +46,7 @@ const update_client = async (req, res) => {
     }
     client_service.update_client(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -52,8 +56,9 @@ const delete_client = async (req, res) => {
     if (!uuid) {
       return res.status(400).end()
     }
-    client_service.delete_client(uuid, res)
+    client_service.delete_client(uuid.trim(), res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -72,10 +77,10 @@ const process_payload = (payload) => {
               processed_payload.type = val.trim()
               break
             case 'email':
-              processed_payload.email =  val.trim()
+              processed_payload.email = val.trim()
               break
             case 'phone':
-              processed_payload.phone =  val.trim()
+              processed_payload.phone = val.trim()
               break
             default:
               return reject({ status: 400 })
