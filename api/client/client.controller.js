@@ -90,7 +90,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process client payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

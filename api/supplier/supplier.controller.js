@@ -11,6 +11,7 @@ const create_supplier = async (req, res) => {
     }
     supplier_service.create_supplier(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -23,6 +24,7 @@ const get_supplier = async (req, res) => {
     }
     supplier_service.get_supplier(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -31,6 +33,7 @@ const get_suppliers = async (req, res) => {
     const filters = await helper.process_filters(req.query)
     supplier_service.get_suppliers(filters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -43,6 +46,7 @@ const update_supplier = async (req, res) => {
     }
     supplier_service.update_supplier(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -54,6 +58,7 @@ const delete_supplier = async (req, res) => {
     }
     supplier_service.delete_supplier(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -72,10 +77,10 @@ const process_payload = (payload) => {
               processed_payload.account = JSON.stringify(val)
               break
             case 'email':
-              processed_payload.email =  val.trim()
+              processed_payload.email = val.trim()
               break
             case 'phone':
-              processed_payload.phone =  val.trim()
+              processed_payload.phone = val.trim()
               break
             default:
               return reject({ status: 400 })
@@ -85,7 +90,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process supplier payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

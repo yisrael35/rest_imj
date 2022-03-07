@@ -30,6 +30,7 @@ const create_cost = async (req, res) => {
     }
     cost_service.create_cost(body_parameters, { bid_id, event_id }, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -42,6 +43,7 @@ const get_cost = async (req, res) => {
     }
     cost_service.get_cost(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -49,6 +51,7 @@ const get_costs = async (req, res) => {
   try {
     cost_service.get_costs(res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -61,6 +64,7 @@ const update_cost = async (req, res) => {
     }
     cost_service.update_cost(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -72,6 +76,7 @@ const delete_cost = async (req, res) => {
     }
     cost_service.delete_cost(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }

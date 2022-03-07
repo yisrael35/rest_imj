@@ -10,6 +10,7 @@ const create_csv = async (req, res) => {
     }
     csv_service.create_csv(process_data, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -22,6 +23,7 @@ const delete_csv = async (req, res) => {
     }
     csv_service.delete_csv(file_name, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -55,7 +57,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process csv payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

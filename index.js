@@ -50,5 +50,5 @@ server.use('/supplier', supplier_routes)
 
 const port = process.env.HTTP_PORT || 3001
 server.listen(port, () => {
-  logger.log(`HTTP Server is running on: ${port}`)
+  logger.info(`HTTP Server is running on: ${port}`)
 })

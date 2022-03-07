@@ -7,6 +7,7 @@ const get_utils = async (req, res) => {
     let level = req.headers.bearerAuth.user.level
     utils_service.get_utils(res, level)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }

@@ -10,6 +10,7 @@ const create_location = async (req, res) => {
     }
     location_service.create_location(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -22,6 +23,7 @@ const get_location = async (req, res) => {
     }
     location_service.get_location(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -29,6 +31,7 @@ const get_locations = async (req, res) => {
   try {
     location_service.get_locations(res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -41,6 +44,7 @@ const update_location = async (req, res) => {
     }
     location_service.update_location(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -52,6 +56,7 @@ const delete_location = async (req, res) => {
     }
     location_service.delete_location(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -80,7 +85,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process location payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

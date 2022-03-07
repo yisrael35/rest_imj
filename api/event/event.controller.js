@@ -14,6 +14,7 @@ const create_event = async (req, res) => {
     }
     event_service.create_event(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -26,6 +27,7 @@ const get_event = async (req, res) => {
     }
     event_service.get_event(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -35,6 +37,7 @@ const get_events = async (req, res) => {
 
     event_service.get_events(filters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -47,6 +50,7 @@ const update_event = async (req, res) => {
     }
     event_service.update_event(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -58,6 +62,7 @@ const delete_event = async (req, res) => {
     }
     event_service.delete_event(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -150,7 +155,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process event payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

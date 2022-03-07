@@ -67,10 +67,15 @@ const update_supplier = async (payload, uuid, result) => {
 
 const delete_supplier = async (uuid, result) => {
   try {
-    const { err, res } = await db_helper.update_just_query(query.delete_supplier(uuid))
+    const [res_supplier] = await db_helper.get(query.get_supplier_by_uuid(uuid))
+    if (!res_supplier) {
+      return result.status(404).end()
+    }
+
+    const { err, res } = await db_helper.update_just_query(query.delete_supplier(res_supplier.id))
     if (err || !res.affectedRows) {
       logger.error(err)
-      return result.status(404).end()
+      return result.status(500).end()
     }
     return result.status(200).end()
   } catch (error) {

@@ -7,7 +7,7 @@ const pool = new StaticPool({
   size: 2,
   task: "./utils/csv_generator.js"
 });
-logger.log('create csv threads-pool successfully')
+logger.info('create csv threads-pool successfully')
 
 const create_csv_file = (data) => {
   return new Promise(async (resolve, reject) => {

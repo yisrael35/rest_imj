@@ -17,7 +17,7 @@ const get_wss_of_ws_service = () => wss
 
 wss.on('connection', async (ws, req) => {
   ws.id = uuid()
-  logger.log(`WS - New connection detected: ${ws.id}`, file_location)
+  logger.info(`WS - New connection detected: ${ws.id}`, file_location)
   try {
     let token = req.url.split('/?token=')[1]
     if (token) {
@@ -52,7 +52,7 @@ wss.on('connection', async (ws, req) => {
   })
 
   ws.on('close', async () => {
-    logger.log(`Closing session [${ws.id}]`, file_location)
+    logger.info(`Closing session [${ws.id}]`, file_location)
     session_manager.delete_session(ws.id)
     ws.terminate()
   })
@@ -75,7 +75,7 @@ const heartbeat = (ws) => {
 }
 
 server.listen(process.env.WS_PORT)
-logger.log(`WS Server is running on: ${process.env.WS_PORT}`, file_location)
+logger.info(`WS Server is running on: ${process.env.WS_PORT}`, file_location)
 
 const handle_token = async (token, ws) => {
   login_data = await auth_manager.checkJWT(token)

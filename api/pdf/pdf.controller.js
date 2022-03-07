@@ -37,6 +37,7 @@ const create_pdf = async (req, res) => {
 
     pdf_service.create_pdf({ event_type_id, fields, email, bid_uuid }, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -49,6 +50,7 @@ const delete_pdf = async (req, res) => {
     }
     pdf_service.delete_pdf(file_name, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -227,7 +229,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process pdf payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

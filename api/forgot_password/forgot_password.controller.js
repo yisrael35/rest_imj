@@ -11,6 +11,7 @@ const forgot_password = async (req, res) => {
     const body_parameters = await process_payload(req.body)
     forgot_password_service.forgot_password(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -24,6 +25,7 @@ const change_password = async (req, res) => {
     const user_id = req.headers.bearerAuth.user.id
     forgot_password_service.change_password(body_parameters, user_id, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -54,7 +56,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process forgot_password payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }
