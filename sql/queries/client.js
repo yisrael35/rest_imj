@@ -35,9 +35,9 @@ const update_client = (client, uuid) => {
   WHERE uuid = '${uuid}';`
 }
 
-const delete_client = (uuid) => {
+const delete_client = (id) => {
   return `
-  DELETE FROM client WHERE uuid = '${uuid}'; 
+  DELETE FROM client WHERE id = '${id}'; 
   `
 }
 

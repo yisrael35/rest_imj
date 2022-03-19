@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `imj_db`.`client` (
   `name` VARCHAR(45) NOT NULL,
   `phone` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NULL DEFAULT NULL,
-  `type` ENUM('private', 'company', 'departmment') NOT NULL,
+  `type` ENUM('private', 'company', 'department') NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;

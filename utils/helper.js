@@ -52,6 +52,12 @@ const process_filters = (payload) => {
             case 'to_date':
               processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
               break
+            case 'csv':
+              if (val !== 'true' && val !== 'false') {
+                return reject({ status: 400 })
+              }
+              processed_payload.csv = val
+              break
             default:
               return reject({ status: 400 })
           }

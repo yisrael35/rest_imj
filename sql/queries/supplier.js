@@ -35,9 +35,9 @@ const update_supplier = (supplier, uuid) => {
   WHERE uuid = '${uuid}';`
 }
 
-const delete_supplier = (uuid) => {
+const delete_supplier = (id) => {
   return `
-  DELETE FROM supplier WHERE uuid = '${uuid}'; 
+  DELETE FROM supplier WHERE id = '${id}'; 
   `
 }
 

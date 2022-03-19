@@ -1,5 +1,7 @@
 const pdfmake = require('pdfmake')
 const fs = require('fs')
+const Logger = require('logplease')
+const logger = Logger.create('./utils/edit_pdf/pdf_editor.js')
 
 const fonts = {
   Roboto: {
@@ -10,26 +12,90 @@ const fonts = {
   },
 }
 
-let lang = 'Hebrew'
+// let lang = 'Hebrew'
+// let pdf_content = {
+//   content: [
+//     { text: 'הצעת מחיר לאירוע #event_type במוזיאון ישראל', style: 'header', fontSize: 18, alignment: 'center', bold: true },
+//     { text: ' ', alignment: 'right' },
+//     { text: '#client_id שלום רב, ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'להלן מפורטים פרטי האירוע וכן הצעת מחיר מטעם המוזיאון: ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'פרטים כללים: ', alignment: 'right', bold: true },
+//     { text: 'תאריך האירוע: #event_date', alignment: 'right' },
+//     { text: 'כמות משתתפים: #max_participants - #min_participants', alignment: 'right' },
+//     { text: 'מיקום האירוע: #location_name', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'לוח זמנים לאירוע:', alignment: 'right', bold: true },
+//     { text: '#schedule_event', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'עלויות:', alignment: 'right', bold: true },
+//     { text: '#costs', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'הערות:', alignment: 'right', bold: true },
+//     { text: '#comment', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'נשמח לסייע בכל שאלה ובקשה נוספת. ', alignment: 'right' },
+//     { text: ' ', alignment: 'right' },
+//     { text: 'בברכה, ', alignment: 'right' },
+//     { text: 'צוות המוזיאון. ', alignment: 'right' },
+//   ],
+// }
 
+let lang = 'English'
 let pdf_content = {
   content: [
-    { text: 'הצעת מחיר לאירוע במוזיאון ישראל', style: 'header', fontSize: 18, alignment: 'center', bold: true, direction: 'LTR' },
-    { text: 'תאריך האירוע: #event_date', alignment: 'right' },
-    { text: 'משתתפים: #participants', alignment: 'right' },
-    { text: 'לוז אירועים:', alignment: 'right' },
-    { text: '#schedul', alignment: 'right' },
-    { text: 'אחת שתיים ^ שלוש ארבע ^ חמש', alignment: 'right' },
+    { text: 'Israel Museum’s proposal for #event_type event', style: 'header', fontSize: 18, alignment: 'center', bold: true },
+    { text: ' ' },
+    { text: 'Dear #client_id, ' },
+    { text: ' ' },
+    { text: 'Please find the event details and the Museum’s proposal for the event:' },
+    { text: ' ' },
+    { text: 'General details:', bold: true },
+    { text: 'Date: #event_date' },
+    { text: 'Participants: #min_participants - #max_participants' },
+    { text: 'Location in the museum: #location_name' },
+    { text: ' ' },
+    { text: 'Event schedule:', bold: true },
+    { text: '#schedule_event'},
+    { text: ' ' },
+    { text: 'Costs:', bold: true },
+    { text: '#costs' },
+    { text: ' ' },
+    { text: 'Comments:', bold: true },
+    { text: '#comment' },
+    { text: ' '},
+    { text: ' ' },
+    { text: 'Please feel free to contact us any time!' },
+    { text: 'Looking forward to hearing from you. ' },
+    { text: '  ' },
+    { text: 'Kind regards, ' },
+    { text: 'Israel Museum Jerusalem' },
   ],
 }
 
 let variables = {
-  event_date: '25.5.2022',
-  participants: '1,000',
-  schedul: 'ראשון שני שלישי ^ רביעי',
+  costs: '',
+  language: '',
+  event_type: '',
+  location_name: '',
+  user: '',
+  event_date: '',
+  client_id: '',
+  event_name: '',
+  comment: '',
+  total_a_discount: '',
+  total_b_discount: '',
+  total_discount: '',
+  currency: '',
+  max_participants: '',
+  min_participants: '',
+  status: '',
+  schedule_event: '',
 }
 
-const replate_str = (str, to, index) => {
+const replace_str = (str, to, index) => {
   var chars = str.split('')
   chars[index] = to
   return chars.join('')
@@ -65,11 +131,11 @@ const str_to_he = (str = '') => {
   for (word in str) {
     for (ch in str[word]) {
       if (str[word][ch] == '(') {
-        str[word] = replate_str(')', ch)
+        str[word] = replace_str(')', ch)
         last_change_ch = ch
         last_change_word = word
       } else if (str[word][ch] == ')') {
-        str[word] = replate_str('(', ch)
+        str[word] = replace_str('(', ch)
         last_change_ch = ch
         last_change_word = word
       }
@@ -92,19 +158,12 @@ const conc_variables = () => {
   }
 }
 
-conc_variables(variables)
-
-if (lang.toLowerCase() == 'hebrew') {
-  for (i in pdf_content['content']) {
-    var pdf_text = pdf_content['content'][i]['text']
-    pdf_content['content'][i]['text'] = str_to_he(pdf_text)
-  }
-}
-
-var printer = new pdfmake(fonts)
-var pdfDoc = printer.createPdfKitDocument(pdf_content)
-pdfDoc.pipe(fs.createWriteStream('./utils/edit_pdf/result.pdf'))
-pdfDoc.end()
+// if (lang.toLowerCase() == 'hebrew') {c
+//   for (i in pdf_content['content']) {
+//     var pdf_text = pdf_content['content'][i]['text']
+//     pdf_content['content'][i]['text'] = str_to_he(pdf_text)
+//   }
+// }
 
 fs.writeFile('./utils/edit_pdf/pdf_data.txt', 'Content field: \n' + JSON.stringify(pdf_content) + '\n fields field: \n' + JSON.stringify(variables), (err) => {
   if (err) {
@@ -112,4 +171,9 @@ fs.writeFile('./utils/edit_pdf/pdf_data.txt', 'Content field: \n' + JSON.stringi
   }
 })
 
-module.exports = {}
+conc_variables(variables)
+
+var printer = new pdfmake(fonts)
+var pdfDoc = printer.createPdfKitDocument(pdf_content)
+pdfDoc.pipe(fs.createWriteStream('./utils/edit_pdf/result.pdf'))
+pdfDoc.end()

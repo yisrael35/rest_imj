@@ -1,5 +1,8 @@
 const query = require('../../sql/queries/supplier')
 const db_helper = require('../../utils/db_helper')
+const Logger = require('logplease')
+const logger = Logger.create('./api/supplier/supplier.service.js')
+const csv_generator = require('../../workers/csv_worker')
 
 const create_supplier = async (payload, result) => {
   try {
@@ -9,7 +12,7 @@ const create_supplier = async (payload, result) => {
     }
     return result.status(200).end()
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -22,21 +25,29 @@ const get_supplier = async (uuid, result) => {
     }
     return result.status(200).send(supplier_details[0])
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
 const get_suppliers = async (filters, result) => {
   try {
-    console.log(filters);
     const supplier_details = await db_helper.get(query.get_suppliers(filters))
-    console.log(supplier_details);
     if (!supplier_details) {
       return result.status(404).end()
+    }
+    if (filters.csv && filters.csv === 'true') {
+      const res_csv = await csv_generator.create_csv_file(supplier_details)
+      if (res_csv.status === 200) {
+        const file_name = res_csv.file_name
+        return result.status(200).send({ file_name })
+      } else {
+        return result.status(res_csv.status).send('failed to create csv')
+      }
     }
     const meta_data = await get_meta_data(filters)
     return result.status(200).send({ suppliers: supplier_details, meta_data })
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -49,19 +60,26 @@ const update_supplier = async (payload, uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(400).end()
   }
 }
 
 const delete_supplier = async (uuid, result) => {
   try {
-    const { err, res } = await db_helper.update_just_query(query.delete_supplier(uuid))
-    if (err || !res.affectedRows) {
-      console.log(err)
+    const [res_supplier] = await db_helper.get(query.get_supplier_by_uuid(uuid))
+    if (!res_supplier) {
       return result.status(404).end()
+    }
+
+    const { err, res } = await db_helper.update_just_query(query.delete_supplier(res_supplier.id))
+    if (err || !res.affectedRows) {
+      logger.error(err)
+      return result.status(500).end()
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }

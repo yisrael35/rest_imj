@@ -1,7 +1,7 @@
 const query = require('../../sql/queries/cost')
 const db_helper = require('../../utils/db_helper')
 const Logger = require('logplease')
-const logger = Logger.create('cost.service.js')
+const logger = Logger.create('./api/cost/cost.service.js')
 
 const create_cost = async (costs, { bid_id, event_id }, result) => {
   try {
@@ -41,6 +41,7 @@ const get_costs = async (result) => {
     }
     return result.status(200).send(cost_details)
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -53,6 +54,7 @@ const update_cost = async (payload, uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.log(error)
     return result.status(400).end()
   }
 }
@@ -65,6 +67,7 @@ const delete_cost = async (uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.log(error)
     return result.status(404).end()
   }
 }

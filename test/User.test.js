@@ -1,5 +1,8 @@
 const axios = require('axios')
 require('dotenv').config()
+const Logger = require('logplease')
+const logger = Logger.create('./test/user.test.js')
+
 const generate_password = (length) => {
   var result = ''
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -34,9 +37,9 @@ test('Check create user if it added to the db', async () => {
     res_get_users = await axios.get(`${url}/user`)
     expect(res_get_users.data.meta_data.sum_rows == sum_of_users + 1).toBeTruthy()
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     expect(false).toBeTruthy()
-    console.log(error.response.status)
+    logger.error(error.response.status)
   }
 })
 
@@ -56,7 +59,7 @@ test('Check get user by id fields', async () => {
     expect(res_user.data).toHaveProperty('is_active')
     expect(res_user.data).toHaveProperty('created_at')
   } catch (error) {
-    console.log(error.response.status)
+    logger.error(error.response.status)
     expect(false).toBeTruthy()
   }
 })
@@ -76,7 +79,7 @@ test('Check update user by id ', async () => {
     expect(res_user.status).toBe(200)
     expect(res_user.data.first_name).toBe(update_user.first_name)
   } catch (error) {
-    console.log(error.response.status)
+    logger.error(error.response.status)
 
     expect(false).toBeTruthy()
   }
@@ -94,7 +97,7 @@ test('Check delete user by id ', async () => {
     expect(res_user.status).toBe(200)
     expect(res_user.data.is_active).toBe(0)
   } catch (error) {
-    console.log(error.response.status)
+    logger.error(error.response.status)
 
     expect(false).toBeTruthy()
   }
@@ -124,7 +127,7 @@ test('Check create user if it fails', async () => {
       expect(error.response.status).toBe(400)
     })
   } catch (error) {
-    console.log(error.response.status)
+    logger.error(error.response.status)
 
     expect(false).toBeTruthy()
   }
@@ -136,7 +139,7 @@ test('Check get user by id wrong id', async () => {
       expect(error.response.status).toBe(404)
     })
   } catch (error) {
-    console.log(error.response.status)
+    logger.error(error.response.status)
 
     expect(false).toBeTruthy()
   }
@@ -166,7 +169,7 @@ test('Check update user by id ', async () => {
       expect(error.response.status).toBe(404)
     })
   } catch (error) {
-    console.log(error.response.status)
+    logger.error(error.response.status)
 
     expect(false).toBeTruthy()
   }
@@ -183,7 +186,7 @@ test('Check delete user by id ', async () => {
       expect(error.response.status).toBe(404)
     })
   } catch (error) {
-    console.log(error.response)
+    logger.error(error.response)
     expect(false).toBeTruthy()
   }
 })

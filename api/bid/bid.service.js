@@ -1,42 +1,21 @@
 const query = require('../../sql/queries/bid')
 const db_helper = require('../../utils/db_helper')
+const Logger = require('logplease')
+const logger = Logger.create('api/bid/bid.service.js')
+const csv_generator = require('../../workers/csv_worker')
 
 const create_bid = async (payload, result) => {
   try {
-    const { bid, schedule_event, costs, language } = payload
-
-    const res_bid = await db_helper.update(query.create_bid(bid), bid)
+    const res_bid = await db_helper.update(query.create_bid(payload), payload)
     let bid_id = res_bid.insertId
     if (!bid_id) {
       return result.status(400).end()
     }
-   
-    for (const sch_e of schedule_event) {
-      sch_e.bid_id = bid_id
-      const res_schedule_event = await db_helper.update(query.create_schedule_event(sch_e), sch_e)
-      if (!res_schedule_event.affectedRows) {
-        console.log('res_schedule_event -- error')
-        return result.status(400).end()
-      }
-    }
-    for (const cost of costs) {
-      cost.bid_id = bid_id
-      const res_costs = await db_helper.update(query.create_costs(cost), cost)
-      if (!res_costs.affectedRows) {
-        console.log('res_costs -- error')
-        return result.status(400).end()
-      }
-    }
-    
-    const client = {name: bid.client_name}
-    const res_client = await db_helper.update(query.create_client(client), client)
-    if (!res_client.affectedRows) {
-      console.log('res_client -- error')
-    }
 
-    return result.status(200).send({ bid_id })
+    const [res_bid_id] = await db_helper.get(query.get_bid_by_id(bid_id))
+    return result.status(200).send({ bid_id: res_bid_id.uuid })
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -51,7 +30,7 @@ const get_bid = async (uuid, result) => {
     }
     return result.status(200).send({ bid: bid_details, costs: bid_costs_details, schedule_event: bid_schedule_event_details })
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -61,6 +40,16 @@ const get_bids = async (filters, result) => {
     if (!bid_details) {
       return result.status(404).end()
     }
+    if (filters.csv && filters.csv === 'true') {
+      const res_csv = await csv_generator.create_csv_file(bid_details)
+      if (res_csv.status === 200) {
+        const file_name = res_csv.file_name
+        return result.status(200).send({ file_name })
+      } else {
+        return result.status(res_csv.status).send('failed to create csv')
+      }
+    }
+
     const meta_data = await get_meta_data(filters)
 
     return result.status(200).send({ bids: bid_details, meta_data })

@@ -30,6 +30,7 @@ const create_schedule_event = async (req, res) => {
     }
     schedule_event_service.create_schedule_event(body_parameters, { bid_id, event_id }, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -42,6 +43,7 @@ const get_schedule_event = async (req, res) => {
     }
     schedule_event_service.get_schedule_event(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -49,6 +51,7 @@ const get_schedule_events = async (req, res) => {
   try {
     schedule_event_service.get_schedule_events(res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -61,6 +64,7 @@ const update_schedule_event = async (req, res) => {
     }
     schedule_event_service.update_schedule_event(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -72,6 +76,7 @@ const delete_schedule_event = async (req, res) => {
     }
     schedule_event_service.delete_schedule_event(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -80,7 +85,7 @@ const process_payload_create = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res_schedule_event = []
-      for (const payload of data.schedule_event) {
+      for (const payload of data.schedule_time_event) {
         const processed_payload = {}
         for (const [key, val] of Object.entries(payload)) {
           if (val !== undefined) {

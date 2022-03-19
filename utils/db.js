@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
 // open the MySQL connection
 connection.connect((error) => {
   if (error) throw error
-  logger.log(`Successfully connected to database: ${process.env.DB_NAME}.`)
+  logger.info(`Successfully connected to database: ${process.env.DB_NAME}.`)
 })
 
 module.exports = connection

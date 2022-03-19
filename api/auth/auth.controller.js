@@ -11,6 +11,7 @@ const sign_in = async (req, res) => {
     const body_parameters = await process_payload(req.body)
     auth_service.sign_in(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -29,6 +30,7 @@ const sign_up = async (req, res) => {
     }
     auth_service.sign_up(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -38,6 +40,7 @@ const sign_out = async (req, res) => {
     const header_parameters = req.headers
     auth_service.sign_out(header_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -76,7 +79,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process auth payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

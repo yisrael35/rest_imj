@@ -6,7 +6,7 @@ const SHA256 = new Hashes.SHA256()
 const helper = require('../../utils/helper')
 const create_user = async (req, res) => {
   try {
-    //validte - admin only
+    //validate - admin only
     let level = req.headers.bearerAuth.user.level
     if (level !== 1) {
       return res.status(403).end()
@@ -17,6 +17,7 @@ const create_user = async (req, res) => {
     }
     user_service.create_user(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -29,13 +30,14 @@ const get_user = async (req, res) => {
     }
     user_service.get_user(uuid, req, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
 
 const get_users = async (req, res) => {
   try {
-    //validte - admin only
+    //validate - admin only
     const filters = await helper.process_filters(req.query)
     let level = req.headers.bearerAuth.user.level
     if (level !== 1) {
@@ -43,6 +45,7 @@ const get_users = async (req, res) => {
     }
     user_service.get_users(filters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -55,12 +58,13 @@ const update_user = async (req, res) => {
     }
     user_service.update_user(body_parameters, uuid, req, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
 const delete_user = async (req, res) => {
   try {
-    //validte - admin only
+    //validate - admin only
     let level = req.headers.bearerAuth.user.level
     if (level !== 1) {
       return res.status(403).end()
@@ -71,6 +75,7 @@ const delete_user = async (req, res) => {
     }
     user_service.delete_user(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }

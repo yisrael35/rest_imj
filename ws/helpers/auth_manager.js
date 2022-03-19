@@ -3,7 +3,7 @@ const query = require('../../sql/queries/auth')
 const dbHelper = require('../../utils/db_helper')
 const AceBase64Crypto = require('../../utils/AceBase64Crypto')
 const Logger = require('logplease')
-const logger = Logger.create('ws/helper/auth_manager.js')
+const logger = Logger.create('./ws/helper/auth_manager.js')
 require('dotenv').config()
 
 const checkJWT = async (token) => {

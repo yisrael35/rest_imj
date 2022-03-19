@@ -10,6 +10,7 @@ const create_event_type = async (req, res) => {
     }
     event_type_service.create_event_type(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -22,6 +23,7 @@ const get_event_type = async (req, res) => {
     }
     event_type_service.get_event_type(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -29,6 +31,7 @@ const get_event_types = async (req, res) => {
   try {
     event_type_service.get_event_types(res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -41,6 +44,7 @@ const update_event_type = async (req, res) => {
     }
     event_type_service.update_event_type(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -52,6 +56,7 @@ const delete_event_type = async (req, res) => {
     }
     event_type_service.delete_event_type(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -83,7 +88,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process event_type payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

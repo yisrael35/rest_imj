@@ -8,13 +8,13 @@ const moment = require('moment')
 
 const create_event = async (req, res) => {
   try {
-
     const body_parameters = await process_payload(req.body)
     if (!body_parameters) {
       return res.status(400).end()
     }
     event_service.create_event(body_parameters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -27,6 +27,7 @@ const get_event = async (req, res) => {
     }
     event_service.get_event(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -36,6 +37,7 @@ const get_events = async (req, res) => {
 
     event_service.get_events(filters, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -48,6 +50,7 @@ const update_event = async (req, res) => {
     }
     event_service.update_event(body_parameters, uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -59,6 +62,7 @@ const delete_event = async (req, res) => {
     }
     event_service.delete_event(uuid, res)
   } catch (error) {
+    logger.error(error)
     return res.status(400).end()
   }
 }
@@ -73,6 +77,13 @@ const process_payload = (payload) => {
             case 'name':
               processed_payload.name = val.trim()
               break
+            case 'bid_id':
+              const [res_bid] = await db_helper.get(query.get_bid_by_uuid(val.trim()))
+              if (!res_bid) {
+                return reject({ status: 404 })
+              }
+              processed_payload.bid_id = res_bid.id
+              break
             case 'user':
               let user_uuid = val
               let [res_user] = await db_helper.get(query.get_user_by_uuid(user_uuid))
@@ -82,12 +93,21 @@ const process_payload = (payload) => {
               processed_payload.user_id = Number(res_user.id)
               break
             case 'from_date':
-              processed_payload.from_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              if (!moment(val).format('YYYY-MM-DD HH:mm:ss')) {
+                return reject({ status: 400 })
+              }
+              processed_payload.from_date = val
               break
             case 'to_date':
-              processed_payload.to_date = moment(val).format('YYYY-MM-DD HH:mm:ss')
+              if (!moment(val).format('YYYY-MM-DD HH:mm:ss')) {
+                return reject({ status: 400 })
+              }
+              processed_payload.to_date = val
               break
             case 'status':
+              if (val !== 'pending' && val !== 'approved' && val !== 'canceled') {
+                return reject({ status: 400 })
+              }
               processed_payload.status = val.trim()
               break
             case 'clients':
@@ -135,7 +155,7 @@ const process_payload = (payload) => {
       return resolve(processed_payload)
     } catch (error) {
       logger.error(`Failed to process event payload, The error: ${error}`)
-      return reject({ status: 404, error: '4.11' })
+      return reject({ status: 400 })
     }
   })
 }

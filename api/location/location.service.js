@@ -1,5 +1,7 @@
 const query = require('../../sql/queries/location')
 const db_helper = require('../../utils/db_helper')
+const Logger = require('logplease')
+const logger = Logger.create('./api/location/location.service.js')
 
 const create_location = async (payload, result) => {
   try {
@@ -9,7 +11,7 @@ const create_location = async (payload, result) => {
     }
     return result.status(200).end()
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -22,7 +24,7 @@ const get_location = async (uuid, result) => {
     }
     return result.status(200).send(location_details[0])
   } catch (error) {
-    console.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -34,6 +36,7 @@ const get_locations = async (result) => {
     }
     return result.status(200).send(location_details)
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -46,6 +49,7 @@ const update_location = async (payload, uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -58,6 +62,7 @@ const delete_location = async (uuid, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    logger.error(error)
     return result.status(404).end()
   }
 }

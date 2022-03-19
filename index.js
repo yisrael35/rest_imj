@@ -1,15 +1,19 @@
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
-const Logger = require('logplease')
-const logger = Logger.create('index.js')
 const server = express()
 server.use(express.json())
 require('dotenv').config({ path: path.resolve(__dirname, '.env') })
 require('./ws/services/ws_service')
+const Logger = require('logplease')
+const logger = Logger.create('./index.js')
+
+if (process.env.QUEUE_LOGGER_ACTIVATE === 'true') {
+  require('./utils/log_queue').init_queue()
+}
 
 server.use(cors('*'))
-server.use('/assets', express.static('pdf_files'))
+server.use('/assets', express.static('files'))
 // Files of the Routes
 const auth_routes = require('./api/auth/auth.routes')
 const user_routes = require('./api/user/user.routes')
@@ -24,6 +28,7 @@ const cost_routes = require('./api/cost/cost.routes')
 const schedule_event_routes = require('./api/schedule_event/schedule_event.routes')
 const pdf_routes = require('./api/pdf/pdf.routes')
 const supplier_routes = require('./api/supplier/supplier.routes')
+const csv_routes = require('./api/csv/csv.routes')
 
 // Routes
 server.use('/auth', auth_routes)
@@ -38,11 +43,12 @@ server.use('/utils', utils_routes)
 server.use('/cost', cost_routes)
 server.use('/schedule_event', schedule_event_routes)
 server.use('/pdf', pdf_routes)
+server.use('/csv', csv_routes)
 server.use('/supplier', supplier_routes)
 
 // const template = require('./utils/pdf_generatore')
 
 const port = process.env.HTTP_PORT || 3001
 server.listen(port, () => {
-  logger.log('HTTP Server is running on:', port)
+  logger.info(`HTTP Server is running on: ${port}`)
 })

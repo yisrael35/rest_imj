@@ -6,8 +6,10 @@ const auth_manager = require('../helpers/auth_manager')
 const { message_type } = require('../helpers/message_handler')
 const { message_builder } = require('../helpers/message_builder')
 const { get_events } = require('../models/event')
-const Logger = require('logplease')
-const logger = Logger.create('ws/ws_service.js')
+// const Logger = require('logplease')
+// const logger = Logger.create('./ws/ws_service.js')
+const logger = require('../../utils/logger')
+const file_location = './ws/ws_service.js'
 const server = createServer()
 
 const wss = new WebSocket.Server({ server })
@@ -15,7 +17,7 @@ const get_wss_of_ws_service = () => wss
 
 wss.on('connection', async (ws, req) => {
   ws.id = uuid()
-  logger.log(`WS - New connection detected: ${ws.id}`)
+  logger.info(`WS - New connection detected: ${ws.id}`, file_location)
   try {
     let token = req.url.split('/?token=')[1]
     if (token) {
@@ -25,14 +27,13 @@ wss.on('connection', async (ws, req) => {
       return
     }
   } catch (error) {
-    logger.log(`Error login:  ${error}`)
+    logger.log(`Error login:  ${error}`, file_location)
     ws.send(JSON.stringify(message_builder({ type: 'login', error: true, content: error, code: '401' })))
     return
   }
 
   ws.on('message', (message) => {
     try {
-      logger.log('---------------------------------------')
       const session = session_manager.get_session(ws.id)
       if (!session || !session.authenticate) {
         ws.send(JSON.stringify(message_builder({ type: 'login', error: true, content: 'Unauthorized', code: '401' })))
@@ -41,7 +42,7 @@ wss.on('connection', async (ws, req) => {
       message = JSON.parse(message)
       message_type(message, ws)
     } catch (error) {
-      logger.error(error)
+      logger.error(error, file_location)
       return ws.send(JSON.stringify(message_builder({ type: 'message', error: true, content: message, code: '400' })))
     }
   })
@@ -51,7 +52,7 @@ wss.on('connection', async (ws, req) => {
   })
 
   ws.on('close', async () => {
-    logger.log(`Closing session [${ws.id}]`)
+    logger.info(`Closing session [${ws.id}]`, file_location)
     session_manager.delete_session(ws.id)
     ws.terminate()
   })
@@ -74,11 +75,10 @@ const heartbeat = (ws) => {
 }
 
 server.listen(process.env.WS_PORT)
-logger.log('WS Server is running on:', process.env.WS_PORT)
+logger.info(`WS Server is running on: ${process.env.WS_PORT}`, file_location)
 
 const handle_token = async (token, ws) => {
   login_data = await auth_manager.checkJWT(token)
-
   const new_session = {
     ...login_data,
     authenticate: true,

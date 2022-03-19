@@ -6,6 +6,9 @@ const mailUtil = require('../../utils/mail')
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const helper = require('../../utils/helper')
+const Logger = require('logplease')
+const logger = Logger.create('./api/forgot_password/forgot_password.service.js')
+
 
 const EXP_TOKEN = '1h'
 const ALG_TOKEN = 'HS256'
@@ -32,7 +35,7 @@ const forgot_password = async (payload, result) => {
       }
     })
   } catch (error) {
-    // console.log(error)
+    logger.error(error)
     return result.status(404).end()
   }
 }
@@ -60,6 +63,7 @@ const change_password = async (payload, user_id, result) => {
       }
     })
   } catch (error) {
+    logger.error(error)
     return result.status(400).end()
   }
 }
@@ -76,6 +80,7 @@ const save_token_in_db = (token, user_id) => {
       const res = await db_helper.update(query.create_token(token_details), token_details)
       return resolve(res)
     } catch (error) {
+      logger.error(error)
       return reject(error)
     }
   })
@@ -112,6 +117,7 @@ const create_token = (user) => {
         return resolve(user_details)
       })
     } catch (error) {
+      logger.error(error)
       return reject(error)
     }
   })
