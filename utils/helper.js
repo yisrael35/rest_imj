@@ -16,6 +16,9 @@ const return_encrypt_email = (email) => {
 const check_password = (password) => {
   return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-,]).{8,200}/.test(password)
 }
+const check_phone = (password) => {
+  return /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(password)
+}
 
 const validateEmail = (email) => {
   var re = /\S+@\S+\.\S+/
@@ -76,6 +79,7 @@ const process_filters = (payload) => {
 module.exports = {
   validateEmail,
   check_password,
+  check_phone,
   return_encrypt_email,
   process_filters,
 }
