@@ -66,7 +66,7 @@ contains queries to update the dbs
 
 ### structure
 
-contains two DB structures: Enigma & Company
+contains DB structure: imj_db
 
 ### queries
 
