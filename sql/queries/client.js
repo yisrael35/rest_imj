@@ -7,15 +7,17 @@ const create_client = (details) => {
 const get_client_by_uuid = (uuid) => {
   return `
   SELECT *
-  FROM client WHERE uuid = '${uuid}';`
+  FROM client WHERE uuid = '${uuid}' AND is_active = 1;`
 }
 
 const get_clients = ({ search, limit, offset }) => {
   return `
   SELECT *
   FROM client
-  ${search ? `WHERE email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
-    LIMIT ${limit} OFFSET ${offset}
+  WHERE
+  ${search ? ` email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'  AND` : ''}
+  is_active = 1
+  LIMIT ${limit} OFFSET ${offset}
     ;`
 }
 
@@ -24,8 +26,9 @@ const get_sum_rows = ({ search }) => {
     SELECT 
     COUNT(DISTINCT id) AS sum
     FROM client 
-    ${search ? `WHERE  email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'` : ''}
-    ;`
+    WHERE
+    ${search ? ` email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' OR type LIKE '%${search}%'  AND` : ''}
+    is_active = 1    ;`
 }
 
 const update_client = (client, uuid) => {
