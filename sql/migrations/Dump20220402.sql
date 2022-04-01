@@ -27,29 +27,31 @@ CREATE TABLE `bid` (
   `uuid` varchar(45) NOT NULL,
   `user_id` int unsigned NOT NULL,
   `event_type_id` int NOT NULL,
-  `location_id` int DEFAULT NULL,
-  `status` enum('draft','sent','approved') NOT NULL,
-  `comment` varchar(200) DEFAULT NULL,
-  `total_a_discount` double NOT NULL,
-  `total_b_discount` double NOT NULL,
-  `total_discount` double NOT NULL,
-  `currency` enum('nis','usd') NOT NULL DEFAULT 'nis',
-  `client_name` varchar(45) NOT NULL,
+  `client_id` int NOT NULL,
+  `location_id` int NOT NULL,
   `event_name` varchar(45) NOT NULL,
-  `event_date` timestamp NULL DEFAULT NULL,
+  `event_date` timestamp NOT NULL,
+  `status` enum('draft','sent','approved') NOT NULL DEFAULT 'draft',
+  `language` enum('he','en') NOT NULL DEFAULT 'he',
+  `currency` enum('nis','usd') NOT NULL DEFAULT 'nis',
+  `comment` varchar(200) DEFAULT NULL,
+  `total_a_discount` double DEFAULT NULL,
+  `total_b_discount` double DEFAULT NULL,
+  `total_discount` double DEFAULT NULL,
   `max_participants` int DEFAULT NULL,
-  `min_participants` int NOT NULL DEFAULT '0',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_bid_location1_idx` (`location_id`),
   KEY `fk_bid_event_type1_idx` (`event_type_id`),
   KEY `fk_bid_user1_idx` (`user_id`),
+  KEY `fk_bid_client1_idx` (`client_id`),
+  CONSTRAINT `fk_bid_client1` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
   CONSTRAINT `fk_bid_event_type1` FOREIGN KEY (`event_type_id`) REFERENCES `event_type` (`id`),
   CONSTRAINT `fk_bid_location1` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`),
   CONSTRAINT `fk_bid_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -60,7 +62,7 @@ CREATE TABLE `bid` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003  CREATE TRIGGER  `bid_BEFORE_INSERT` BEFORE INSERT ON `bid` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `bid_BEFORE_INSERT` BEFORE INSERT ON `bid` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -83,10 +85,11 @@ CREATE TABLE `client` (
   `type` enum('private','company','department') NOT NULL DEFAULT 'private',
   `email` varchar(45) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
+  `is_active` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -97,7 +100,7 @@ CREATE TABLE `client` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003  CREATE TRIGGER  `client_BEFORE_INSERT` BEFORE INSERT ON `client` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `client_BEFORE_INSERT` BEFORE INSERT ON `client` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -123,12 +126,14 @@ CREATE TABLE `cost` (
   `total_cost` double NOT NULL DEFAULT '0',
   `discount` double DEFAULT '0',
   `comment` varchar(200) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_costs_bid1_idx` (`bid_id`),
   KEY `fk_costs_event1_idx` (`event_id`),
   CONSTRAINT `fk_costs_bid1` FOREIGN KEY (`bid_id`) REFERENCES `bid` (`id`),
   CONSTRAINT `fk_costs_event1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,20 +150,23 @@ CREATE TABLE `event` (
   `user_id` int unsigned NOT NULL,
   `from_date` timestamp NOT NULL,
   `to_date` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `template_data_id` int DEFAULT NULL,
-  `status` enum('pending','approved','canceled') NOT NULL DEFAULT 'pending',
+  `status` enum('pending','approved','canceled') NOT NULL DEFAULT 'approved',
   `clients` json DEFAULT NULL,
   `type` enum('public','private','inside','photo_shot') NOT NULL DEFAULT 'public',
   `comment` varchar(200) DEFAULT NULL,
   `budget` tinyint DEFAULT NULL,
   `check_list` tinyint DEFAULT NULL,
   `suppliers` json DEFAULT NULL,
+  `bid_id` int DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_event_user1_idx` (`user_id`),
+  KEY `fk_event_bid1_idx` (`bid_id`),
+  CONSTRAINT `fk_event_bid1` FOREIGN KEY (`bid_id`) REFERENCES `bid` (`id`),
   CONSTRAINT `fk_event_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -169,7 +177,7 @@ CREATE TABLE `event` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003  CREATE TRIGGER  `event_BEFORE_INSERT` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_BEFORE_INSERT` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -191,8 +199,10 @@ CREATE TABLE `event_type` (
   `language` varchar(45) DEFAULT NULL,
   `content` json DEFAULT NULL,
   `fields` json DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,8 +217,10 @@ CREATE TABLE `location` (
   `name_en` varchar(45) NOT NULL,
   `name_he` varchar(45) NOT NULL,
   `mapping` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,12 +237,14 @@ CREATE TABLE `schedule_event` (
   `start_activity` time NOT NULL,
   `end_activity` time NOT NULL,
   `description` varchar(200) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_schedule_event_event1_idx` (`event_id`),
   KEY `fk_schedule_event_bid1_idx` (`bid_id`),
   CONSTRAINT `fk_schedule_event_bid1` FOREIGN KEY (`bid_id`) REFERENCES `bid` (`id`),
   CONSTRAINT `fk_schedule_event_event1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,6 +261,7 @@ CREATE TABLE `supplier` (
   `account` json DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
+  `is_active` tinyint NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -261,8 +276,8 @@ CREATE TABLE `supplier` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003  CREATE TRIGGER  `supplier_BEFORE_INSERT` BEFORE INSERT ON `supplier` FOR EACH ROW BEGIN
-	SET NEW.`uuid` = UUID();
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `supplier_BEFORE_INSERT` BEFORE INSERT ON `supplier` FOR EACH ROW BEGIN
+SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -287,7 +302,7 @@ CREATE TABLE `token` (
   PRIMARY KEY (`id`),
   KEY `fk_token_user1_idx` (`user_id`),
   CONSTRAINT `fk_token_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=427 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -313,7 +328,7 @@ CREATE TABLE `user` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -324,7 +339,7 @@ CREATE TABLE `user` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003  CREATE TRIGGER  `user_BEFORE_INSERT` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_BEFORE_INSERT` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -342,4 +357,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-23 20:13:55
+-- Dump completed on 2022-04-02  0:14:47

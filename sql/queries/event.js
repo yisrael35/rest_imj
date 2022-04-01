@@ -40,7 +40,7 @@ const get_events = ({ search, limit, offset, from_date, to_date, status }) => {
   WHERE
   ${from_date ? `e.from_date >= '${from_date}' AND` : ''}
   ${to_date ? `e.to_date <= '${to_date}' AND` : ''}
-  ${search ? ` e.id LIKE '%${search}%'  OR e.uuid LIKE '%${search}%' AND ` : ''}
+  ${search ? ` e.id LIKE '%${search}%'  OR e.uuid LIKE '%${search}%' OR e.name LIKE '%${search}%'  OR e.from_date LIKE '%${search}%' AND ` : ''}
   ${status ? `e.status = '${status}' AND` : ''}
   1=1
   ORDER BY e.created_at DESC
@@ -55,7 +55,7 @@ const get_sum_rows = ({ search, from_date, to_date }) => {
   WHERE
   ${from_date ? `from_date >= '${from_date}' AND` : ''}
   ${to_date ? `to_date <= '${to_date}' AND` : ''}
-  ${search ? ` id LIKE '%${search}%'  OR uuid LIKE '%${search}%' AND` : ''}
+  ${search ? ` id LIKE '%${search}%'  OR uuid LIKE '%${search}%' OR name LIKE '%${search}%'  OR from_date LIKE '%${search}%' AND ` : ''}
   1 = 1
   ;`
 }
