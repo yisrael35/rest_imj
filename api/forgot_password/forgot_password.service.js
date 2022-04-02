@@ -10,7 +10,7 @@ const Logger = require('logplease')
 const logger = Logger.create('./api/forgot_password/forgot_password.service.js')
 
 
-const EXP_TOKEN = '1h'
+const EXP_TOKEN = '20m'
 const ALG_TOKEN = 'HS256'
 
 const forgot_password = async (payload, result) => {

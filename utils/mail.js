@@ -194,7 +194,6 @@ const confirm_change_password = () => {
   `
 }
 
-
 const share_file = () => {
   return `${first_letter}
             <tr>
@@ -205,7 +204,7 @@ const share_file = () => {
                 <br />
                 <br />
                 <p>Sincerely,</p>
-                <p>The israel musuem team</p>
+                <p>The Israel Museum Support team</p>
                 <br />
                 <br />
               </td>
@@ -214,8 +213,29 @@ const share_file = () => {
   `
 }
 
+const six_digits = (six_digits) => {
+  return `${first_letter}
+          <tr>
+            <td id="credeantials">
+              <p>Hello,</p><br />
+              <p>
+              Please enter the 6 digits for further ID verification,
+              These digits are valid for twenty minutes only!
+              </p>
+              <br />
+              <h3>Your six digits: <b>${six_digits}</b></h3>
+
+              <p>Regards,</p>
+              <p>The Israel Museum Support team</p>
+              </td>
+          </tr>
+          ${end_letter}
+  `
+}
+
 module.exports = {
   share_file,
   forgot_password,
   confirm_change_password,
+  six_digits,
 }

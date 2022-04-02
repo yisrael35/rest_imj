@@ -31,7 +31,7 @@ const check_token_in_db = (token) => {
 }
 const check_token_is_active = (token) => {
   return `
-    SELECT is_active FROM token WHERE content = '${token}';`
+    SELECT * FROM token WHERE content = '${token}';`
 }
 
 const create_token = (data) => {

@@ -180,10 +180,10 @@ The package that we used:
 <a href="https://www.npmjs.com/package/pdfkit">pdfkit</a>
 
 
-👀 All rights reserved to Yisrael Bar
-🌱 How to reach me:
-[My Linkedin](https://www.linkedin.com/in/yisrael-bar-7534a842/)
-If you want to see more of my projects:
-[My GitHub](https://github.com/yisrael35)
+👀 All rights reserved to Yisrael Bar<br>
+🌱 How to reach me:<br>
+[My Linkedin](https://www.linkedin.com/in/yisrael-bar-7534a842/)<br>
+If you want to see more of my projects:<br>
+[My GitHub](https://github.com/yisrael35)<br>
 
 ### Created by: Yisrael Bar
