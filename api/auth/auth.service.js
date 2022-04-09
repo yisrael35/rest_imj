@@ -2,9 +2,13 @@ const query = require('../../sql/queries/auth')
 const db_helper = require('../../utils/db_helper')
 const jwt = require('jsonwebtoken')
 const AceBase64Crypto = require('../../utils/AceBase64Crypto')
+const helper = require('../../utils/helper')
+const send_sms = require('../../utils/send_sms')
+const mailUtil = require('../../utils/mail')
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const Logger = require('logplease')
 const logger = Logger.create('api/auth/auth.service.js')
-
 const EXP_TOKEN = '1d'
 const ALG_TOKEN = 'HS256'
 
@@ -15,11 +19,23 @@ const sign_in = async (payload, result) => {
     if (!user) {
       return result.status(403).end()
     }
-    const user_details = await create_token(user)
-    return result.status(200).send(user_details)
+    if (process.env.TWO_FA_STATUS === 'false') {
+      const type = 'platform'
+      const two_fa_status = process.env.TWO_FA_STATUS
+      const user_details = await create_token({ type, user })
+      user_details.two_fa_status = two_fa_status
+      return result.status(200).send(user_details)
+    } else {
+      const type = 'login'
+      const code = helper.generate_six_digits()
+      const user_details = await create_token({ type, user, code })
+      user_details.phone = helper.return_encrypt_phone(user.phone)
+      user_details.email = helper.return_encrypt_email(user.email)
+      return result.status(200).send(user_details)
+    }
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 
@@ -30,7 +46,7 @@ const sign_up = async (payload, result) => {
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 
@@ -52,26 +68,97 @@ const sign_out = async (payload, result) => {
   }
 }
 
-// create token in database
-const save_token_in_db = (token, user_id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const token_details = {
-        content: token,
-        user_id,
-      }
-      db_helper.update_just_query(query.update_user(user_id))
-      const res = await db_helper.update(query.create_token(token_details), token_details)
-      return resolve(res)
-    } catch (error) {
-      logger.error(error)
-      return reject(error)
+const update_two_fa_status = async (payload, result) => {
+  try {
+    process.env.TWO_FA_STATUS = payload.two_fa_status
+    const data = { two_fa_status: process.env.TWO_FA_STATUS }
+    return result.status(200).send(data)
+  } catch (error) {
+    logger.error(error)
+    return result.status(500).end()
+  }
+}
+
+const send_six_digits = async (payload, result) => {
+  try {
+    const [res_user] = await db_helper.get(query.get_user_by_id(payload.user_id))
+    if (!res_user) {
+      return result.status(404).send('Failed to find user')
     }
-  })
+    const [res_token] = await db_helper.get(query.check_token_in_db(payload.token))
+    if (!res_token) {
+      return result.status(403).send('Failed to find token')
+    }
+
+    const { code } = res_token
+    if (payload.send_code_to === 'sms') {
+      const phone = '+972' + res_user.phone
+      const message = `The verification code for IMJ, is: ${code}`
+      const res_sms = await send_sms.send_sms(phone, message)
+      if (res_sms.status === 200) {
+        return result.status(200).end()
+      } else {
+        return result.status(400).end()
+      }
+    } else if (payload.send_code_to === 'email') {
+      const msg = {
+        to: res_user.email,
+        from: `${process.env.IMJ_FROM}`,
+        subject: 'IMJ: verification code',
+        html: mailUtil.six_digits(`${code}`),
+      }
+      sgMail.send(msg, async (err, res) => {
+        if (err) {
+          return result.status(500).end()
+        } else {
+          return result.status(200).send({ status: 200, data: { email: helper.return_encrypt_email(res_user.email) } })
+        }
+      })
+    }
+    return result.status(200).end()
+  } catch (error) {
+    logger.error(error)
+    return result.status(500).end()
+  }
+}
+
+const validate_six_digits = async (payload, result) => {
+  try {
+    const [user] = await db_helper.get(query.get_user_by_id(payload.user_id))
+    if (!user) {
+      return result.status(404).send('Failed to find user')
+    }
+    const [res_token] = await db_helper.get(query.check_token_in_db(payload.token))
+    if (!res_token) {
+      return result.status(403).send('Failed to find token')
+    }
+    if (payload.code !== res_token.code) {
+      return result.status(403).send('Failed to authenticate code')
+    }
+
+    const two_fa_status = process.env.TWO_FA_STATUS
+    const type = 'platform'
+    const user_details = await create_token({ type, user })
+    user_details.two_fa_status = two_fa_status
+
+    return result.status(200).send(user_details)
+  } catch (error) {
+    logger.error(error)
+    return result.status(500).end()
+  }
+}
+
+module.exports = {
+  sign_in,
+  sign_out,
+  sign_up,
+  update_two_fa_status,
+  send_six_digits,
+  validate_six_digits,
 }
 
 // create token
-const create_token = (user) => {
+const create_token = ({ user, type, code }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const exp = EXP_TOKEN
@@ -88,7 +175,7 @@ const create_token = (user) => {
         if (err) {
           throw err
         }
-        await save_token_in_db(token, user.id)
+        await save_token_in_db({ code, type, token, user_id: user.id })
 
         const user_details = {
           user: {
@@ -96,7 +183,8 @@ const create_token = (user) => {
             id: user.uuid,
             level: user.level,
           },
-          token: token,
+          token,
+          type,
         }
         return resolve(user_details)
       })
@@ -107,8 +195,22 @@ const create_token = (user) => {
   })
 }
 
-module.exports = {
-  sign_in,
-  sign_out,
-  sign_up,
+// create token in database
+const save_token_in_db = ({ code, type, token, user_id }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token_details = {
+        content: token,
+        user_id,
+        type,
+        code,
+      }
+      db_helper.update_just_query(query.update_user(user_id))
+      const res = await db_helper.update(query.create_token(token_details), token_details)
+      return resolve(res)
+    } catch (error) {
+      logger.error(error)
+      return reject(error)
+    }
+  })
 }

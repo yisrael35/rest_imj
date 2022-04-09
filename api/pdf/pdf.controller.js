@@ -65,7 +65,7 @@ const get_fields = async (event_type_id, res_bid) => {
   let fields = JSON.parse(res_event_type.fields)
   const process_data = {}
   for (const [key, val] of Object.entries(fields)) {
-    // TODO : handle multiple tables
+    //  handle multiple tables
     switch (key) {
       case 'language':
         process_data[key] = res_event_type['language']

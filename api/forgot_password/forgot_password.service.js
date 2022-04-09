@@ -9,7 +9,6 @@ const helper = require('../../utils/helper')
 const Logger = require('logplease')
 const logger = Logger.create('./api/forgot_password/forgot_password.service.js')
 
-
 const EXP_TOKEN = '20m'
 const ALG_TOKEN = 'HS256'
 
@@ -69,12 +68,13 @@ const change_password = async (payload, user_id, result) => {
 }
 
 // create token in database
-const save_token_in_db = (token, user_id) => {
+const save_token_in_db = ({ type, token, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const token_details = {
         content: token,
         user_id,
+        type,
       }
       db_helper.update_just_query(query.update_user(user_id))
       const res = await db_helper.update(query.create_token(token_details), token_details)
@@ -104,7 +104,8 @@ const create_token = (user) => {
         if (err) {
           throw err
         }
-        await save_token_in_db(token, user.id)
+        const type = 'reset_password'
+        await save_token_in_db({ type, token, user_id: user.id })
 
         const user_details = {
           user: {
@@ -112,7 +113,8 @@ const create_token = (user) => {
             id: user.uuid,
             level: user.level,
           },
-          token: token,
+          token,
+          type,
         }
         return resolve(user_details)
       })

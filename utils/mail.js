@@ -99,7 +99,7 @@ const first_letter = `
         margin-top: 32px;
       }
 
-      #disclamer {
+      #disclaimer {
         padding-top: 40px;
         font-size: 10px;
         text-align: left;
@@ -113,10 +113,8 @@ const first_letter = `
           <tr>
             <td>
             <i class="sprite sprite-logo">
-              <img src="https://www.imj.org.il/sites/all/themes/museum/img/icons/logo-text-he-rtl.svg" alt="לוגו בעברית">
-              <img src="https://www.imj.org.il/sites/all/themes/museum/img/icons/logo-text-eng-rtl.svg" alt="English logo">
-              <img src="https://www.imj.org.il/sites/all/themes/museum/img/icons/logo-text-ar-rtl.svg" alt="Arabic logo">
-            </i>
+              <img src="http://yisraelbar.xyz/assets/logo.png" alt="logo">
+                </i>
             </td>
           </tr>
         </tbody>
@@ -136,11 +134,9 @@ const end_letter = `
             </td>
           </tr>
           <tr>
-            <td id="disclamer">
+            <td id="disclaimer">
               <p><b>Disclaimer</b></p>
-          
               <br />
-              
               <p></p>
             </td>
           </tr>
@@ -197,13 +193,13 @@ const confirm_change_password = () => {
 const share_file = () => {
   return `${first_letter}
             <tr>
-              <td id="credeantials">
-                <p>Hello,</p>
+              <td id="credentials">
+                <p>Hello</p>
                 <br />
                 <p>You will find a pdf file attached to this email</p>
                 <br />
                 <br />
-                <p>Sincerely,</p>
+                <p>Sincerely</p>
                 <p>The Israel Museum Support team</p>
                 <br />
                 <br />
@@ -216,16 +212,16 @@ const share_file = () => {
 const six_digits = (six_digits) => {
   return `${first_letter}
           <tr>
-            <td id="credeantials">
-              <p>Hello,</p><br />
+            <td id="verification">
+              <p>Hello</p><br />
               <p>
               Please enter the 6 digits for further ID verification,
-              These digits are valid for twenty minutes only!
+              These digits are valid for twenty minutes only
               </p>
               <br />
               <h3>Your six digits: <b>${six_digits}</b></h3>
 
-              <p>Regards,</p>
+              <p>Regards</p>
               <p>The Israel Museum Support team</p>
               </td>
           </tr>
