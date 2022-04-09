@@ -8,12 +8,12 @@ const create_client = async (payload, result) => {
   try {
     const res = await db_helper.update(query.create_client(payload), payload)
     if (!res.insertId) {
-      return result.status(404).end()
+      return result.status(400).end()
     }
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 
@@ -26,7 +26,7 @@ const get_client = async (uuid, result) => {
     return result.status(200).send(client_details[0])
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 const get_clients = async (filters, result) => {
@@ -48,7 +48,7 @@ const get_clients = async (filters, result) => {
     return result.status(200).send({ clients: client_details, meta_data })
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 
@@ -56,12 +56,12 @@ const update_client = async (payload, uuid, result) => {
   try {
     const res = await db_helper.update(query.update_client(payload, uuid), payload)
     if (!res.affectedRows) {
-      return result.status(404).end()
+      return result.status(400).end()
     }
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 
@@ -71,15 +71,15 @@ const delete_client = async (uuid, result) => {
     if (!res_client) {
       return result.status(404).end()
     }
-    const { err, res } = await db_helper.update_just_query(query.delete_client(res_client.id))
-    if (err || !res.affectedRows) {
-      logger.error(err)
+    const client_data = { is_active: 0 }
+    const res = await db_helper.update(query.update_client(client_data, uuid), client_data)
+    if (!res.affectedRows) {
       return result.status(500).end()
     }
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 

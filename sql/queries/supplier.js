@@ -7,15 +7,17 @@ const create_supplier = (details) => {
 const get_supplier_by_uuid = (uuid) => {
   return `
   SELECT *
-  FROM supplier WHERE uuid = '${uuid}';`
+  FROM supplier WHERE uuid = '${uuid}' AND is_active = 1;`
 }
 
 const get_suppliers = ({ search, limit, offset }) => {
   return `
   SELECT *
   FROM supplier
-  ${search ? `WHERE email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%'` : ''}
-    LIMIT ${limit} OFFSET ${offset}
+  WHERE
+  ${search ? ` email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%'  AND` : ''}
+  is_active = 1
+  LIMIT ${limit} OFFSET ${offset}
     ;`
 }
 
@@ -24,8 +26,9 @@ const get_sum_rows = ({ search }) => {
     SELECT 
     COUNT(DISTINCT id) AS sum
     FROM supplier 
-    ${search ? `WHERE  email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%' ` : ''}
-    ;`
+    WHERE
+    ${search ? ` email LIKE '%${search}%'  OR phone LIKE '%${search}%'  OR name LIKE '%${search}%'  AND` : ''}
+    is_active = 1    ;`
 }
 
 const update_supplier = (supplier, uuid) => {

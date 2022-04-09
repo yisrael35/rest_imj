@@ -111,7 +111,7 @@ test('Check create user if it fails', async () => {
       name: 'new user',
       username: 'user_test2',
       level: '1',
-      email: 'user_test@makor-capital.com',
+      email: 'user_test@yisraelbar.xyz',
       phone: '052350539',
     }
     // unexpected params
@@ -120,7 +120,7 @@ test('Check create user if it fails', async () => {
     })
 
     new_user = {
-      email: 'user_test@makor-capital.com',
+      email: 'user_test@yisraelbar.com',
     }
     //missing params
     await axios.post(`${url}/user`, new_user).catch((error) => {

@@ -8,12 +8,12 @@ const create_supplier = async (payload, result) => {
   try {
     const res = await db_helper.update(query.create_supplier(payload), payload)
     if (!res.insertId) {
-      return result.status(404).end()
+      return result.status(400).end()
     }
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 
@@ -26,7 +26,7 @@ const get_supplier = async (uuid, result) => {
     return result.status(200).send(supplier_details[0])
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 const get_suppliers = async (filters, result) => {
@@ -48,7 +48,7 @@ const get_suppliers = async (filters, result) => {
     return result.status(200).send({ suppliers: supplier_details, meta_data })
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 
@@ -56,12 +56,12 @@ const update_supplier = async (payload, uuid, result) => {
   try {
     const res = await db_helper.update(query.update_supplier(payload, uuid), payload)
     if (!res.affectedRows) {
-      return result.status(404).end()
+      return result.status(400).end()
     }
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 
@@ -72,15 +72,15 @@ const delete_supplier = async (uuid, result) => {
       return result.status(404).end()
     }
 
-    const { err, res } = await db_helper.update_just_query(query.delete_supplier(res_supplier.id))
-    if (err || !res.affectedRows) {
-      logger.error(err)
-      return result.status(500).end()
+    const supplier_data = { is_active: 0 }
+    const res = await db_helper.update(query.update_supplier(supplier_data, uuid), supplier_data)
+    if (!res.affectedRows) {
+      return result.status(400).end()
     }
     return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 

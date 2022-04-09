@@ -5,6 +5,9 @@ const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0
 
 const return_encrypt_email = (email) => {
+  if (!email) {
+    return undefined
+  }
   if (typeof email !== 'string') {
     email = email[0]
   }
@@ -13,9 +16,18 @@ const return_encrypt_email = (email) => {
   return split_email[0] + '@' + split_email[1]
 }
 
+const return_encrypt_phone = (phone) => {
+  if (!phone) {
+    return undefined
+  }
+  let p_len = phone.length
+  return `${phone.slice(0, 4)}${'*'.repeat(7)}${phone.slice(p_len - 3)}`
+}
+
 const check_password = (password) => {
   return /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-,]).{8,200}/.test(password)
 }
+
 const check_phone = (password) => {
   return /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(password)
 }
@@ -24,8 +36,6 @@ const validateEmail = (email) => {
   var re = /\S+@\S+\.\S+/
   return re.test(email)
 }
-
-// process filters
 
 const process_filters = (payload) => {
   return new Promise(async (resolve, reject) => {
@@ -76,10 +86,16 @@ const process_filters = (payload) => {
   })
 }
 
+const generate_six_digits = () => {
+  return Math.floor(100000 + Math.random() * 900000)
+}
+
 module.exports = {
   validateEmail,
   check_password,
   check_phone,
   return_encrypt_email,
+  return_encrypt_phone,
   process_filters,
+  generate_six_digits,
 }

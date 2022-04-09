@@ -19,6 +19,7 @@ const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) =>
         if (email) {
           let file_path = path.join(path.resolve(), 'files', file_name)
           let attachment = fs.readFileSync(file_path).toString('base64')
+
           const msg = {
             to: email,
             from: `${process.env.IMJ_FROM}`,
@@ -35,7 +36,7 @@ const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) =>
           }
           sgMail.send(msg, async (err, res) => {
             if (err) {
-              console.log(err)
+              console.log(err.response.body)
               return result.status(500).end()
             } else {
               // update status bid to sent
@@ -52,7 +53,7 @@ const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) =>
       } else {
         return result.status(res_pdf.status).end()
       }
-    }, 4000)
+    }, 2000)
   } catch (error) {
     logger.error(error)
     return result.status(400).end()

@@ -52,6 +52,12 @@ const get_users = async (req, res) => {
 const update_user = async (req, res) => {
   try {
     const uuid = req.params.id
+    const { password, confirm_password } = req.body
+    if (password) {
+      if (password.trim() !== confirm_password.trim()) {
+        return res.status(400).end()
+      }
+    }
     const body_parameters = await process_payload(req.body)
     if (!uuid || !body_parameters) {
       return res.status(400).end()
@@ -93,6 +99,8 @@ const process_payload = (payload) => {
               break
             case 'password':
               processed_payload.password = SHA256.hex(val.trim())
+              break
+            case 'confirm_password':
               break
             case 'first_name':
               processed_payload.first_name = val.trim()
