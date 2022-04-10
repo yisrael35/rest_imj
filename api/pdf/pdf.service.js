@@ -3,7 +3,8 @@ const db_helper = require('../../utils/db_helper')
 const query = require('../../sql/queries/pdf')
 const Logger = require('logplease')
 const logger = Logger.create('./api/pdf/pdf.service.js')
-const pdf_generator = require('../../utils/pdf_generator')
+const pdf_generator = require('../../utils/pdf/pdf_generator')
+const pdf_bid_en = require('../../utils/pdf/pdf_bid_en')
 const mailUtil = require('../../utils/mail')
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -12,7 +13,13 @@ const helper = require('../../utils/helper')
 
 const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) => {
   try {
-    const res_pdf = await pdf_generator.pdf_generator(event_type_id, fields)
+    let res_pdf
+    console.log(fields)
+    if (fields.language === 'en') {
+      res_pdf = await pdf_bid_en.create_pdf(fields)
+    } else {
+      res_pdf = await pdf_generator.pdf_generator(event_type_id, fields)
+    }
     await setTimeout(() => {
       if (res_pdf.status === 200) {
         const file_name = res_pdf.file_name
@@ -23,7 +30,7 @@ const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) =>
           const msg = {
             to: email,
             from: `${process.env.IMJ_FROM}`,
-            subject: 'IMJ',
+            subject: 'Israel Museum Jerusalem: Bid Proposal',
             attachments: [
               {
                 content: attachment,

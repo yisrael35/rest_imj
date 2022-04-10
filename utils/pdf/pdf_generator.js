@@ -1,19 +1,19 @@
 const Logger = require('logplease')
-const logger = Logger.create('./utils/pdf_generator.js')
+const logger = Logger.create('./utils/pdf/pdf_generator.js')
 const pdfmake = require('pdfmake')
 const fs = require('fs')
 const path = require('path')
 
-const db_helper = require('./db_helper')
-const query = require('../sql/queries/pdf_generator')
+const db_helper = require('../db_helper')
+const query = require('../../sql/queries/pdf_generator')
 // const pdf_temp = require('./edit_pdf/pdf_editor')
 
 const fonts = {
   Roboto: {
-    normal: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Regular.ttf'),
-    bold: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Bold.ttf'),
-    italics: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Italic.ttf'),
-    bolditalics: path.join(path.resolve(), 'utils', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Bolditalic.ttf'),
+    normal: path.join(path.resolve(), 'utils', 'pdf', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Regular.ttf'),
+    bold: path.join(path.resolve(), 'utils', 'pdf', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Bold.ttf'),
+    italics: path.join(path.resolve(), 'utils', 'pdf', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Italic.ttf'),
+    bolditalics: path.join(path.resolve(), 'utils', 'pdf', 'edit_pdf', 'Open Sans Hebrew', 'OpenSansHebrew-Bolditalic.ttf'),
   },
 }
 
@@ -55,6 +55,8 @@ const pdf_generator = async (id, fields) => {
     return { status: 500 }
   }
 }
+
+
 
 const replace_str = (str, to, index) => {
   var chars = str.split('')

@@ -127,10 +127,10 @@ const first_letter = `
 const end_letter = `
           <tr>
             <td id="info">
-              <p><b>The israel museum Jerusalem מוזיאון ישראל ירושלים</b></p>
+              <p><b>Israel Museum Jerusalem מוזיאון ישראל ירושלים</b></p>
               <p>שדרות רופין 11 הקריה, ירושלים</p>
-              <p>02-6708811</p>
-              <p>${imj_url}/login</p>
+              <p>02-6708811  |  info@imj.org.il</p>
+              <p>https://www.imj.org.il</p>
             </td>
           </tr>
           <tr>
@@ -196,11 +196,14 @@ const share_file = () => {
               <td id="credentials">
                 <p>Hello</p>
                 <br />
-                <p>You will find a pdf file attached to this email</p>
+                <p>Continuing our conversation about your event- <br />
+                A bid proposal is attached to this email, on behalf of the museum.
+                <br />
+                Feel free to contact us for further questions and updates</p>
                 <br />
                 <br />
-                <p>Sincerely</p>
-                <p>The Israel Museum Support team</p>
+                <p>Best Regards,</p>
+                <p> Israel Museum Jerusalem support team</p>
                 <br />
                 <br />
               </td>

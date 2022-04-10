@@ -62,13 +62,18 @@ const get_fields = async (event_type_id, res_bid) => {
     logger.error('res_event_type failed')
     throw Error
   }
+  const [res_user] = await db_helper.get(query.get_user(res_bid.user_id))
+  if (!res_user) {
+    logger.error('res_user failed')
+    throw Error
+  }
   let fields = JSON.parse(res_event_type.fields)
   const process_data = {}
   for (const [key, val] of Object.entries(fields)) {
     //  handle multiple tables
     switch (key) {
       case 'language':
-        process_data[key] = res_event_type['language']
+        process_data[key] = res_bid['language']
         break
       case 'event_type':
         process_data[key] = res_event_type['name']
@@ -102,6 +107,8 @@ const get_fields = async (event_type_id, res_bid) => {
           throw Error
         }
         process_data[key] = res_client['name']
+        process_data['client_name'] = res_client['name']
+
         break
       case 'event_comment':
         process_data[key] = res_bid['comment']
@@ -118,23 +125,34 @@ const get_fields = async (event_type_id, res_bid) => {
   }
 
   process_data['schedule_event'] = await get_schedule_event(res_bid['id'], process_data['language'])
-  process_data['costs'] = await get_costs(res_bid['id'], process_data['language'], process_data['total_b_discount'], process_data['total_a_discount'])
-
+  let costs = await get_costs(res_bid['id'], process_data['language'])
+  console.log(costs)
+  process_data['costs'] = costs.cost_str
+  process_data['price'] = String(costs.total_cost)
+  process_data['uuid'] = res_bid.uuid
+  console.log(res_bid)
+  process_data['uuid'] = res_bid.uuid
+  process_data['date'] = res_bid.event_date
+  process_data['participants'] = res_bid.max_participants.toString()
+  process_data['user_name'] = res_user.first_name + ' ' + res_user.last_name
+  process_data['currency'] = res_bid.currency
   // console.log('process_data:')
   // console.log(process_data)
   return process_data
 }
 
-const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => {
+const get_costs = async (bid_id, lang) => {
   const res_cost = await db_helper.get(query.get_cost_by_bid_id(bid_id))
+  let total_cost = 0
   if (!res_cost) {
     logger.error('res_cost failed')
     throw Error
   }
   if (res_cost.length === 0 || (res_cost[0]['description'] == '' && res_cost[0]['amount'] == 0 && res_cost[0]['total_cost'] == 0)) {
-    return ''
+    return { cost_str: '', total_cost: '0' }
   }
-  let cost_str = ''
+  let cost_str = '',
+    price_with_discount = ''
   let discount_flag = false
   if (lang.toLowerCase() == 'hebrew') {
     for (let element of res_cost) {
@@ -148,11 +166,11 @@ const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => 
       }
       cost_str += element['unit_cost'] + ' x ' + element['amount'] + '  ' + element['comment'] + '^'
     }
-    if (discount_flag) {
-      cost_str += '^ סך הכל לפני הנחה: ' + total_cost + '^ סך הכל אחרי הנחה: ' + total_cost_with_discount
-    } else {
-      cost_str += '^ סך הכל: ' + total_cost
-    }
+    // if (discount_flag) {
+    //   cost_str += '^ סך הכל לפני הנחה: ' + total_cost + '^ סך הכל אחרי הנחה: ' + total_cost_with_discount
+    // } else {
+    //   cost_str += '^ סך הכל: ' + total_cost
+    // }
   } else {
     for (let element of res_cost) {
       cost_str += element['description'] + ': ' + element['amount'] + ' x ' + ' ' + element['unit_cost']
@@ -162,17 +180,18 @@ const get_costs = async (bid_id, lang, total_cost, total_cost_with_discount) => 
         discount = element['discount']
         discount_flag = true
       }
-      console.log(element['total_cost'] - discount)
-      console.log(element['comment'])
       cost_str += ' = ' + (element['total_cost'] - discount) + ' ' + element['comment'] + '\\n'
+      price_with_discount = element['total_cost'] - discount
+      total_cost += price_with_discount
     }
-    if (discount_flag) {
-      cost_str += '\\ntotal price without discount: ' + total_cost + '\\n total price with discount: ' + total_cost_with_discount
-    } else {
-      cost_str += '\\ntotal price: ' + total_cost
-    }
+    // if (discount_flag) {
+    //   cost_str += '\\ntotal price without discount: ' + total_cost + '\\n total price with discount: ' + total_cost_with_discount
+    // } else {
+    //   cost_str += '\\ntotal price: ' + total_cost
+    // }
   }
-  return cost_str
+  total_cost = String(total_cost)
+  return { cost_str, total_cost }
 }
 const get_schedule_event = async (bid_id, lang) => {
   const res_schedule_event = await db_helper.get(query.get_schedule_event_by_bid_id(bid_id))
