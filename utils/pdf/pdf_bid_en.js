@@ -42,24 +42,29 @@ const create_pdf = async (data) => {
 }
 
 const concat_data = async (doc, data) => {
-  await generate_header(doc)
+  await generate_header(doc, data)
   await generate_bid_data(doc, data)
   await generate_bottom(doc)
   doc.end()
 }
 
-const generate_header = (doc) => {
+const generate_header = (doc, data) => {
+  const { event_name } = data
+
   doc.image(path.join(path.resolve(), 'utils', 'pdf', 'logo.png'), 50, 45, { width: 300, height: 100 }).moveDown()
   doc.strokeColor(black).lineWidth(1).moveTo(50, 125).lineTo(550, 125).stroke().moveDown()
+  doc
+    .fontSize(16)
+    .fillColor(grey)
+    .text(event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase() + ' Bid Information', 220, 150)
+    .moveDown()
 }
 const generate_bid_data = (doc, data) => {
-  const { uuid,event_name, participants, currency, price, status, event_date, client_name, user_name, location_name } = data
- 
-  doc.fontSize(14).fillColor(grey).text(event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase() + ' Bid Information', 200, 140).moveDown()
- 
+  const { uuid, participants, currency, price, status, event_date, client_name, user_name, location_name } = data
+
   let x_key = 50
   let x_value = 150
-  let y = 170
+  let y = 190
   let add_to_y = 28
   const field_font = bold_font
   const value_font = regular_font
@@ -98,9 +103,9 @@ const generate_bid_data = (doc, data) => {
   // //second column
   x_key = 350
   x_value = 480
-  y = 170
+  y = 190
 
-  doc.font(value_font).text(`Price `, x_key, y)
+  doc.font(value_font).text(`Total Price `, x_key, y)
   doc
     .font(field_font)
     .text(`${String(price)}`, x_value, y)
@@ -118,7 +123,7 @@ const generate_bid_data = (doc, data) => {
   doc.font(value_font).text(`Museum Employee `, x_key, y)
   doc.font(field_font).text(`${user_name}`, x_value, y).moveDown()
 
-  y = 350
+  y = 390
   x_value = 360
 
   doc.font(regular_font).fontSize(14).fillColor(grey).text(`The Beneficial Owners of this transaction is:`, 50, y)
@@ -145,7 +150,7 @@ const generate_bottom = (doc) => {
     .fontSize(11)
     .fillColor(grey)
     .font(bold_font)
-    .text(`Disclaimer`, 50,y+90)
+    .text(`Disclaimer`, 50, y + 90)
     .moveDown()
     .fontSize(10)
     .font(regular_font)
