@@ -97,8 +97,13 @@ const get_fields = async (event_type_id, res_bid) => {
         }
         break
       case 'event_date':
-        let date = res_bid['event_date'].getUTCDate() + '/' + (res_bid['event_date'].getUTCMonth() + 1) + '/' + res_bid['event_date'].getUTCFullYear()
-        process_data[key] = date
+        let date
+        if (res_bid['language'] == 'en') {
+          date = res_bid['event_date'].getUTCFullYear() + (res_bid['event_date'].getUTCMonth() + 1 + res_bid['event_date'].getUTCDate()) + '/'
+        } else {
+          date = res_bid['event_date'].getUTCDate() + '/' + (res_bid['event_date'].getUTCMonth() + 1) + '/' + res_bid['event_date'].getUTCFullYear()
+        }
+        process_data['date'] = date
         break
       case 'client_id':
         const [res_client] = await db_helper.get(query.get_table_by_id('client', res_bid[key]))
@@ -132,7 +137,6 @@ const get_fields = async (event_type_id, res_bid) => {
   process_data['uuid'] = res_bid.uuid
   console.log(res_bid)
   process_data['uuid'] = res_bid.uuid
-  process_data['date'] = res_bid.event_date
   process_data['participants'] = res_bid.max_participants.toString()
   process_data['user_name'] = res_user.first_name + ' ' + res_user.last_name
   process_data['currency'] = res_bid.currency.toUpperCase()
