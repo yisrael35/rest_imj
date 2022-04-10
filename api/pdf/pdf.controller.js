@@ -135,7 +135,7 @@ const get_fields = async (event_type_id, res_bid) => {
   process_data['date'] = res_bid.event_date
   process_data['participants'] = res_bid.max_participants.toString()
   process_data['user_name'] = res_user.first_name + ' ' + res_user.last_name
-  process_data['currency'] = res_bid.currency
+  process_data['currency'] = res_bid.currency.toUpperCase()
   // console.log('process_data:')
   // console.log(process_data)
   return process_data
