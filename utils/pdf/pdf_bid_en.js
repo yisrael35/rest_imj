@@ -51,7 +51,7 @@ const concat_data = async (doc, data) => {
 const generate_header = (doc, data) => {
   const { event_name } = data
 
-  doc.image(path.join(path.resolve(), 'utils', 'pdf', 'logo.png'), 50, 45, { width: 300, height: 100 }).moveDown()
+  doc.image(path.join(path.resolve(), 'utils', 'pdf', 'logo_en.png'), 50, 45, { width: 300, height: 100 }).moveDown()
   doc.strokeColor(black).lineWidth(1).moveTo(50, 125).lineTo(550, 125).stroke().moveDown()
   doc
     .fontSize(16)

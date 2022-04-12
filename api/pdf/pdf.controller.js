@@ -90,9 +90,9 @@ const get_fields = async (event_type_id, res_bid) => {
           logger.error('res_location failed')
           throw Error
         }
-        if (res_event_type['language'].toLowerCase() === 'hebrew') {
+        if (res_bid['language'].toLowerCase() === 'he') {
           process_data['location_name'] = res_location['name_he']
-        } else if (res_event_type['language'].toLowerCase() === 'english') {
+        } else if (res_bid['language'].toLowerCase() === 'en') {
           process_data['location_name'] = res_location['name_en']
         }
         break

@@ -5,6 +5,7 @@ const Logger = require('logplease')
 const logger = Logger.create('./api/pdf/pdf.service.js')
 const pdf_generator = require('../../utils/pdf/pdf_generator')
 const pdf_bid_en = require('../../utils/pdf/pdf_bid_en')
+const pdf_bid_he = require('../../utils/pdf/pdf_bid_he')
 const mailUtil = require('../../utils/mail')
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -18,7 +19,8 @@ const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) =>
     if (fields.language === 'en') {
       res_pdf = await pdf_bid_en.create_pdf(fields)
     } else {
-      res_pdf = await pdf_generator.pdf_generator(event_type_id, fields)
+      res_pdf = await pdf_bid_he.create_pdf(fields)
+
     }
     await setTimeout(() => {
       if (res_pdf.status === 200) {
