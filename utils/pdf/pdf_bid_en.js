@@ -56,7 +56,7 @@ const generate_header = (doc, data) => {
   doc
     .fontSize(16)
     .fillColor(grey)
-    .text(event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase() + ' Bid Information', 220, 150)
+    .text(event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase() + ' Bid Information', 220, 165)
     .moveDown()
 }
 const generate_bid_data = (doc, data) => {
@@ -64,7 +64,7 @@ const generate_bid_data = (doc, data) => {
 
   let x_key = 50
   let x_value = 150
-  let y = 190
+  let y = 225
   let add_to_y = 28
   const field_font = bold_font
   const value_font = regular_font
@@ -103,7 +103,7 @@ const generate_bid_data = (doc, data) => {
   // //second column
   x_key = 350
   x_value = 480
-  y = 190
+  y = 225
 
   doc.font(value_font).text(`Total Price `, x_key, y)
   doc

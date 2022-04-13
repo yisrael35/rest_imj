@@ -61,7 +61,7 @@ const generate_header = (doc, data) => {
   doc
     .fontSize(17)
     .fillColor(grey)
-    .text('הצעת מחיר לאירוע ' + event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase(), 0, 150, { align: 'right', width: 425, features: ['rtla'] })
+    .text('הצעת מחיר לאירוע ' + event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase(), 0, 165, { align: 'right', width: 400, features: ['rtla'] })
     .moveDown()
 }
 
@@ -70,7 +70,7 @@ const generate_bid_data = (doc, data) => {
 
   let x_key = 550
   let x_value = 460
-  let y = 190
+  let y = 225
   let add_to_y = 27
   const field_font = bold_font
   const value_font = regular_font
@@ -138,7 +138,7 @@ const generate_bid_data = (doc, data) => {
   // //second column
   x_key = 250
   x_value = 160
-  y = 190
+  y = 225
 
   doc.font(value_font).text(`מחיר סופי`, 0, y, { align: 'right', width: x_key, features: ['rtla'] })
   doc
