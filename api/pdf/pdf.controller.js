@@ -56,7 +56,6 @@ const delete_pdf = async (req, res) => {
 }
 
 const get_fields = async (event_type_id, res_bid) => {
-  // console.log(res_bid)
   const [res_event_type] = await db_helper.get(query.get_event_type(event_type_id))
   if (!res_event_type) {
     logger.error('res_event_type failed')
@@ -131,17 +130,13 @@ const get_fields = async (event_type_id, res_bid) => {
 
   process_data['schedule_event'] = await get_schedule_event(res_bid['id'], process_data['language'])
   let costs = await get_costs(res_bid['id'], process_data['language'])
-  console.log(costs)
   process_data['costs'] = costs.cost_str
   process_data['price'] = String(costs.total_cost)
   process_data['uuid'] = res_bid.uuid
-  console.log(res_bid)
   process_data['uuid'] = res_bid.uuid
   process_data['participants'] = res_bid.max_participants.toString()
   process_data['user_name'] = res_user.first_name + ' ' + res_user.last_name
   process_data['currency'] = res_bid.currency.toUpperCase()
-  // console.log('process_data:')
-  // console.log(process_data)
   return process_data
 }
 

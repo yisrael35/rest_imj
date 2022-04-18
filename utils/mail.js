@@ -113,7 +113,7 @@ const first_letter = `
           <tr>
             <td>
             <i class="sprite sprite-logo">
-              <img src="http://yisraelbar.xyz/assets/logo.png" alt="logo">
+              <img src="http://15.188.57.188:3001/assets/logo.png" alt="logo">
                 </i>
             </td>
           </tr>
@@ -150,7 +150,7 @@ const end_letter = `
 const forgot_password = (link) => {
   return `${first_letter}
           <tr>
-            <td id="credeantials">
+            <td id="credentials">
               <p>Hello,</p><br />
               <p>
                 Click on the following link to update your password, this link is
@@ -173,7 +173,7 @@ const forgot_password = (link) => {
 const confirm_change_password = () => {
   return `${first_letter}
     <tr>
-      <td id="credeantials">
+      <td id="credentials">
         <p>Hello,</p><br />
         <p>
           Your password has been changed.

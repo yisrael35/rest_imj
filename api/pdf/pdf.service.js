@@ -15,12 +15,10 @@ const helper = require('../../utils/helper')
 const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) => {
   try {
     let res_pdf
-    console.log(fields)
     if (fields.language === 'en') {
       res_pdf = await pdf_bid_en.create_pdf(fields)
     } else {
       res_pdf = await pdf_bid_he.create_pdf(fields)
-
     }
     await setTimeout(() => {
       if (res_pdf.status === 200) {
@@ -45,7 +43,7 @@ const create_pdf = async ({ event_type_id, fields, email, bid_uuid }, result) =>
           }
           sgMail.send(msg, async (err, res) => {
             if (err) {
-              console.log(err.response.body)
+              logger.log(err.response.body)
               return result.status(500).end()
             } else {
               // update status bid to sent
