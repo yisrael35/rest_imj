@@ -113,7 +113,7 @@ const first_letter = `
           <tr>
             <td>
             <i class="sprite sprite-logo">
-              <img src="http://15.188.57.188:3001/assets/logo.png" alt="logo">
+              <img src="https://rest-api.yisraelbar.xyz/assets/logo.png" alt="logo">
                 </i>
             </td>
           </tr>
