@@ -61,7 +61,8 @@ const generate_header = (doc, data) => {
   doc
     .fontSize(17)
     .fillColor(grey)
-    .text('הצעת מחיר לאירוע ' + event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase(), 0, 165, { align: 'right', width: 400, features: ['rtla'] })
+    .text('הצעת מחיר לאירוע ', 0, 165, { align: 'right', width: 400, features: ['rtla'] })
+    .text(event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase(), 0, 165, { align: 'right', width: 260 })
     .moveDown()
 }
 
