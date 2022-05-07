@@ -3,14 +3,14 @@ HTTP_PORT= 3001
 WS_PORT= 3020
 
 # DB configoratins
-DB_HOST= localhost
-DB_USERNAME= root
-DB_PASSWORD= password
-DB_NAME= imj_db
+DB_HOST= 
+DB_USERNAME= 
+DB_PASSWORD= 
+DB_NAME= 
 
 # Sendgrid api key
 SENDGRID_API_KEY= 
-
+ 
 # Token
 ACCESS_TOKEN_SECRET= 
  
@@ -18,24 +18,30 @@ JWT_PAYLOAD_PASSWORD=
 JWT_PAYLOAD_SALT= 
 JWT_PAYLOAD_IV= 
 
-TEST_URL= http://localhost:3001
-IMJ_URL= https://react-imj.herokuapp.com
-REDIRECT_URL_FORGOT_PASSWORD= http://localhost:3000
-IMJ_FROM= no-reply@react-imj.herokuapp.com
+# API
+IMJ_URL_CLIENT= https://yisraelbar.xyz
+IMJ_URL_REST_API= https://rest-api.yisraelbar.xyz/
+IMJ_FROM= 
 
+# TEST
+TEST_URL= http://localhost:3001
 USERNAME_TEST= y@gmail.com
 PASSWORD_TEST= 12345678
 
+# RABBITMQ
 RABBITMQ_URL= 
 RABBITMQ_CHANNEL_NAME= 
 QUEUE_LOGGER_ACTIVATE= false
 
+# TWILIO 
 TWILIO_ACCOUNT_SID= 
 TWILIO_AUTH_TOKEN= 
 TWILIO_PHONE_NUMBER= 
 
-CERT_NAME= 
+# BUCKET 
+CERT_NAME= rsa_id
 BUCKET_USERNAME=
 BUCKET_URL=
 
+# 2FA
 TWO_FA_STATUS= false

@@ -46,6 +46,7 @@
     "node-forge": "^0.10.0",
     "node-worker-threads-pool": "^1.5.1",
     "path": "^0.12.7",
+    "pdfkit": "^0.13.0",
     "ssh2-sftp-client": "^7.2.3",
     "twilio": "^3.75.1",
     "uuid": "^8.3.2",

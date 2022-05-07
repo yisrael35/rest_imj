@@ -3,6 +3,11 @@ const get_event_type = (id) => {
   SELECT *
   FROM event_type WHERE id = '${id}';`
 }
+const get_user = (id) => {
+  return `
+  SELECT *
+  FROM user WHERE id = '${id}';`
+}
 const get_bid_id_by_uuid = (uuid) => {
   return `
   SELECT *
@@ -65,4 +70,5 @@ module.exports = {
   get_table_by_id,
   get_cost_by_bid_id,
   update_bid,
+  get_user,
 }

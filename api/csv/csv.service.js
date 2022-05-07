@@ -24,7 +24,7 @@ const create_csv = async ({ table, filters }, result) => {
     }
   } catch (error) {
     logger.log(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 

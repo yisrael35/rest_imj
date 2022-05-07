@@ -24,7 +24,7 @@ const forgot_password = async (payload, result) => {
       to: user.email,
       from: `${process.env.IMJ_FROM}`,
       subject: 'IMJ: Reset password',
-      html: mailUtil.forgot_password(`${process.env.REDIRECT_URL_FORGOT_PASSWORD}/ResetPassword/${user_details.token}`),
+      html: mailUtil.forgot_password(`${process.env.IMJ_URL_CLIENT}/ResetPassword/${user_details.token}`),
     }
     sgMail.send(msg, async (err, res) => {
       if (err) {

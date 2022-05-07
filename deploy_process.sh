@@ -1,5 +1,5 @@
 #!/bin/bash
-# NOTE -- node, mysql (include .my.cnf file), nginx, git, crontab need to be already installed 
+# NOTE -- node, mysql (include .my.cnf file), nginx, cretbot , git, crontab need to be already installed 
 # NOTE -- dir init_files should be exist with: .env, rsa_id, nginx_server, nginx_client
 
 git clone https://github.com/yisrael35/rest_imj.git imj_server
@@ -25,19 +25,93 @@ git checkout dev
 npm run build 
 cd ..
 
-# nginx 
-cd ../../etc/nginx/sites-available/
-cp $init_files_path/nginx_server /imj_server
-cp $init_files_path/nginx_client /imj_client
 
-cd ../sites-enabled/
-ln -s ../sites-available/imj_client
-ln -s ../sites-available/imj_server
+# ----------------------------------------------------
+NGINX_AVAILABLE_VHOSTS='/etc/nginx/sites-available'
+NGINX_ENABLED_VHOSTS='/etc/nginx/sites-enabled'
+imj_client ='imj_client'
+imj_server_rest ='imj_server_rest'
+imj_server_ws ='imj_server_ws'
+# Create the Nginx config file.
+cat > $imj_client <<EOF
+server {
+root /home/ubuntu/react_imj/build;
+index index.html index.htm index.nginx-debian.html;
+server_name _ yisraelbar.xyz www.yisraelbar.xyz;
+location / {
+try_files $uri $uri/ /index.html;
+}
+}
+EOF
+echo "imj_client file created"
+
+cat > $imj_server_rest <<EOF
+server {
+  server_name rest-api.yisraelbar.xyz;
+  location / {
+proxy_pass http://localhost:3001;
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection 'upgrade';
+proxy_set_header Host $host;
+proxy_cache_bypass $http_upgrade;
+proxy_read_timeout 300;
+proxy_connect_timeout 300;
+proxy_send_timeout 300;
+}
+}
+EOF
+echo "imj_server_rest file created"
+
+
+cat > $imj_server_ws <<EOF
+server {
+  server_name ws-api.yisraelbar.xyz;
+  location / {
+    proxy_pass http://localhost:3020;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+    proxy_read_timeout 300;
+    proxy_connect_timeout 300;
+    proxy_send_timeout 300;
+    }
+}
+EOF
+echo "imj_server_rest file created"
+
+cp ./$imj_client $NGINX_AVAILABLE_VHOSTS/$imj_client
+echo "imj_client file copied"
+rm ./$imj_client
+
+cp ./$imj_server_rest $NGINX_AVAILABLE_VHOSTS/$imj_server_rest
+echo "imj_server_rest file copied"
+rm ./$imj_server_rest
+
+cp ./$imj_server_ws $NGINX_AVAILABLE_VHOSTS/$imj_server_ws
+echo "imj_server_ws file copied"
+rm ./$imj_server_ws
+
+# certbot --nginx -d $sub_domain -d www.$sub_domain
+
+ln -s $NGINX_AVAILABLE_VHOSTS/$imj_client $NGINX_ENABLED_VHOSTS/$imj_client
+ln -s $NGINX_AVAILABLE_VHOSTS/$imj_server_rest $NGINX_ENABLED_VHOSTS/$imj_server_rest
+ln -s $NGINX_AVAILABLE_VHOSTS/$imj_server_ws $NGINX_ENABLED_VHOSTS/$imj_server_ws
+echo "file is been pointed"
+
 # certbot -nginx
+sudo certbot --nginx -d yisraelbar.xyz -d www.yisraelbar.xyz
+sudo certbot --nginx -d rest-api.yisraelbar.xyz -d ws-api.yisraelbar.xyz
+/etc/init.d/nginx restart 
 
-/etc/init.d/nginx restart
- 
+sudo su 
+crontab -e
+0 12 * * * /usr/bin/certbot renew --quiet
+
 # cronjob
+sudo su ubuntu 
 crontab -e 
 00 0 * * * /usr/bin/node /home/ubuntu/rest_imj/cron_job/clean_files.js > /home/ubuntu/rest_imj/cron_job/clean_files.log
 

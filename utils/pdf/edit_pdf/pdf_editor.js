@@ -58,14 +58,14 @@ let pdf_content = {
     { text: 'Location in the museum: #location_name' },
     { text: ' ' },
     { text: 'Event schedule:', bold: true },
-    { text: '#schedule_event'},
+    { text: '#schedule_event' },
     { text: ' ' },
     { text: 'Costs:', bold: true },
     { text: '#costs' },
     { text: ' ' },
     { text: 'Comments:', bold: true },
     { text: '#comment' },
-    { text: ' '},
+    { text: ' ' },
     { text: ' ' },
     { text: 'Please feel free to contact us any time!' },
     { text: 'Looking forward to hearing from you. ' },
@@ -167,7 +167,8 @@ const conc_variables = () => {
 
 fs.writeFile('./utils/edit_pdf/pdf_data.txt', 'Content field: \n' + JSON.stringify(pdf_content) + '\n fields field: \n' + JSON.stringify(variables), (err) => {
   if (err) {
-    return console.log(err)
+    logger.log(err)
+    return
   }
 })
 

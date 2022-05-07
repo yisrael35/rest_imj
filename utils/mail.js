@@ -1,4 +1,3 @@
-const imj_url = process.env.IMJ_URL
 const first_letter = `
 <!DOCTYPE html>
 <html>
@@ -113,7 +112,7 @@ const first_letter = `
           <tr>
             <td>
             <i class="sprite sprite-logo">
-              <img src="http://yisraelbar.xyz/assets/logo.png" alt="logo">
+              <img src="https://rest-api.yisraelbar.xyz/assets/logo.png" alt="logo">
                 </i>
             </td>
           </tr>
@@ -127,10 +126,10 @@ const first_letter = `
 const end_letter = `
           <tr>
             <td id="info">
-              <p><b>The israel museum Jerusalem מוזיאון ישראל ירושלים</b></p>
+              <p><b>Israel Museum Jerusalem מוזיאון ישראל ירושלים</b></p>
               <p>שדרות רופין 11 הקריה, ירושלים</p>
-              <p>02-6708811</p>
-              <p>${imj_url}/login</p>
+              <p>02-6708811  |  info@imj.org.il</p>
+              <p>https://www.imj.org.il</p>
             </td>
           </tr>
           <tr>
@@ -150,7 +149,7 @@ const end_letter = `
 const forgot_password = (link) => {
   return `${first_letter}
           <tr>
-            <td id="credeantials">
+            <td id="credentials">
               <p>Hello,</p><br />
               <p>
                 Click on the following link to update your password, this link is
@@ -173,7 +172,7 @@ const forgot_password = (link) => {
 const confirm_change_password = () => {
   return `${first_letter}
     <tr>
-      <td id="credeantials">
+      <td id="credentials">
         <p>Hello,</p><br />
         <p>
           Your password has been changed.
@@ -196,11 +195,14 @@ const share_file = () => {
               <td id="credentials">
                 <p>Hello</p>
                 <br />
-                <p>You will find a pdf file attached to this email</p>
+                <p>Continuing our conversation about your event- <br />
+                A bid proposal is attached to this email, on behalf of the museum.
+                <br />
+                Feel free to contact us for further questions and updates</p>
                 <br />
                 <br />
-                <p>Sincerely</p>
-                <p>The Israel Museum Support team</p>
+                <p>Best Regards,</p>
+                <p> Israel Museum Jerusalem support team</p>
                 <br />
                 <br />
               </td>
