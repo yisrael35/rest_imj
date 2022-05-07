@@ -46,7 +46,10 @@ const change_password = async (payload, user_id, result) => {
       return result({ status: 400 })
     }
 
-    await db_helper.update_just_query(query.update_password(user_id, payload.password))
+    const res_change_password = await db_helper.update_just_query(query.update_password(user_id, payload.password))
+    if (!res_change_password.affectedRows) {
+      return result.status(500).end()
+    }
     const msg = {
       to: user.email,
       from: `${process.env.IMJ_FROM}`,
@@ -61,6 +64,7 @@ const change_password = async (payload, user_id, result) => {
         return result.status(200).end()
       }
     })
+    return result.status(200).end()
   } catch (error) {
     logger.error(error)
     return result.status(400).end()

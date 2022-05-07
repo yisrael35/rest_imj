@@ -7,7 +7,7 @@ const create_token = (data) => {
 const update_password = (id, password) => {
   return `
   UPDATE user 
-  SET passwprd = '${password}'
+  SET password = '${password}'
   WHERE id = '${id}';`
 }
 const update_user = (user, uuid) => {
