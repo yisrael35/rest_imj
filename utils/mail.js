@@ -1,4 +1,3 @@
-const imj_url = process.env.IMJ_URL
 const first_letter = `
 <!DOCTYPE html>
 <html>

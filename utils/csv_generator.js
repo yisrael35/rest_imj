@@ -1,7 +1,7 @@
 const Logger = require('logplease')
 const logger = Logger.create('utils/csv_generator.js')
-const { parentPort, workerData } = require('worker_threads')
-
+const { parentPort } = require('worker_threads')
+const iconv = require('iconv-lite')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter
 const path = require('path')
 
@@ -32,8 +32,7 @@ const create_csv_file = async ({ data }) => {
       })
     } catch (error) {
       logger.error(error)
-      logger.error(file_name, 'error')
-      return reject({ status: 500 })
+      return resolve({ status: 500 })
     }
   })
 }

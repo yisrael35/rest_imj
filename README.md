@@ -1,5 +1,20 @@
+## Management events system
+
+### About the project
+
+I built this project for The Israel Museum, Jerusalem.
+The technology stack:
+
+> For the DB I used MySQL [Link](https://github.com/yisrael35/rest_imj/tree/main/sql/structure)<br>
+> For the FrontEnd I used React with Redux and Material UI [Link](https://github.com/yisrael35/react_imj)<br>
+> For the BackEnd I used REST-API and WebSocket (NodeJS) - current repository <br>
+> For the deployment I used AWS-EC2 [Link](https://yisraelbar.xyz)<br>
+> For the documentation I used wiki.js [Link](https://wiki-imj.herokuapp.com/)<br>
+> To menage all the project I used Monday and Git<br>
+> The project goal is to build a Management events system for IMJ.<br>
+
 <p align="center">
-  <h1 align="center">IMJ Architecture</h1>
+  <h1 align="center">IMJ Server Architecture</h1>
   <p align="center">
     General documentation on the structure of the IMJ project
   </p>
@@ -11,6 +26,23 @@
   <li> .env - required variables in ./_env</li>
   <li> db structure and data - ./sql/structure/imj_db.mwb  || ./sql/migration/data_script.sql</li>
 </ol>
+
+
+### Client API
+<b>Production:</b>
+<a href="https://www.yisraelbar.xyz">https://www.yisraelbar.xyz</a>
+<b>Local:</b>
+<a href="http://localhost:3001">http://localhost:3000</a>
+
+
+### Server API
+<b>Production:</b>
+
+> <ol><li>Rest: <a href="https://rest-api.yisraelbar.xyz">https://rest-api.yisraelbar.xyz</a></li><li>WebSocket: <a href="wss://ws-api.yisraelbar.xyz">wss://ws-api.yisraelbar.xyz</a></li></ol>
+
+
+<b>Local:</b>
+> <ol><li>Rest: <a href="http://localhost:3001">http://localhost:3001</a></li><li>WebSocket: <a href="ws://localhost:3020">ws://localhost:3020</a></li></ol>
 
 ## LOGIN
 
