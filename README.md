@@ -24,7 +24,7 @@ The technology stack:
 
 <ol>
   <li> .env - required variables in ./_env</li>
-  <li> db structure and data - ./sql/structure/imj_db.mwb  || ./sql/migration/data_script.sql</li>
+  <li> db structure and data - ./sql/structure/imj_db.mwb  || ./sql/migration/last_dump.sql</li>
 </ol>
 
 
@@ -43,6 +43,13 @@ The technology stack:
 
 <b>Local:</b>
 > <ol><li>Rest: <a href="http://localhost:3001">http://localhost:3001</a></li><li>WebSocket: <a href="ws://localhost:3020">ws://localhost:3020</a></li></ol>
+
+## Docker
+Run the project - Simply by running the commend:
+docker-compose up 
+Stop the project:
+docker-compose down --rmi all
+
 
 ## LOGIN
 

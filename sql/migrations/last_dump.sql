@@ -51,8 +51,18 @@ CREATE TABLE `bid` (
   CONSTRAINT `fk_bid_event_type1` FOREIGN KEY (`event_type_id`) REFERENCES `event_type` (`id`),
   CONSTRAINT `fk_bid_location1` FOREIGN KEY (`location_id`) REFERENCES `location` (`id`),
   CONSTRAINT `fk_bid_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bid`
+--
+
+LOCK TABLES `bid` WRITE;
+/*!40000 ALTER TABLE `bid` DISABLE KEYS */;
+
+/*!40000 ALTER TABLE `bid` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -62,7 +72,7 @@ CREATE TABLE `bid` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `bid_BEFORE_INSERT` BEFORE INSERT ON `bid` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `bid_BEFORE_INSERT` BEFORE INSERT ON `bid` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -89,8 +99,15 @@ CREATE TABLE `client` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `client`
+--
+
+LOCK TABLES `client` WRITE;
+/*!40000 ALTER TABLE `client` DISABLE KEYS */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -100,7 +117,7 @@ CREATE TABLE `client` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `client_BEFORE_INSERT` BEFORE INSERT ON `client` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `client_BEFORE_INSERT` BEFORE INSERT ON `client` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -133,8 +150,17 @@ CREATE TABLE `cost` (
   KEY `fk_costs_event1_idx` (`event_id`),
   CONSTRAINT `fk_costs_bid1` FOREIGN KEY (`bid_id`) REFERENCES `bid` (`id`),
   CONSTRAINT `fk_costs_event1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cost`
+--
+
+LOCK TABLES `cost` WRITE;
+/*!40000 ALTER TABLE `cost` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cost` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `event`
@@ -168,6 +194,15 @@ CREATE TABLE `event` (
   CONSTRAINT `fk_event_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `event`
+--
+
+LOCK TABLES `event` WRITE;
+/*!40000 ALTER TABLE `event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `event` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -177,7 +212,7 @@ CREATE TABLE `event` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_BEFORE_INSERT` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `event_BEFORE_INSERT` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -206,6 +241,15 @@ CREATE TABLE `event_type` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `event_type`
+--
+
+LOCK TABLES `event_type` WRITE;
+/*!40000 ALTER TABLE `event_type` DISABLE KEYS */;
+/*!40000 ALTER TABLE `event_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `location`
 --
 
@@ -220,8 +264,18 @@ CREATE TABLE `location` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `location`
+--
+
+LOCK TABLES `location` WRITE;
+/*!40000 ALTER TABLE `location` DISABLE KEYS */;
+INSERT INTO `location` VALUES (1,'in door','בתוך הבניין','ff1','2022-04-01 21:14:20','2022-04-01 21:14:20'),(2,'garden','גינה','ff','2022-04-01 21:14:20','2022-04-01 21:14:20'),(4,'room','חדר','קומה 3','2022-04-01 21:29:52','2022-04-01 21:29:52');
+/*!40000 ALTER TABLE `location` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `schedule_event`
@@ -244,8 +298,17 @@ CREATE TABLE `schedule_event` (
   KEY `fk_schedule_event_bid1_idx` (`bid_id`),
   CONSTRAINT `fk_schedule_event_bid1` FOREIGN KEY (`bid_id`) REFERENCES `bid` (`id`),
   CONSTRAINT `fk_schedule_event_event1` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `schedule_event`
+--
+
+LOCK TABLES `schedule_event` WRITE;
+/*!40000 ALTER TABLE `schedule_event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `schedule_event` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `supplier`
@@ -267,6 +330,16 @@ CREATE TABLE `supplier` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `supplier`
+--
+
+LOCK TABLES `supplier` WRITE;
+/*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
+
+/*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -276,7 +349,7 @@ CREATE TABLE `supplier` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `supplier_BEFORE_INSERT` BEFORE INSERT ON `supplier` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `supplier_BEFORE_INSERT` BEFORE INSERT ON `supplier` FOR EACH ROW BEGIN
 SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -296,14 +369,25 @@ CREATE TABLE `token` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL,
   `content` varchar(255) NOT NULL,
+  `type` enum('platform','login','reset_password') NOT NULL DEFAULT 'platform',
+  `code` varchar(6) DEFAULT NULL,
   `is_active` int NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_token_user1_idx` (`user_id`),
   CONSTRAINT `fk_token_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `token`
+--
+
+LOCK TABLES `token` WRITE;
+/*!40000 ALTER TABLE `token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `token` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -328,8 +412,21 @@ CREATE TABLE `user` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `imj_db`.`user` (`username`, `password`, `first_name`, `last_name`, `email`, `phone`, `level`, `is_active`) VALUES ('yisrael', 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f', 'yisrael', 'bar', 'yisrael35@gmail.com', '0523558539', '1', '1');
+INSERT INTO `imj_db`.`user` SET username='elad.david5', password=('ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'), level=1, is_active=1, first_name='Elad', last_name='David', email='elad.david5@gmail.com';
+
+
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -339,7 +436,7 @@ CREATE TABLE `user` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_BEFORE_INSERT` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
+/*!50003 CREATE TRIGGER `user_BEFORE_INSERT` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
 	SET NEW.`uuid` = UUID();
 END */;;
 DELIMITER ;
@@ -357,4 +454,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-02  0:14:47
+-- Dump completed on 2022-05-14 16:59:07
