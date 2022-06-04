@@ -46,7 +46,6 @@ server.use('/pdf', pdf_routes)
 server.use('/csv', csv_routes)
 server.use('/supplier', supplier_routes)
 
-// const template = require('./utils/pdf_generatore')
 
 const port = process.env.HTTP_PORT || 3001
 server.listen(port, () => {
