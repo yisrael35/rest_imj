@@ -49,6 +49,7 @@ const change_password = async (payload, user_id, result) => {
 
     const res_change_password = await db_helper.update_just_query(query.update_password(user_id, payload.password))
     if (!res_change_password.affectedRows) {
+      logger.error(`New Password has to be different from the old one, user_id: ${user_id}`)
       return result.status(500).send('New Password has to be different from the old one')
     }
     const msg = {
