@@ -71,15 +71,15 @@ const process_payload = (payload) => {
             case 'name':
               processed_payload.name = val.trim()
               break
-            case 'language':
-              processed_payload.language = val.trim()
-              break
-            case 'content':
-              processed_payload.content = JSON.stringify(val)
-              break
-            case 'fields':
-              processed_payload.fields = JSON.stringify(val)
-              break
+            // case 'language':
+            //   processed_payload.language = val.trim()
+            //   break
+            // case 'content':
+            //   processed_payload.content = JSON.stringify(val)
+            //   break
+            // case 'fields':
+            //   processed_payload.fields = JSON.stringify(val)
+            //   break
             default:
               return reject({ status: 400 })
           }

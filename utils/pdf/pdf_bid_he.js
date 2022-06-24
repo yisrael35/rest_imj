@@ -62,7 +62,7 @@ const generate_header = (doc, data) => {
     .fontSize(17)
     .fillColor(grey)
     .text('הצעת מחיר לאירוע ', 0, 165, { align: 'right', width: 400, features: ['rtla'] })
-    .text(event_name.charAt(0).toUpperCase() + event_name.slice(1).toLowerCase(), 0, 165, { align: 'right', width: 260 })
+    .text(event_name, 0, 165, { align: 'right', width: 260, features: ['rtla'] })
     .moveDown()
 }
 
@@ -85,7 +85,7 @@ const generate_bid_data = (doc, data) => {
     status_he = 'נשלחה'
     status_color = orange
   } else if (status === 'draft') {
-    status_he = 'טְיוּטָה'
+    status_he = 'טיוטה'
     status_color = grey
   }
   doc
