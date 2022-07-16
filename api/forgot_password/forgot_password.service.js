@@ -28,6 +28,7 @@ const forgot_password = async (payload, result) => {
     }
     sgMail.send(msg, async (err, res) => {
       if (err) {
+        logger.error(`Failed to send email of forgot password, email: ${user.email}`)
         return result.status(500).end()
       } else {
         return result.status(200).send({ status: 200, data: { email: helper.return_encrypt_email(user.email) } })
@@ -35,7 +36,7 @@ const forgot_password = async (payload, result) => {
     })
   } catch (error) {
     logger.error(error)
-    return result.status(404).end()
+    return result.status(500).end()
   }
 }
 
@@ -46,7 +47,11 @@ const change_password = async (payload, user_id, result) => {
       return result({ status: 400 })
     }
 
-    await db_helper.update_just_query(query.update_password(user_id, payload.password))
+    const res_change_password = await db_helper.update_just_query(query.update_password(user_id, payload.password))
+    if (!res_change_password.affectedRows) {
+      logger.error(`New Password has to be different from the old one, user_id: ${user_id}`)
+      return result.status(500).send('New Password has to be different from the old one')
+    }
     const msg = {
       to: user.email,
       from: `${process.env.IMJ_FROM}`,
@@ -56,14 +61,16 @@ const change_password = async (payload, user_id, result) => {
 
     sgMail.send(msg, async (err, res) => {
       if (err) {
+        logger.error(`Failed to send email of changed password`)
         return result.status(500).end()
       } else {
         return result.status(200).end()
       }
     })
+    return result.status(200).end()
   } catch (error) {
     logger.error(error)
-    return result.status(400).end()
+    return result.status(500).end()
   }
 }
 

@@ -66,9 +66,9 @@ const get_fields = async (event_type_id, res_bid) => {
     logger.error('res_user failed')
     throw Error
   }
-  let fields = JSON.parse(res_event_type.fields)
+  let fields = ['language', 'event_type', 'currency', 'location_name', 'event_date', 'client_id', 'event_name', 'status']
   const process_data = {}
-  for (const [key, val] of Object.entries(fields)) {
+  for (const key of fields) {
     //  handle multiple tables
     switch (key) {
       case 'language':
@@ -81,8 +81,6 @@ const get_fields = async (event_type_id, res_bid) => {
         currency = res_bid['currency']
         break
       case 'location_name':
-        // join implementation:
-        // process_data['location_name'] = res_event_type['language'].toLowerCase() === 'hebrew' ? res_bid?.location_he : res_bid?.location_en
 
         const [res_location] = await db_helper.get(query.get_location_by_id(res_bid['location_id']))
         if (!res_location) {
@@ -114,9 +112,9 @@ const get_fields = async (event_type_id, res_bid) => {
         process_data['client_name'] = res_client['name']
 
         break
-      case 'event_comment':
-        process_data[key] = res_bid['comment']
-        break
+      // case 'event_comment':
+      //   process_data[key] = res_bid['comment']
+      //   break
 
       default:
         if (res_bid[key]) {

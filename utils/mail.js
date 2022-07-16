@@ -153,13 +153,16 @@ const forgot_password = (link) => {
               <p>Hello,</p><br />
               <p>
                 Click on the following link to update your password, this link is
-                valid for 1 hour only.
+                valid for 20 minutes only.
               </p>
               <br />
                 <h3>
                   <a href=${link}>Submit new password</a>
                 </h3>
               <br />
+              <br />
+              <br />
+              <h3>*** PLEASE DO NOT RESPOND TO THIS MESSAGE ***</h3>
               <br />
               <p>Regards,</p>
               <p>IMJ Support Team</p>
@@ -201,6 +204,9 @@ const share_file = () => {
                 Feel free to contact us for further questions and updates</p>
                 <br />
                 <br />
+                <br />
+                <h3>*** PLEASE DO NOT RESPOND TO THIS MESSAGE ***</h3>
+                <br />
                 <p>Best Regards,</p>
                 <p> Israel Museum Jerusalem support team</p>
                 <br />
@@ -218,11 +224,13 @@ const six_digits = (six_digits) => {
               <p>Hello</p><br />
               <p>
               Please enter the 6 digits for further ID verification,
-              These digits are valid for twenty minutes only
+              These digits are valid for 20 minutes only
               </p>
               <br />
               <h3>Your six digits: <b>${six_digits}</b></h3>
-
+              <br />
+              <h3>*** PLEASE DO NOT RESPOND TO THIS MESSAGE ***</h3>
+              <br />
               <p>Regards</p>
               <p>The Israel Museum Support team</p>
               </td>

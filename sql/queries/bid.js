@@ -123,7 +123,7 @@ const get_bids = ({ search, limit, offset }) => {
   `
       : ''
   }
-  ORDER BY created_at DESC
+  ORDER BY b.created_at DESC
   LIMIT ${limit} OFFSET ${offset}
   ;`
 }
