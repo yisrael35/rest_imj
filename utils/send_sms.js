@@ -5,6 +5,12 @@ const authToken = process.env.TWILIO_AUTH_TOKEN
 const client = require('twilio')(accountSid, authToken)
 const { check_phone } = require('./helper')
 
+/**
+ * Send sms - function that send a message via sms.
+ * @param {string} phone_number The phone number that you want to send to.
+ * @param {string} message The message that you want this number will get.
+ * @return {Promise<Object>} object that contain status like (200,400,500), example: { status: 200 }.
+ */
 const send_sms = async (phone_number, message) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -31,7 +37,7 @@ const send_sms = async (phone_number, message) => {
     } catch (error) {
       logger.error(`Failed to send sms, error: ${error}`)
       if (error.status) {
-        return reject({ status: 400,  })
+        return reject({ status: 400 })
       }
       return reject({
         status: 500,

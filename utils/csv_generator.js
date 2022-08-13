@@ -1,10 +1,14 @@
 const Logger = require('logplease')
 const logger = Logger.create('utils/csv_generator.js')
 const { parentPort } = require('worker_threads')
-const iconv = require('iconv-lite')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter
 const path = require('path')
 
+/**
+ * create csv file - function that get array of object and create csv file in ./files folder.
+ * @param {Object} data it will take from the first object it's keys and make them the headers (columns name) and accordingly it will fill the file .
+ * @return {Promise<Object>} object that contain status like (200,500) and file_name in case of success, example: { file_name: 'csv_1650291071152.csv', status: 200 }.
+ */
 const create_csv_file = async ({ data }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -36,6 +40,8 @@ const create_csv_file = async ({ data }) => {
     }
   })
 }
+
+
 parentPort.on('message', async (data) => {
   parentPort.postMessage(await create_csv_file(data))
 })
