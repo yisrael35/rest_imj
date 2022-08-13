@@ -5,6 +5,7 @@ const create_user = (details) => {
   INSERT INTO user (${Object.keys(details)})
   VALUES (${Object.values(details).map((u) => '?')});`
 }
+
 const update_user = (id) => {
   let now = moment().format('yyyy-MM-DD HH:mm:ss')
   return `
@@ -48,6 +49,13 @@ const delete_token = (content) => {
   `
 }
 
+const update_token = (content, data) => {
+  return `
+  UPDATE token 
+  SET ${Object.keys(data).map((key) => `${key} = ? `)}
+  WHERE content = '${content}';`
+}
+
 module.exports = {
   login,
   create_token,
@@ -57,4 +65,5 @@ module.exports = {
   check_token_in_db,
   check_token_is_active,
   delete_token,
+  update_token,
 }

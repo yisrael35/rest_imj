@@ -90,6 +90,13 @@ const send_six_digits = async (payload, result) => {
       return result.status(403).send('Failed to find token')
     }
 
+    if (res_token.send_counter > process.env.AUTH_SEND_LIMIT) {
+      await db_helper.get(query.delete_token(payload.token))
+      return result.status(403).send(`You reached the limit of sending to sms/email`)
+    }
+    const token_data = { send_counter: res_token.send_counter + 1 }
+    await db_helper.update(query.update_token(payload.token, token_data), token_data)
+
     const { code } = res_token
     if (payload.send_code_to === 'sms') {
       const phone = '+972' + res_user.phone
@@ -132,7 +139,15 @@ const validate_six_digits = async (payload, result) => {
     if (!res_token) {
       return result.status(403).send('Failed to find token')
     }
+
+    if (res_token.tries_counter > process.env.AUTH_TRIES_LIMIT) {
+      await db_helper.get(query.delete_token(payload.token))
+      return result.status(403).send(`You reached the maximum of tries`)
+    }
+
     if (payload.code !== res_token.code) {
+      const token_data = { tries_counter: res_token.tries_counter + 1 }
+      await db_helper.update(query.update_token(payload.token, token_data), token_data)
       return result.status(403).send('Failed to authenticate code')
     }
 
