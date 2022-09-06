@@ -156,7 +156,7 @@ Each EndPoint divide to three parts:
   <li> auth.controller.js </li>
   <li> auth.service.js </li>
 </ol>
-
+<b> More info in our Wiki: <a href"https://github.com/yisrael35/rest_imj/wiki"> Wiki </a></b>
 ## Worker
 
 Some of the tasks in the project are highly consuming cpu usage and in order to not block the Node main loop - we created workers for those tasks.
