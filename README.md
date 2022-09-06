@@ -156,7 +156,9 @@ Each EndPoint divide to three parts:
   <li> auth.controller.js </li>
   <li> auth.service.js </li>
 </ol>
-<b> More info in our Wiki: <a href"https://github.com/yisrael35/rest_imj/wiki"> Wiki </a></b>
+
+<b> More info in our <a href="https://github.com/yisrael35/rest_imj/wiki"> Wiki </a></b>
+
 ## Worker
 
 Some of the tasks in the project are highly consuming cpu usage and in order to not block the Node main loop - we created workers for those tasks.
@@ -183,7 +185,6 @@ The Folder `./files/` is contain all the files that user will upload or create(c
 For example:
 
 > http://localhost:3001/assets/csv_1648217122426.csv
-> {.is-info}
 
 ### Cron Jobs
 
