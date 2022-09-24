@@ -1,7 +1,37 @@
 #!/bin/bash
-# NOTE -- node, mysql (include .my.cnf file), nginx, cretbot , git, crontab need to be already installed 
 # NOTE -- dir init_files should be exist with: .env, rsa_id, nginx_server, nginx_client
+sudo apt update
+sudo apt install curl
+sudo apt install npm
+sudo npm install pm2 -g
+sudo apt install bashtop
+sudo apt-get install mysql-server
+sudo mysql -u root -p
+ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'xxxxxxxxxxxxxxx';
 
+sudo apt install nginx
+# install certbot
+sudo apt install python3 python3-venv libaugeas0
+sudo python3 -m venv /opt/certbot/
+sudo /opt/certbot/bin/pip install --upgrade pip
+sudo /opt/certbot/bin/pip install certbot certbot-nginx
+sudo ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+
+# update node version
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+source ~/.bashrc
+nvm install v14.16.0
+
+
+
+sudo adduser $imj_user --disabled-password 
+cd /home/$imj_user/
+mkdir .ssh
+# cp  $root_user/init_files/authorized_keys ./.ssh/authorized_keys
+chown -R $linux_user:$linux_user /home/$linux_user/
+
+
+# init projects
 git clone https://github.com/yisrael35/rest_imj.git imj_server
 git clone https://github.com/yisrael35/react_imj.git imj_client
 
@@ -104,7 +134,7 @@ echo "file is been pointed"
 # certbot -nginx
 sudo certbot --nginx -d yisraelbar.xyz -d www.yisraelbar.xyz
 sudo certbot --nginx -d rest-api.yisraelbar.xyz -d ws-api.yisraelbar.xyz
-/etc/init.d/nginx restart 
+sudo /etc/init.d/nginx restart 
 
 sudo su 
 crontab -e

@@ -12,6 +12,9 @@ const create_user = async (payload, result) => {
     }
     return result.status(200).end()
   } catch (error) {
+    if (error.errno === 1062) {
+      return result.status(409).send('username already exist, field: username have to be unique')
+    }
     logger.error(error)
     return result.status(400).end()
   }
