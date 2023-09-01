@@ -2,7 +2,7 @@
 
 ### About the project
 
-This project was built for The Israel Museum, Jerusalem.
+This project was built for The Israel Museum, Jerusalem. <br/>
 The technology stack:
 
 > For the DB I used MySQL [Link](https://github.com/yisrael35/rest_imj/tree/main/sql/structure)<br>
